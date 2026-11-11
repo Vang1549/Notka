@@ -1,0 +1,38 @@
+name: Import Notka project
+on:
+  push:
+    branches: [main]
+    paths: [migration.json]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: notka-release
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Install signature verifier
+        run: python -m pip install cryptography
+      - name: Import verified snapshot
+        run: python scripts/import.py
+      - name: Verify signed update catalogs
+        run: python scripts/publish.py --verify-only
+      - name: Commit imported project
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add source dist scripts README.md .gitignore publication.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Import Notka source and signed update catalogs; migrate APK to GitHub'
+            git push origin HEAD:main
+          fi
+          echo "NOTKA_RELEASE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Publish APK and historical downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/publish.py

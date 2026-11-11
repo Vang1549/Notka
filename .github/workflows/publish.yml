@@ -1,0 +1,23 @@
+name: Publish Notka releases
+on:
+  push:
+    branches: [main]
+    paths: [publication.json]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: notka-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install signature verifier
+        run: python -m pip install cryptography
+      - name: Publish verified files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOTKA_RELEASE_COMMIT: ${{ github.sha }}
+        run: python scripts/publish.py
