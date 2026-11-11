@@ -1,17 +1,1 @@
-{
-  "parts": [
-    {
-      "url": "https://notka-piano-updates.zentas.chatgpt.site/migration/notka-github-63.part0",
-      "bytes": 20971520,
-      "sha256": "b277b558fc945d5b56fe3381cf5fdb2822f31825735e8d6a074b3c177ca381ec"
-    },
-    {
-      "url": "https://notka-piano-updates.zentas.chatgpt.site/migration/notka-github-63.part1",
-      "bytes": 15843884,
-      "sha256": "44509bf1700090623a1b2819dd08a56cecb74543d28dc92ad58b759a573774cf"
-    }
-  ],
-  "sha256": "7d5645134cb642490106c5696b1e15f79e7a6121a82ded56c67d1858069d7eee",
-  "bytes": 36815404,
-  "source_commit": "7c5db844697dd9576a3af6808743e046b254b2ee"
-}
+{"transport_commit":"8f89a8671a499e0fb71141e9eefd75e8a4d60d9c","bytes":63012112,"sha256":"b207cccffea324288340f9f98e08f2e9a4a3d34e3dc040f19cc5689fbf31dcfb"}

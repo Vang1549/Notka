@@ -16,6 +16,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Read transport revision
+        id: transport
+        run: echo "sha=$(python -c 'import json; print(json.load(open("migration.json"))["transport_commit"])')" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.transport.outputs.sha }}
+          path: transport
+          fetch-depth: 1
       - name: Install signature verifier
         run: python -m pip install cryptography
       - name: Import verified snapshot
@@ -35,4 +43,5 @@ jobs:
       - name: Publish APK and historical downloads
         env:
           GH_TOKEN: ${{ github.token }}
+          NOTKA_ASSET_DIR: release-assets
         run: python scripts/publish.py
