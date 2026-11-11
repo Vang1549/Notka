@@ -1,0 +1,1986 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>Нотка</title><style>
+:root{color-scheme:dark;--bg:#101614;--panel:#1d2722;--text:#ecf3eb;--muted:#adc0b0;--border:#35463a;--cell:#2d3c32;--black:#202d25;--key:#46574b;--raised:#17221b;--line:#617767;--accent:#baef8a;--on:#1e3825;--cursor:#ffc477}
+:root.light{color-scheme:light;--bg:#f4f3eb;--panel:#e7eadf;--text:#233328;--muted:#516655;--border:#bac9b9;--cell:#e4ecdf;--black:#d4e0d1;--key:#f2f4ed;--raised:#b8cab7;--line:#829787;--accent:#3c7243;--on:#fff;--cursor:#965012}
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden}body{font:15px Roboto,system-ui,sans-serif;background:var(--bg);color:var(--text)}main{height:100%;padding:12px 0;display:flex;flex-direction:column;gap:10px}
+header,.controls,.tempo{display:flex;align-items:center;gap:8px}#status{font-size:12px;color:var(--muted)}button{color:inherit;font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:2px solid var(--cursor);outline-offset:-3px}.button{border:1px solid var(--border);background:var(--panel);border-radius:10px;min-height:43px;padding:0 12px}.button:disabled{opacity:.45}#status{margin:0;line-height:1.4}#status:empty,#trackStatus:empty{display:none}.controls{gap:7px}.play{flex:1;background:var(--accent);color:var(--on);font-weight:700}.tempo output{min-width:32px;font-weight:650;text-align:center}.tempo small{display:block;font-size:9px;color:var(--muted)}.tempo{gap:4px}
+#roll{--row:34px;--key-width:32px;--ruler:32px;position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none;user-select:none;border-radius:0;background:var(--panel);box-shadow:0 0 0 1px var(--border)}#roll button{touch-action:none}
+.clip{overflow:hidden;position:absolute}.times{left:var(--key-width);top:0;right:0;height:var(--ruler)}.keys{left:0;top:var(--ruler);bottom:0;width:var(--key-width)}.notes{left:var(--key-width);right:0;top:var(--ruler);bottom:0;background:var(--border)}
+.layer{position:absolute;display:grid;left:0;top:0;grid-auto-rows:var(--row);grid-template-columns:repeat(var(--cols),var(--col))}.keys .layer{grid-template-columns:var(--key-width)}.times .layer{grid-auto-rows:var(--ruler)}
+.tile{min-width:0;border:0;margin:0;border-radius:0;padding:0;box-shadow:inset -1px -1px var(--border);background:var(--cell)}.tile.sharp{background:var(--black)}.tile.bar{border-left:2px solid var(--line)}.tile.beat{border-left:1px solid var(--border)}.tile.on{background:var(--accent);border:2px solid var(--panel);border-radius:6px}.tile.now{box-shadow:inset 2px 0 var(--cursor)}.key{background:var(--key);font-size:min(12px,calc(var(--row)*.5));font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}.key.c:after{content:attr(data-octave);font-size:7px}.key.sharp{background:var(--raised);color:var(--muted)}.key.c{color:var(--accent);font-weight:800}.time{background:var(--panel);font-size:11px;color:var(--muted)}.time.bar{font-weight:800;color:var(--text)}.time.start,.time.now{color:var(--cursor);box-shadow:inset 0 -3px var(--cursor)}
+@media(max-height:480px){main{gap:5px;padding:6px 0}header .button{min-height:32px}}
+
+[hidden]{display:none!important}.snap{margin-left:auto;color:var(--muted)}select{font:inherit;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:5px}#blocks,#playhead{position:absolute;inset:0;pointer-events:none}.note-block{position:absolute;height:calc(var(--row) - 4px);min-width:6px;border-radius:6px;background:var(--accent);box-shadow:inset 0 0 0 1px #0004;overflow:hidden;color:var(--on)}.note-block:after{content:'';position:absolute;right:2px;top:27%;height:46%;width:2px;border-radius:2px;background:var(--on);opacity:.6}.note-block.active{outline:2px solid var(--cursor);outline-offset:-2px;z-index:1}#blocks{isolation:isolate}#playhead{z-index:1;right:auto;width:2px;background:var(--cursor)}#inspector{position:fixed;z-index:3;width:min(320px,calc(100vw - 16px));border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);padding:6px 9px;box-shadow:0 4px 20px #0006;font-size:12px}.ins-head,.ins-row{display:flex;align-items:center;gap:6px}.ins-head{flex-wrap:wrap}.ins-head b{font-size:14px}.ins-head span{color:var(--muted)}#inspector button{border:0;border-radius:5px;background:var(--raised);color:var(--text);padding:6px}#volumeToggle{margin-left:auto}#volumeToggle svg,#copyNotes svg{display:block}.ins-row{margin-top:5px}.ins-row input{min-width:30px;flex:1;accent-color:var(--accent);height:24px}.ins-row output{min-width:30px}.ins-head #deleteNote{color:#fbac9c}:root.light .ins-head #deleteNote{color:#983624}
+.split{display:flex;flex:1;min-width:0}.split #playStart{border-radius:10px 0 0 10px;flex:0 0 44px;padding:0;border-right:1px solid #0004}.split #play{border-radius:0;white-space:nowrap;padding:0 6px}.split .visual-launch{border-radius:0 10px 10px 0;flex:0 0 46px;display:grid;place-items:center;padding:0;border-left:1px solid #0004}
+#stage,.shade{position:fixed;inset:0;z-index:5}#stage{background:#080e19;color:white}#scene{width:100%;height:100%;display:block;outline:none;touch-action:manipulation}.shade{z-index:6;background:#000a;display:grid;place-items:center;padding:12px}.pref-card{background:var(--bg);border:1px solid var(--border);border-radius:18px;padding:16px;width:min(100%,380px);max-height:100%;overflow:auto}.pref-heading,.pref-card label{display:flex;justify-content:space-between;align-items:center;gap:10px}.pref-heading{margin-bottom:14px}.pref-heading h2{font-size:20px;margin:0}.pref-card label{min-height:38px}.pref-card small{display:block;color:var(--accent);font-size:10px;letter-spacing:.14em;margin:14px 0 4px}.pref-card input{accent-color:var(--accent);width:21px;height:21px}.pref-card p{font-size:12px;line-height:1.45;color:var(--muted);margin-bottom:2px}
+@media(max-width:360px){main{padding:8px 0}.controls{gap:4px}header .button{padding:0 8px}.tempo .button{padding:0 9px}}
+#prefTitle:empty{display:none}#closePrefs{margin-left:auto}#prefHome,#trackChoices{display:grid;gap:8px}#trackStatus:empty{display:none}
+#laneOptions{width:min(100%,460px)}#laneName{width:100%;min-height:44px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);padding:8px;font:inherit}#laneOptions #deleteLane{color:#ef6666}:root.light #laneOptions #deleteLane{color:#bd2626}#ghostChoices input.deferred:checked{opacity:.45}
+.lane-flags{display:grid;grid-template-columns:44px minmax(0,1fr) 44px 44px;align-items:center;gap:4px}.flag-head{color:var(--muted);font-size:11px;margin-bottom:6px}.flag-head span:nth-last-child(-n+2){text-align:center}#ghostChoices{display:grid;gap:6px}#ghostChoices .lane-flags{border:1px solid var(--border);border-radius:10px;padding:3px}#ghostChoices .lane-current{border-color:var(--accent);background:var(--panel)}#ghostChoices label{justify-content:center;min-height:44px;cursor:pointer}#ghostChoices .button{width:100%;min-width:0;height:44px;padding:5px;border:0;background:transparent}#ghostChoices .lane-instrument{display:grid;place-items:center;border:1px solid var(--border);border-radius:8px;background:var(--raised)}#ghostChoices .lane-instrument .note-instrument{position:static;width:24px;height:24px;max-width:none;max-height:none;color:inherit;opacity:1}#ghostChoices .lane-name{text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:none;-webkit-touch-callout:none;touch-action:pan-y}#ghostChoices .lane-name[aria-pressed=true]{color:var(--accent);font-weight:650}#addLane{width:100%;margin-top:10px;font-size:26px}.lane-flags .lane-instrument:empty:before{content:attr(data-instrument);font-size:12px}
+#blocks{isolation:isolate}.note-block{z-index:1}.note-block.active{z-index:2}.note-block.ghost{z-index:0;background:#858585;opacity:.65;pointer-events:none}.note-block.ghost:after{display:none}:root.light .note-block.ghost{background:#777}
+#gridPreview{margin:8px 0 12px;border:1px solid var(--border);border-radius:9px;overflow:hidden}#gridPreview svg{display:block;width:100%;height:auto}#stepSheet .pref-card{width:min(100%,420px)}#stepSheet fieldset{min-width:0;border:1px solid var(--border);border-radius:10px;padding:6px 10px 10px;margin:10px 0 0}#stepSheet legend{font-weight:650}#stepSheet select{max-width:56%}#songSave,#songList,#exportOptions{display:grid;gap:7px}#exportOptions label{justify-content:flex-start}#exportOptions .button{width:100%;padding:9px 12px}#exportOptions input[type=checkbox]{flex-shrink:0}#songList{overflow:auto;max-height:34vh}#songList .button{text-align:left;overflow-wrap:anywhere}.pref-card input.song-input{width:100%;height:42px;background:var(--raised);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font:inherit}
+header{display:flex;gap:6px}header,.controls,#status,#missingSounds{margin:0 12px}.icon{display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}header .icon{width:40px;height:40px;min-height:40px;padding:0}#prefs{margin-left:auto}#laneOptions .pref-heading .button{width:auto;margin:0}.tempo label{display:grid;justify-items:center}.tempo input{width:3.4ch;padding:0;background:transparent;color:var(--text);border:0;font:inherit;font-weight:bold;text-align:center}.tempo label:focus-within{outline:1px solid var(--accent);border-radius:4px}
+[data-note-depth="true"] .note-block:not(.ghost){background:linear-gradient(to bottom,#ffffff66,transparent 45%,#00000033),var(--accent);box-shadow:inset 0 1px 0 #ffffff88,inset 0 -1px 0 #0007,0 1px 2px #0005}
+#instrumentChoices{display:grid;gap:8px}#instrumentChoices [aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}#instrumentStatus:empty{display:none}.instrument-filters{display:grid;gap:8px;margin-bottom:12px}.instrument-filters input,.instrument-filters select{width:100%;min-width:0;min-height:40px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);padding:8px;font:inherit}.instrument-group{margin:6px 0 0;font-size:12px;color:var(--muted)}
+.instrument-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;align-items:center}.instrument-row .instrument-pick{grid-column:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.instrument-row small{grid-column:2;grid-row:2;text-align:center;margin:0;font-size:11px;letter-spacing:0;color:var(--muted)}.instrument-row .instrument-action{grid-column:2;grid-row:1;padding:0 9px;font-size:12px}.instrument-delete{display:flex;gap:8px;margin-top:10px}.instrument-delete>*{flex:1}.note-block:before{content:attr(data-instrument);position:absolute;bottom:1px;left:2px;font-size:8px;font-weight:650;line-height:10px;white-space:nowrap;pointer-events:none;max-width:calc(100% - 3px);overflow:hidden}.note-block:before,.note-instrument{color:var(--instrument-ink,#000);opacity:.22}.note-block.ghost{--instrument-ink:#000}.note-instrument{position:absolute;bottom:1px;left:2px;width:13px;height:13px;max-width:calc(100% - 3px);max-height:calc(100% - 2px);pointer-events:none}
+
+.stage-head{position:absolute;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));display:flex;align-items:center;justify-content:space-between;gap:12px}.stage-actions{display:flex;gap:8px}.stage-head button{display:grid;place-items:center;background:#101b29cc;border:1px solid #b6cce025;border-radius:12px;font:20px system-ui;width:44px;height:44px;padding:0;color:#e0eaf3;backdrop-filter:blur(12px)}#stageLoop{font-size:28px}#stageLoop[aria-pressed=true]{color:#baf8e8;border-color:#62dfc4;background:#183d37}@media(orientation:portrait){.scene-open #stage,.scene-open .scene-settings{inset:auto;left:50%;top:50%;width:100vh;height:100vw;transform:translate(-50%,-50%) rotate(90deg)}}.scene-settings .pref-card{width:min(100%,440px)}#scenePreview{display:block;width:100%;height:130px;border:1px solid var(--border);border-radius:12px;margin:4px 0 10px}.scene-presets{display:flex;gap:6px;margin-bottom:14px}.scene-presets button{flex:1;padding:0 8px;font-size:12px;min-height:34px}.scene-section{border-top:1px solid var(--border);padding:12px 0}.scene-section summary{font-weight:650;cursor:pointer;font-size:14px}.scene-section[open] summary{margin-bottom:8px}.scene-section label{font-size:13px;gap:12px}.scene-section label>span{min-width:0;overflow-wrap:anywhere}.scene-section select{max-width:58%;font-size:12px;padding:6px}.scene-section input[type=number]{width:64px;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text);padding:5px;height:auto;font:inherit}.scene-section input[type=range]{width:100%;height:22px;margin:0;accent-color:var(--accent)}.scene-section input[type=color]{width:46px;height:28px;padding:2px;border:1px solid var(--border);background:var(--panel);border-radius:6px}.scene-section output{color:var(--accent);font-variant-numeric:tabular-nums}.scene-section .scene-hint{font-size:11px;margin:0 0 7px}.scene-subtle{font-size:12px;min-height:32px;padding:0 8px;margin:5px 0}#sceneColors{border-left:2px solid var(--border);padding-left:10px;margin:7px 0}@media(max-height:520px) and (min-width:700px){.scene-settings{justify-items:end;padding:10px 16px}.scene-settings .pref-card{max-height:100%;width:390px}#scenePreview{height:100px}}
+.sound-tabs{display:flex;gap:7px;margin:10px 0}.sound-tabs .button{flex:1;padding:8px;font-size:13px}.sound-tabs [aria-pressed=true]{border-color:var(--accent);color:var(--accent)}.current-sound{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:5px;margin:0 0 14px}.current-sound .button{min-width:0;padding:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.current-sound .button:first-child{text-align:left;border-color:var(--accent);color:var(--accent)}#instrumentEditor input[type=number],#soundName{background:var(--panel);border:1px solid var(--border);border-radius:7px;color:var(--text);font:inherit;padding:6px;min-width:0}#soundName{width:65%;min-height:36px}#soundSource{font-size:12px}#soundEnvelope{color:var(--accent)}#soundEnvelope svg{display:block;width:100%;height:72px}.sound-field{display:grid;grid-template-columns:minmax(0,1fr) 90px;align-items:center;gap:5px 8px;margin:10px 0}.sound-field label{font-size:12px}.sound-field input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent);height:24px}.sound-field input[type=number]{width:90px;min-height:32px;font-size:12px}#soundAdvanced fieldset{border:1px solid var(--border);border-radius:9px;margin:10px 0;padding:8px}#soundAdvanced legend{font-size:13px}#soundAdvanced select{max-width:65%;font-size:12px}.song-row{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:7px}.song-row>.button:first-child{text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#songList .song-remove{display:grid;place-items:center;width:44px;min-height:44px;padding:0;text-align:center;font-size:22px;line-height:1;color:#ef6666}:root.light #songList .song-remove{color:#bd2626}
+#missingSounds{padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:12px}#missingSounds p{margin:0 0 6px}.instrument-row .source-split{padding:0}.source-split{display:inline-flex;min-width:174px}.source-split>.button{white-space:nowrap;flex:1;justify-content:center;min-width:0;padding:0 8px;font-size:12px;border-radius:0}.source-split>.button:first-child{border-radius:9px 0 0 9px}.source-split>.button:last-child{border-left:0;border-radius:0 9px 9px 0}.source-split>.button.import-ready{background:var(--accent);color:var(--on)}#importProgress .pref-card{max-width:360px}#importProgress button{width:100%}.source-link{color:var(--text);display:inline-flex;align-items:center;text-decoration:none;font-size:12px;min-height:36px}#instrumentSource p{font-size:12px;color:var(--muted)}
+#selectionBox{position:absolute;pointer-events:none;border:1px solid var(--cursor);background:#ffffff18;z-index:2147483647}#inspector.group{width:min(320px,calc(100vw - 16px))}#inspector.group .ins-head b{white-space:nowrap}#inspector.group .ins-head span{font-size:11px}
+#scenePresetSection>select{width:100%;max-width:100%}#presetNewForm>#saveScenePreset{width:100%}#presetSaveSplit{width:100%;margin-top:10px}#presetSaveSplit>.button{white-space:normal;padding:8px}#presetStatus:empty{display:none}
+#exitSheet{z-index:8}#exitSheet .pref-heading{justify-content:flex-start}#exitSheet .pref-heading button{width:44px;flex-shrink:0;padding:0;font-size:26px}#exitActions,#exitChoices,#exitNameForm{display:grid;gap:8px}#exitStatus:empty{display:none}
+</style><main>
+<header><button class="button icon" id="editLane" aria-haspopup="dialog" aria-label="Дорожки" title="Дорожки"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="4" height="4" rx="1"/><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="3" y="16" width="4" height="4" rx="1"/><path d="M11 6h10M11 12h10M11 18h10"/></svg></button><button class="button icon" id="stepMenu" aria-haspopup="dialog" aria-label="Настройка сетки" title="Настройка сетки"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></button><button class="button icon" id="prefs" aria-label="Меню трека"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="17" cy="16" rx="3" ry="2"/></svg></button><button class="button icon" onclick="notkaBack()" aria-label="Вернуться к выбору версии"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button></header>
+
+<div id="roll" role="group" aria-label="Нотный редактор"><div class="clip times"><div id="ruler" class="layer"></div></div><div class="clip keys"><div id="keys" class="layer"></div></div><div class="clip notes"><div id="notes" class="layer"></div><div id="blocks"></div><div id="selectionBox" hidden></div><div id="playhead" hidden></div></div></div><div id="inspector" role="group" aria-label="Настройки ноты" hidden><div class="ins-head"><b id="noteName"></b><span id="duration"></span><button id="volumeToggle" type="button" aria-label="Громкость ноты" title="Громкость ноты" aria-controls="volumeRow" aria-expanded="false"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9h4l5-4v14l-5-4H3zM16 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg></button><button id="copyNotes" aria-label="Копировать выделенные ноты" title="Копировать выделенные ноты"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></svg></button><button id="deleteNote" aria-label="Удалить выбранную ноту">Удалить</button><button id="closeNote" aria-label="Закрыть настройки">✕</button></div><div class="ins-row" id="volumeRow" hidden><label for="volume">Громк.</label><input id="volume" type="range" min="0" max="100" step="1"><output id="volLabel"></output></div></div>
+<div id="missingSounds" role="status" hidden></div><p id="status" role="status"></p>
+<div class="controls"><div class="split" role="group" aria-label="Воспроизведение"><button class="button play" id="playStart" disabled aria-label="Играть с начала трека" title="Играть с начала трека">|▶</button><button class="button play" id="play" disabled>▶ Играть</button><button class="button play visual-launch" id="visualPlay" disabled aria-label="Визуальное пианино — играть с начала" title="Визуальное пианино"><svg width="23" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" d="M6 5v4m5-7v5m6-2v5"/><rect x="2" y="13" width="20" height="9" rx="2"/><path d="M7 13v5m5-5v5m5-5v5"/></svg></button></div><div class="tempo"><button class="button" id="minus" aria-label="Медленнее">−</button><label><input id="bpm" aria-label="Темп в BPM" type="text" inputmode="numeric" maxlength="3" value="100"><small>BPM</small></label><button class="button" id="plus" aria-label="Быстрее">+</button></div></div>
+</main>
+<section id="stage" aria-label="Визуальное пианино" hidden>
+<canvas id="scene" aria-label="Падающие ноты и клавиатура"></canvas>
+<div class="stage-head" id="stageHud"><button id="leaveStage" aria-label="Вернуться в редактор"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><div class="stage-actions"><button id="stageExport" aria-label="Сохранить аудио или видео"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg></button><button id="stageHide" aria-label="Скрыть интерфейс"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 8V3h5m8 0h5v5M3 16v5h5m8 0h5v-5"/></svg></button><button id="stagePrefs" aria-label="Настройки проигрывателя">⚙</button><button id="stageLoop" aria-label="Повторять трек" aria-pressed="false">∞</button><button id="stageTransport" aria-label="Остановить">■</button></div></div></section>
+<div class="shade" id="preferences" role="dialog" aria-modal="true" aria-label="Меню трека" hidden><article class="pref-card">
+<div class="pref-heading"><h2 id="prefTitle"></h2><button class="button" id="closePrefs" aria-label="Закрыть настройки">✕</button></div>
+<div id="songSave" hidden><label for="songName">Название трека</label><input id="songName" class="song-input" maxlength="80" placeholder="Например, Вечер"><button class="button" id="confirmSave">Сохранить трек</button></div>
+<div id="trackChoices" hidden><button class="button" id="songSearchButton" aria-expanded="false" aria-controls="songQuery">Поиск по названию</button><input class="song-input" id="songQuery" type="search" aria-label="Название для поиска" placeholder="Найти трек…" hidden><div id="songList"></div><div id="songDeleteConfirm" hidden><p id="songDeleteName"></p><div class="sound-tabs"><button class="button" id="confirmSongDelete">Удалить</button><button class="button" id="cancelSongDelete">Отмена</button></div></div><button class="button" id="loadFile">Импортировать старый файл .notka…</button></div>
+<div id="exportOptions" hidden><label for="exportName">Название</label><input class="song-input" id="exportName" maxlength="48"><label><input type="checkbox" id="exportMuted"> Включить выключенные дорожки</label><button class="button" id="exportNotka">Для Нотки · .notka</button><button class="button" id="exportMidi">MIDI · FL Studio / Embers</button><button class="button" id="exportAudio">ZIP · ноты и звук по дорожкам</button><p id="exportStatus" role="status" style="white-space:pre-line;overflow-wrap:anywhere"></p><button class="button" id="cancelExport" hidden>Отмена</button></div><div id="prefHome"><button class="button" id="lastTrack">Загрузить последний трек</button><button class="button" id="saveTrack">Сохранить</button><button class="button" id="saveAs">Сохранить как…</button><button class="button" id="loadTrack">Загрузить</button><button class="button" id="exportTrack">Экспорт…</button></div>
+<p id="trackStatus" role="status"></p><button class="button" id="replaceTrack" hidden>Заменить трек</button><div id="visualOptions" hidden>
+<label>Повторять трек <input id="loop" type="checkbox"></label>
+<canvas id="scenePreview" aria-label="Предпросмотр оформления проигрывателя"></canvas>
+<div class="scene-presets"><button class="button" id="sceneCalm">Спокойный</button><button class="button" id="sceneCinema">Сияние</button><button class="button" id="sceneNeon">Неон</button></div>
+<details class="scene-section" id="scenePresetSection"><summary>Мои пресеты</summary>
+<select id="presetChoice" aria-label="Сохранённый пресет"></select><div class="sound-tabs"><button class="button" id="loadScenePreset">Загрузить</button><button class="button" id="deleteScenePreset">Удалить</button></div>
+<div id="presetNewForm"><input id="presetName" class="song-input" maxlength="48" aria-label="Название пресета" placeholder="Название пресета"><button class="button" id="saveScenePreset">Сохранить пресет</button><button class="button" id="cancelNewPreset" hidden>Отмена</button></div><div class="source-split" id="presetSaveSplit" role="group" aria-label="Сохранение пресета" hidden><button class="button" id="newScenePreset">Сохранить как новый</button><button class="button" id="replaceScenePreset">Заменить выбранный</button></div>
+<div id="presetConfirm" hidden><p id="presetConfirmText"></p><div class="sound-tabs"><button class="button" id="confirmScenePreset">Подтвердить</button><button class="button" id="cancelScenePreset">Отмена</button></div></div><p id="presetStatus" role="status"></p></details>
+<details class="scene-section" open><summary>Клавиатура и диапазон</summary>
+<label>Диапазон <select id="rangeMode"><option value="auto">По музыке</option><option value="manual">Вручную</option></select></label>
+<div id="manualRange"><label>Первая нота <select id="keyStart"></select></label><label>Количество клавиш <input id="keyCount" type="number" min="12" max="88" step="1"></label></div>
+<label>Высота клавиатуры <output id="keyboardHeightValue"></output></label><input aria-label="Высота клавиатуры" id="keyboardHeight" type="range" min="8" max="26" step="1">
+<label>Подписи клавиш <select id="keyLabels"><option value="c">Только До</option><option value="all">Все ноты</option><option value="none">Без подписей</option></select></label>
+<label>Линии клавиш <input id="guides" type="checkbox"></label>
+</details>
+<details class="scene-section" open><summary>Движение и форма нот</summary>
+<label>Скорость падения <output id="speedValue"></output></label><input id="speed" aria-label="Скорость падения" type="range" min="0.5" max="3" step="0.1">
+<label>Вертикальный масштаб <output id="stretchValue"></output></label><input id="stretch" aria-label="Вертикальный масштаб нот" type="range" min="0.25" max="2.5" step="0.05">
+<p class="scene-hint">Масштаб меняет длину и путь нот, сохраняя ритм музыки.</p>
+<label>Ширина нот <output id="noteWidthValue"></output></label><input id="noteWidth" aria-label="Ширина нот" type="range" min="40" max="96" step="1">
+<label>Скругление <output id="roundnessValue"></output></label><input id="roundness" aria-label="Скругление нот" type="range" min="0" max="50" step="1">
+<label>Стиль нот <select id="noteStyle"><option value="glass">Стекло</option><option value="solid">Матовый</option><option value="neon">Неоновый контур</option></select></label>
+</details>
+<details class="scene-section"><summary>Цвета и фон</summary>
+<label>Цвет нот <select id="colorMode"><option value="lane">По дорожкам</option><option value="instrument">По инструментам</option><option value="single">Один цвет</option></select></label>
+<label>Палитра <select id="palette"><option value="aurora">Северное сияние</option><option value="ember">Янтарь</option><option value="ice">Лёд</option><option value="iris">Ирис</option></select></label>
+<div id="sceneColors"></div>
+<button class="button scene-subtle" id="resetSceneColors">Вернуть цвета палитры</button>
+<label>Фон <select id="backdrop"><option value="aurora">Мягкое сияние</option><option value="stars">Звёзды</option><option value="plain">Однотонный</option></select></label>
+<label>Цвет фона <input id="background" type="color"></label>
+</details>
+<details class="scene-section"><summary>Эффекты</summary>
+<label>Свечение <input id="glow" type="checkbox"></label>
+<label>Яркость свечения <output id="glowAmountValue"></output></label><input id="glowAmount" aria-label="Яркость свечения" type="range" min="0" max="100" step="1">
+<label>Искры <input id="sparks" type="checkbox"></label>
+<label>Количество искр <output id="sparkAmountValue"></output></label><input id="sparkAmount" aria-label="Количество искр" type="range" min="0" max="100" step="1">
+<label>Световые лучи <output id="raysValue"></output></label><input id="rays" aria-label="Световые лучи" type="range" min="0" max="100" step="1">
+<label>Кольца касания <output id="ringsValue"></output></label><input id="rings" aria-label="Кольца касания" type="range" min="0" max="100" step="1">
+<label>Световой след <output id="trailsValue"></output></label><input id="trails" aria-label="Световой след" type="range" min="0" max="100" step="1">
+<label>Подсветка клавиш <input id="keyLights" type="checkbox"></label>
+</details>
+<details class="scene-section"><summary>Качество</summary>
+<label>Частота кадров <select id="fps"><option value="30">30 FPS</option><option value="60">60 FPS</option></select></label>
+<label>Чёткость <select id="quality"><option value="1">Экономная</option><option value="1.5">Сбалансированная</option><option value="2">Высокая</option></select></label>
+</details>
+</div>
+</article></div>
+<div class="shade" id="stepSheet" hidden role="dialog" aria-modal="true" aria-labelledby="stepTitle"><article class="pref-card"><div class="pref-heading"><h2 id="stepTitle">Сетка</h2><button class="button" id="closeStep">Готово</button></div><div id="gridPreview" role="img"></div>
+
+<fieldset><legend>Вид сетки</legend><label>Деление сетки <select id="gridDivision"><option value="0">Как привязка</option><option value="1">1 удар</option><option value="2">1/2</option><option value="3">1/3</option><option value="4">1/4</option><option value="6">1/6</option><option value="8">1/8</option><option value="12">1/12</option><option value="16">1/16</option></select></label></fieldset><fieldset><legend>Размер нот</legend><label>Длина новой ноты <select id="noteSize"><option value="0">По сетке</option><option value="1">1 удар</option><option value="2">1/2</option><option value="3">1/3</option><option value="4">1/4</option><option value="6">1/6</option><option value="8">1/8</option><option value="12">1/12</option><option value="16">1/16</option></select></label><label>Привязка <select id="snap" aria-label="Привязка в долях удара"><option value="1">1 удар</option><option value="2">1/2</option><option value="3">1/3</option><option value="4" selected>1/4</option><option value="6">1/6</option><option value="8">1/8</option><option value="12">1/12</option><option value="16">1/16</option><option value="0">Свободно</option></select></label></fieldset></article></div>
+<div class="shade" id="laneSheet" hidden role="dialog" aria-modal="true" aria-labelledby="laneTitle"><article class="pref-card" id="laneOptions"><div class="pref-heading"><h2 id="laneTitle">Дорожки</h2><button class="button" id="closeLane" aria-label="Закрыть настройки дорожки">Готово</button></div><div id="laneList"><div class="lane-flags flag-head"><span></span><span>Дорожка</span><span>Фон</span><span>Звук</span></div><div id="ghostChoices"></div><button class="button" id="addLane" aria-label="Добавить дорожку">＋</button></div><div id="laneRename" hidden><label for="laneName">Название дорожки</label><input type="text" maxlength="48" id="laneName" aria-label="Название дорожки" autocomplete="off"><div class="sound-tabs"><button class="button" id="finishLaneRename">Готово</button><button class="button" id="deleteLane" aria-label="Удалить дорожку"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg></button></div></div><div id="laneDeleteConfirm" hidden><p id="laneDeleteName"></p><div class="sound-tabs"><button class="button" id="confirmLane">Удалить</button><button class="button" id="cancelLaneDelete">Отмена</button></div></div></article></div><div class="shade" id="instrumentSheet" hidden role="dialog" aria-modal="true" aria-labelledby="instrumentTitle"><article class="pref-card"><div class="pref-heading"><h2 id="instrumentTitle">Инструмент</h2><button class="button" id="closeInstrument">Готово</button></div><div id="currentInstrument"></div><div id="instrumentEditor" hidden><label>Название <input id="soundName" maxlength="48"></label><p id="soundSource"></p><div class="sound-tabs"><button class="button" id="soundBasicTab">Базовые</button><button class="button" id="soundAdvancedTab">Advanced</button></div><div id="soundEnvelope"></div><div id="sound-basic"></div><div id="soundAdvanced" hidden><fieldset id="sound-envelope"><legend>Огибающая громкости</legend></fieldset><fieldset id="sound-tuning"><legend>Высота</legend></fieldset><fieldset id="sound-filter"><legend>Фильтр</legend><label>Тип <select id="sound-filterType"><option value="off">Выключен</option><option value="lowpass">Низкие частоты · LP</option><option value="highpass">Высокие частоты · HP</option><option value="bandpass">Полоса · BP</option></select></label></fieldset><fieldset id="sound-sample"><legend>Сэмпл</legend><label>Петля <select id="sound-loop"><option value="original">Из инструмента</option><option value="off">Выключена</option></select></label><label>Реверс <input id="sound-reverse" type="checkbox"></label></fieldset></div><div class="sound-tabs"><button class="button" id="soundPreview">▶ Послушать</button><button class="button" id="soundReset">Сбросить параметры</button></div></div><div id="instrumentLibrary" hidden><div class="instrument-filters"><input id="instrumentSearch" type="search" placeholder="Найти инструмент" aria-label="Поиск инструментов" autocomplete="off"><select id="instrumentCategory" aria-label="Раздел инструментов"><option value="all">Все инструменты</option><option value="installed">Загруженные</option></select></div><div id="instrumentChoices"></div><p id="instrumentEmpty" role="status" hidden>Ничего не найдено</p></div><div id="instrumentSource" hidden></div><p id="instrumentStatus" role="status"></p><div id="instrumentDeleteConfirm" hidden><p id="instrumentDeleteText"></p><div class="instrument-delete"><button class="button" id="confirmInstrumentDelete">Удалить</button><button class="button" id="cancelInstrumentDelete">Отмена</button></div></div></article></div><div class="shade" id="importProgress" role="dialog" aria-modal="true" aria-labelledby="importTitle" hidden><article class="pref-card"><h2 id="importTitle">Импорт шкатулки</h2><p id="importStatus" role="status"></p><button class="button" id="cancelInstrumentImport">Отмена</button></article></div><div class="shade" id="exitSheet" role="dialog" aria-modal="true" aria-labelledby="exitTitle" hidden><article class="pref-card"><div class="pref-heading"><button class="button" id="cancelExit" aria-label="Вернуться в редактор">‹</button><h2 id="exitTitle">Сохранить трек перед выходом?</h2></div><div id="exitActions"><button class="button" id="exitSave">Сохранить и выйти</button><button class="button" id="exitDiscard">Выйти без сохранения</button></div><div id="exitChoices" hidden><button class="button" id="exitOverwrite">Заменить существующий</button><button class="button" id="exitNew">Сохранить как новый</button></div><div id="exitNameForm" hidden><label for="exitName">Название трека</label><input class="song-input" id="exitName" maxlength="80"><button class="button" id="exitConfirm">Сохранить и выйти</button></div><p>Без сохранения трек можно восстановить через «Загрузить последний трек».</p><p id="exitStatus" role="status"></p></article></div><script>
+'use strict';
+const byId=id=>document.getElementById(id);
+const names=['До','До♯','Ре','Ре♯','Ми','Фа','Фа♯','Соль','Соль♯','Ля','Ля♯','Си'];
+const pitchName=p=>names[p%12]+(Math.floor(p/12)-1);
+const instruments=[{"id":"vsco-piano-1","short":"П","name":"Пианино","gm":0,"asset":"piano","demo":60,"bytes":5523797},{"id":"lib-mda-grand-1","short":"ГП","name":"Grand Piano · MDA","gm":0,"asset":"bank-mda-grand-1","demo":60,"bytes":7683540},{"id":"lib-floe-musicbox-1","short":"Шк","name":"Шкатулка · FrozenPlain","gm":10,"asset":"musicbox-floe","demo":60,"bytes":21145294}];
+const visibleInstrumentIds=new Set(instruments.map(d=>d.id));
+const legacyInstruments={'classic':'vsco-piano-1','vsco-violin-1':'lib-vsco-violin-1','vsco-flute-1':'lib-vsco-flute-1','vsco-bass-1':'lib-vsco-bass-1'};
+const normalizeInstrument=id=>id===undefined?'vsco-piano-1':(Object.prototype.hasOwnProperty.call(legacyInstruments,id)?legacyInstruments[id]:id);
+const instrumentById=id=>instruments.find(item=>item.id===id);
+// Static SVG paths keep marks sharp and theme-aware without image/font downloads.
+const instrumentIcons={
+ piano:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v9h2V4m5 0v9h2V4M8 13v7m7-7v7"/>',
+ violin:'<path d="m15 8 5-5m-3-1 5 5M13 6l5 5-3 3c-2-1-3 0-3 2 0 3-4 6-7 3s0-7 3-7c2 0 3-1 2-3zM5 19l9-9m-1 12 8-13"/>',
+ flute:'<path d="m3 19 15-15 3 3L6 22zM16 6l3 3M6 17l1 1m2-4 1 1m2-4 1 1M18 3l1-1 3 3-1 1"/>',
+ bass:'<path d="M12 6V2h3M11 6h3v5c0 2 4 2 4 5 0 4-3 5-6 5s-6-1-6-5c0-3 4-3 4-5V8zM12 7v15M9 16h6"/>',
+ musicbox:'<path d="M3 12h18v8H3zM3 12l4-8h10l4 8M8 16h8M12 4v5"/><path d="M15 2v5l3-1V1z"/>',
+ trumpet:'<path d="M2 10h13l6-5v14l-6-5H5m-2-6v8m4-2v3c0 3 7 3 7 0v-7M8 7v5m3-5v5m3-5v5M7 7h2m1 0h2m1 0h2"/>'
+};
+const instrumentIconPrograms={0:'piano',1:'piano',2:'piano',3:'piano',4:'piano',5:'piano',10:'musicbox',32:'bass',40:'violin',43:'bass',56:'trumpet',73:'flute'};
+function paintInstrumentMark(el,def,width){
+ const icon=def?instrumentIconPrograms[def.gm]||'':'';
+ if(el.dataset.instrumentIcon!==icon){
+  el.dataset.instrumentIcon=icon;
+  el.innerHTML=icon?'<svg class="note-instrument" viewBox="0 0 24 24" preserveAspectRatio="xMinYMax meet" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+instrumentIcons[icon]+'</svg>':'';
+ }
+ const mark=def?.short||'Ин';
+ setView(el.dataset,'instrument',icon?'':width<16?Array.from(mark)[0]:mark);
+ setView(el,'title',def?.name||'Неизвестный инструмент');
+}
+
+const soundDefaults={volume:100,pan:0,transpose:0,fine:0,attack:null,release:null,delay:0,hold:0,decay:0,sustain:100,filter:'off',cutoff:16000,resonance:.7,start:0,end:100,reverse:false,loop:'original',velocity:1};
+const soundBounds={volume:[0,150],pan:[-100,100],transpose:[-24,24],fine:[-100,100],attack:[0,5],release:[.005,10],delay:[0,2],hold:[0,5],decay:[0,10],sustain:[0,100],cutoff:[20,20000],resonance:[.1,20],start:[0,99.9],end:[.1,100],velocity:[.25,3]};
+function soundSettings(raw={},strict=false){
+ const result={...soundDefaults};
+ if(!raw||typeof raw!=='object'||Array.isArray(raw))throw Error('Неверные настройки инструмента.');
+ for(const k of Object.keys(result))if(Object.prototype.hasOwnProperty.call(raw,k)){
+  const v=raw[k],bounds=soundBounds[k];
+  if((k==='attack'||k==='release')&&v===null){result[k]=null;continue}
+  const valid=bounds?typeof v==='number'&&Number.isFinite(v)&&v>=bounds[0]&&v<=bounds[1]&&(k!=='transpose'||Number.isInteger(v)):k==='reverse'?typeof v==='boolean':(k==='filter'?['off','lowpass','highpass','bandpass']:['original','off']).includes(v);
+  if(!valid){if(strict)throw Error('Некорректный параметр инструмента: '+k);continue}result[k]=v;
+ }
+ if(result.start>=result.end)throw Error('Начало сэмпла должно быть раньше конца.');
+ return result;
+}
+let projectInstruments=[{id:'inst-1',source:'vsco-piano-1',name:'Пианино',settings:soundSettings()}];
+function laneInstrument(lane,rack=projectInstruments){return rack.find(i=>i.id===lane.instrumentId&&i.source===lane.instrument)||rack.find(i=>i.source===lane.instrument)||{source:lane.instrument||'vsco-piano-1',name:instrumentById(lane.instrument)?.name||'Инструмент',settings:soundSettings()}}
+function addProjectInstrument(source,copy=null){
+ if(projectInstruments.length>=128)throw Error('В проекте может быть до 128 инструментов.');
+ let number=1;while(projectInstruments.some(i=>i.id==='inst-'+number))number++;
+ const base=copy?.name||instrumentById(source)?.name||'Инструмент';let name=base,n=2;
+ while(projectInstruments.some(i=>i.name===name))name=base.slice(0,42)+' '+n++;
+ const item={id:'inst-'+number,source,name,settings:soundSettings(copy?.settings)};projectInstruments.push(item);return item;
+}
+function reconcileRack(){
+ for(const lane of lanes){let item=laneInstrument(lane);if(!item.id)item=addProjectInstrument(item.source);lane.instrumentId=item.id}
+}
+const sourceUsed=id=>projectInstruments.some(i=>i.source===id)||lanes.some(l=>l.instrument===id);
+
+const sampleHost=typeof NotkaPlayer!=='undefined'&&typeof NotkaPlayer.instrumentData==='function'?NotkaPlayer:null;
+// Only app-owned source URLs may become links; track files cannot supply URLs.
+const instrumentSources=new Map([['lib-floe-musicbox-1',{name:'Music Box Suite Free · FrozenPlain',url:'https://www.frozenplain.com/product/music-box-suite-free'}]]);
+const builtinPresence=new Map(),pendingBuiltinData=new Map(),remoteAlternatives=new Map();
+const importHost=sampleHost&&['pickInstrument','instrumentResult','readInstrumentPackage','commitInstrumentImport','cancelInstrumentImport','hasImportedInstrument','deleteImportedInstrument'].every(k=>typeof sampleHost[k]==='function')?sampleHost:null;
+const floeId='lib-floe-musicbox-1';
+let sourceStep=0,sourceAway=false,importJob=null;
+function importedMusicbox(){return !!importHost?.hasImportedInstrument()}
+function saveSourceStep(){try{sampleHost?.soundWrite('musicbox-source-step',String(sourceStep))}catch{}}
+function restoreSourceStep(){try{const saved=sampleHost?.soundRead('musicbox-source-step');sourceStep=saved==='1'||saved==='2'?2:0;if(sourceStep)saveSourceStep()}catch{}}
+function sourceVisibility(){
+ if(document.hidden){if(sourceStep===1)sourceAway=true;return}
+ sourceResume();
+}
+function sourceResume(){
+ let returned=sourceAway;try{returned=returned||sampleHost?.soundRead('musicbox-source-step')==='2'}catch{}
+ if(sourceStep===1&&returned){sourceStep=2;sourceAway=false;saveSourceStep();renderMissingSounds();if(!byId('instrumentSheet').hidden)renderInstruments()}
+}
+
+function builtinAvailable(def){
+ if(!['lib-mda-grand-1','lib-floe-musicbox-1'].includes(def.id))return true;
+ if(!builtinPresence.has(def.id)){
+  if(typeof sampleHost?.instrumentAvailable==='function'){builtinPresence.set(def.id,!!sampleHost.instrumentAvailable(def.asset));return builtinPresence.get(def.id)}
+  let raw='';try{raw=sampleHost?.instrumentData(def.asset)||''}catch{}
+  builtinPresence.set(def.id,!!raw);
+  // Reuse the compatibility probe when decoding, without retaining it indefinitely.
+  if(raw){pendingBuiltinData.set(def.id,raw);setTimeout(()=>pendingBuiltinData.delete(def.id),30000)}
+ }
+ return builtinPresence.get(def.id);
+}
+function downloadableInstrument(id){const def=instrumentById(id);return def&&!def.remote&&!builtinAvailable(def)?remoteAlternatives.get(id):def}
+function instrumentReferences(trackLanes){return [...new Set(trackLanes.filter(l=>l.notes.length).map(l=>l.instrument))].filter(id=>instrumentSources.has(id)).map(id=>({id,...instrumentSources.get(id)}))}
+function availableInstrument(def){return !!def&&(def.remote?downloadedInstruments.has(def.id):builtinAvailable(def))}
+function authorLink(id){
+ const source=instrumentSources.get(id),group=document.createElement('div'),link=document.createElement('a'),button=document.createElement('button');
+ group.className='source-split';link.className='button source-link';link.href=source.url;link.rel='noopener noreferrer';link.textContent='Скачать ↗';
+ link.setAttribute('aria-label','Скачать у автора · '+source.name);link.onclick=()=>{flushDraft();if(!sourceStep){sourceStep=1;sourceAway=false;saveSourceStep()}};
+ button.className='button'+(sourceStep===2&&importHost?' import-ready':'');button.textContent='Импорт';button.setAttribute('aria-label','Импортировать Music Box Suite Free');
+ button.disabled=sourceStep!==2||!importHost||!!importJob;button.onclick=()=>importMusicbox();
+ group.append(link,button);return group;
+}
+function importReadError(raw){
+ const messages={'!uri':'Не выбран файл пакета.','!access':'Нет доступа к файлу. Выбери его из «Загрузок».','!package-read':'Файл недоступен или превышает 16 МБ.','!package-save':'Нет места для временного пакета.','!zip':'Не удалось открыть архив пакета.','!template':'Ошибка импортёра. Переустанови APK.','!sample':'Ошибка чтения звуковой записи.','!license':'Ошибка чтения лицензии.','!contents':'Пакет неполный.','!bank-save':'Не удалось сохранить инструмент. Проверь свободное место.'};
+ const code=String(raw||'!read').split(':')[0];
+ if(code==='!read'&&typeof importHost?.importReaderVersion!=='function')return 'Для исправления чтения пакета обнови APK до 0.51.';
+ return (messages[code]||'Не удалось прочитать пакет.')+' ['+String(raw||'!read').replace(/[^a-zA-Z0-9:!-]/g,'').slice(0,80)+']';
+}
+async function importMusicbox(){
+ if(!importHost||importJob||fileBusy||sourceStep!==2)return;
+ const job={cancelled:false};importJob=job;fileBusy=true;stop();flushDraft();
+ const progress=byId('importStatus');byId('importProgress').hidden=false;progress.textContent='Выбери скачанный файл .floe-pkg';byId('cancelInstrumentImport').disabled=false;
+ let message='';
+ try{
+  if(!importHost.pickInstrument())throw Error('Не удалось открыть выбор файла.');
+  let result;
+  while(!job.cancelled&&!(result=importHost.instrumentResult()))await new Promise(resolve=>setTimeout(resolve,250));
+  if(job.cancelled||result==='cancelled')return;
+  progress.textContent='Проверка пакета…';await new Promise(resolve=>setTimeout(resolve,30));
+  if(job.cancelled)return;
+  const raw=importHost.readInstrumentPackage();
+  if(raw==='!unsupported')throw Error('Это не поддерживаемый пакет Music Box Suite Free. Скачай файл .floe-pkg по левой кнопке.');
+  if(!raw||raw[0]==='!')throw Error(importReadError(raw));
+  const data=JSON.parse(raw),def=instrumentById(floeId);checkBank(data,def);
+  progress.textContent='Подготовка звука…';await unlock();
+  let bank;
+  try{bank=await decodeInstrumentBank(data,def,job)}catch(e){if(job.cancelled)return;throw Error('Не удалось прочитать FLAC. Обнови Android System WebView и повтори импорт.')}
+  if(job.cancelled)return;
+  if(!importHost.commitInstrumentImport())throw Error('Не удалось сохранить инструмент. Проверь свободное место.');
+  instrumentCache.set(floeId,bank);builtinPresence.set(floeId,true);pendingBuiltinData.delete(floeId);
+  message='Шкатулка импортирована.';
+ }catch(e){message=e.message||'Не удалось импортировать инструмент.'}
+ finally{
+  importHost.cancelInstrumentImport();importJob=null;fileBusy=false;byId('importProgress').hidden=true;
+  renderMissingSounds();renderInstruments();controls();trackActions();
+  if(message){soundMessage(message);byId('status').textContent=message}
+ }
+}
+byId('cancelInstrumentImport').onclick=()=>{if(importJob){importJob.cancelled=true;byId('cancelInstrumentImport').disabled=true;byId('importStatus').textContent='Отмена…'}};
+
+function renderMissingSounds(){
+ const box=byId('missingSounds');box.replaceChildren();
+ const missing=[...new Set(lanes.filter(l=>l.notes.length).map(l=>l.instrument))].filter(id=>instrumentSources.has(id)&&!availableInstrument(instrumentById(id)));
+ box.hidden=!missing.length;
+ for(const id of missing){const text=document.createElement('p');text.textContent='Нет звука: '+instrumentById(id).name+'.';box.append(text,authorLink(id))}
+ if(missing.length&&!importHost){const hint=document.createElement('p');hint.textContent='Для импорта установи APK 0.51.';box.append(hint)}
+}
+const newLane=name=>({name,muted:false,ghost:false,instrument:'vsco-piano-1',instrumentId:projectInstruments.find(i=>i.source==='vsco-piano-1')?.id,notes:[]});
+let lanes=[newLane('Дорожка 1')],activeLane=0,score=lanes[0].notes;
+const laneViews=new WeakMap(),voices=new Set();
+// Keep the saved background preference; selecting a lane temporarily reveals it for editing.
+const isBackground=lane=>lane.ghost&&lane!==lanes[activeLane];
+function renderLanes(){
+ if(!byId('laneSheet').hidden)renderLaneFlags();
+ renderMissingSounds();
+}
+function chooseLane(index){
+ if(running||index<0||index>=lanes.length)return;
+ finishGesture(true);contacts.clear();pinch=null;clearSelection();templateNote=null;
+ laneViews.set(lanes[activeLane],(y+h/2)/row);
+ activeLane=index;score=lanes[index].notes;
+ if(laneViews.has(lanes[index]))y=clampY(laneViews.get(lanes[index])*row-h/2);
+ renderLanes();if(!byId('laneSheet').hidden)syncLaneSheet();controls();paintSoon();trackChanged();
+}
+byId('addLane').onclick=()=>{
+ if(running)return;
+ let number=lanes.length+1;
+ const used=new Set(lanes.map(lane=>lane.name));
+ while(used.has('Дорожка '+number))number++;
+ lanes.push(newLane('Дорожка '+number));chooseLane(lanes.length-1);
+};
+function laneFlag(row,title,checked){
+ const label=document.createElement('label'),input=document.createElement('input');
+ input.type='checkbox';input.checked=checked;input.setAttribute('aria-label',title);
+ label.append(input);row.append(label);
+ return input;
+}
+let laneHold=null;
+function cancelLaneHold(){if(laneHold)clearTimeout(laneHold.timer);laneHold=null}
+function openLaneRename(index){
+ if(running||byId('laneSheet').hidden)return;
+ chooseLane(index);byId('laneList').hidden=true;byId('laneRename').hidden=false;byId('laneName').focus?.();byId('laneName').select?.();
+}
+function closeLaneRename(){
+ cancelLaneDelete();byId('laneName').blur?.();flushDraft();byId('laneRename').hidden=true;byId('laneList').hidden=false;renderLaneFlags();
+}
+function renderLaneFlags(){
+ cancelLaneHold();const list=byId('ghostChoices');list.replaceChildren();
+ lanes.forEach((lane,i)=>{
+  const row=document.createElement('div'),name=document.createElement('button'),icon=document.createElement('button');
+  row.className='lane-flags'+(i===activeLane?' lane-current':'');
+  icon.className='button lane-instrument';paintInstrumentMark(icon,instrumentById(laneInstrument(lane).source),24);
+  icon.setAttribute('aria-label','Инструмент · '+lane.name+' · '+laneInstrument(lane).name);icon.setAttribute('aria-haspopup','dialog');
+  icon.onclick=()=>{if(running)return;chooseLane(i);openLaneInstrument()};
+  name.className='button lane-name';name.textContent=lane.name;name.setAttribute('aria-pressed',String(i===activeLane));name.title='Удерживайте, чтобы переименовать';
+  let skip=false;
+  name.onpointerdown=e=>{
+   cancelLaneHold();skip=false;if(e.isPrimary===false||e.button>0)return;
+   name.setPointerCapture?.(e.pointerId);const hold={x:e.clientX,y:e.clientY,timer:0};laneHold=hold;
+   hold.timer=setTimeout(()=>{if(laneHold!==hold)return;skip=true;cancelLaneHold();openLaneRename(i)},1000);
+  };
+  name.onpointermove=e=>{if(laneHold&&Math.hypot(e.clientX-laneHold.x,e.clientY-laneHold.y)>10){skip=true;cancelLaneHold()}};
+  name.onpointerup=cancelLaneHold;name.onpointercancel=()=>{skip=true;cancelLaneHold()};name.onlostpointercapture=cancelLaneHold;
+  name.oncontextmenu=e=>e.preventDefault();name.onkeydown=e=>{if(e.key==='F2'){e.preventDefault();openLaneRename(i)}};
+  name.onclick=()=>{cancelLaneHold();if(skip){skip=false;return}if(running)return;chooseLane(i);closeLane()};
+  row.append(icon,name);
+  const box=laneFlag(row,'Фон · '+lane.name,!!lane.ghost);box.className=i===activeLane?'deferred':'';
+  box.onchange=()=>{lane.ghost=box.checked;controls();paintSoon();trackChanged()};
+  const sound=laneFlag(row,'Звук · '+lane.name,!lane.muted);
+  sound.onchange=()=>{lane.muted=!sound.checked;controls();trackChanged()};
+  list.append(row);
+ });
+}
+let pendingLaneDelete=null;
+function cancelLaneDelete(){pendingLaneDelete=null;byId('laneDeleteConfirm').hidden=true}
+byId('cancelLaneDelete').onclick=cancelLaneDelete;
+function closeLane(){cancelLaneHold();closeLaneRename();flushDraft();byId('laneSheet').hidden=true;byId('editLane').focus?.()}
+function syncLaneSheet(){
+ const lane=lanes[activeLane];
+ byId('laneName').value=lane.name;
+ renderLaneFlags();byId('deleteLane').disabled=lanes.length===1;cancelLaneDelete();
+}
+byId('editLane').onclick=()=>{
+ if(running)return;byId('laneRename').hidden=true;byId('laneList').hidden=false;syncLaneSheet();byId('laneSheet').hidden=false;byId('closeLane').focus?.();
+};
+byId('closeLane').onclick=()=>{if(!byId('laneRename').hidden)closeLaneRename();else closeLane()};
+byId('finishLaneRename').onclick=closeLaneRename;
+byId('laneName').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();closeLaneRename()}};
+byId('laneName').oninput=e=>{
+ const name=e.target.value.trim();cancelLaneDelete();
+ if(name){lanes[activeLane].name=name;renderLanes();renderLaneFlags();trackChanged(true)}
+};
+byId('laneName').onblur=()=>{byId('laneName').value=lanes[activeLane].name};
+byId('deleteLane').onclick=()=>{
+ if(running||lanes.length===1)return;pendingLaneDelete=lanes[activeLane];
+ byId('laneDeleteName').textContent='Удалить «'+pendingLaneDelete.name+'» вместе с нотами?';byId('laneDeleteConfirm').hidden=false;
+};
+byId('confirmLane').onclick=()=>{
+ if(running||pendingLaneDelete!==lanes[activeLane]||lanes.length===1||byId('laneDeleteConfirm').hidden)return;
+ const removing=activeLane;
+ chooseLane(removing>0?removing-1:1);
+ lanes.splice(removing,1);if(activeLane>removing)activeLane--;
+ closeLane();renderLanes();controls();trackChanged();
+};
+let bpm=100,current=-1,running=false,audio,master,timer,generation=0;
+async function unlock(){
+ if(!audio){
+   audio=new AudioContext();
+   const limiter=audio.createDynamicsCompressor();limiter.connect(audio.destination);
+   master=audio.createGain();master.gain.value=.65;master.connect(limiter);
+ }
+ if(audio.state!=='running')await audio.resume();
+}
+function audioFail(){if(byId('stage').hidden)stop();else leaveStage();byId('status').textContent='Звук недоступен. Попробуй нажать ещё раз.'}
+const instrumentCache=new Map(),instrumentLoads=new Map();
+let previewSerial=0,instrumentRequest=0;
+function instrumentError(){return Error('Для этих инструментов обнови APK «Нотки» до 0.32 или новее.')}
+async function prepareInstrument(id){
+ if(instrumentCache.has(id))return instrumentCache.get(id);
+ if(instrumentLoads.has(id))return instrumentLoads.get(id);
+ const def=instrumentById(id);
+ if(!def)throw Error('Инструмент отсутствует в каталоге. Подключись к интернету и открой редактор заново.');
+ if(!def.asset||!sampleHost)throw instrumentError();
+ const pending=(async()=>{
+  const data=readInstrumentData(def);checkBank(data,def);
+  const bank=await decodeInstrumentBank(data,def);
+  instrumentCache.set(id,bank);return bank;
+ })();
+ instrumentLoads.set(id,pending);
+ try{return await pending}finally{instrumentLoads.delete(id)}
+}
+async function decodeInstrumentBank(data,def,job=null){
+ checkBank(data,def);
+  const samples=[];
+  for(const sample of data.samples){
+   if(job?.cancelled)throw Error('Импорт отменён.');
+   if(!Number.isInteger(sample.root)||sample.root<0||sample.root>127||!Number.isFinite(sample.tune))throw Error('Повреждён набор звуков.');
+   const binary=atob(sample.data),bytes=new Uint8Array(binary.length);
+   for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+   // Callbacks also work on WebViews whose decodeAudioData does not return a Promise.
+   const buffer=await new Promise((resolve,reject)=>audio.decodeAudioData(bytes.buffer,resolve,reject));
+   if(sample.loop&&(!Array.isArray(sample.loop)||sample.loop.length!==2||sample.loop[0]<0||sample.loop[0]>=sample.loop[1]||sample.loop[1]/data.sampleRate>buffer.duration))throw Error('Повреждена петля инструмента.');
+   samples.push({root:sample.root,tune:sample.tune,loop:sample.loop,rr:sample.rr||0,buffer});
+  }
+  samples.sort((a,b)=>a.root-b.root);
+  const bank={samples,roundRobins:data.roundRobins||1,rate:data.sampleRate,gain:data.gain,attack:data.attack,release:data.release};
+  if(![bank.rate,bank.gain,bank.attack,bank.release].every(Number.isFinite)||bank.rate<8000||bank.gain<=0||bank.gain>1||bank.attack<0||bank.attack>1||bank.release<.01||bank.release>3)throw Error('Повреждены параметры инструмента.');
+ return bank;
+}
+function silenceVoice(sources){
+ for(const source of sources){try{source.stop()}catch{}try{source.disconnect()}catch{}}
+ sources.dispose?.();voices.delete(sources);
+}
+const reverseBuffers=new WeakMap();
+function reverseBuffer(context,buffer){
+ if(reverseBuffers.has(buffer))return reverseBuffers.get(buffer);
+ const reversed=context.createBuffer(buffer.numberOfChannels,buffer.length,buffer.sampleRate);
+ for(let channel=0;channel<buffer.numberOfChannels;channel++){const from=buffer.getChannelData(channel),to=reversed.getChannelData(channel);for(let i=0;i<from.length;i++)to[i]=from[from.length-1-i]}
+ reverseBuffers.set(buffer,reversed);return reversed;
+}
+function envelopePlan(bank,s,length,volume){
+ const attack=s.attack??Math.min(bank.attack,length/2),release=s.release??bank.release,level=bank.gain*(s.volume/100)*Math.pow(volume/100,s.velocity);
+ const knots=[[0,0],[s.delay,0],[s.delay+attack,level],[s.delay+attack+s.hold,level],[s.delay+attack+s.hold+s.decay,level*s.sustain/100]];
+ const points=[...new Map(knots.map(p=>[p[0],p[1]])).entries()].sort((a,b)=>a[0]-b[0]);
+ const before=t=>{let prior=points[0];for(const point of points.slice(1)){if(t<point[0])return prior[1]+(point[1]-prior[1])*(t-prior[0])/(point[0]-prior[0]);prior=point}return prior[1]};
+ const offLevel=before(length),stops=points.filter(p=>p[0]<length).concat([[length,offLevel],[length+release,0]]);
+ const value=t=>t<=length?before(t):Math.max(0,offLevel*(1-(t-length)/release));
+ return {stops,value,release};
+}
+function createInstrumentVoice(context,destination,bank,rawSettings,pitch,when,length,volume,elapsed=0,variant=0){
+ const s=soundSettings(rawSettings);if(!volume||!s.volume)return;
+ if(s.filter!=='off'&&!context.createBiquadFilter)throw Error('Для фильтра обнови Android System WebView.');
+ if(s.pan!==0&&!context.createStereoPanner)throw Error('Для панорамы обнови Android System WebView.');
+ const tuned=pitch+s.transpose,group=variant%(bank.roundRobins||1),pool=bank.samples.filter(sample=>(sample.rr||0)===group);let sample=pool[0]||bank.samples[0];
+ for(const candidate of pool)if(Math.abs(candidate.root-tuned)<Math.abs(sample.root-tuned))sample=candidate;
+ const buffer=s.reverse?reverseBuffer(context,sample.buffer):sample.buffer,rate=Math.pow(2,(tuned-sample.root+(sample.tune+s.fine)/100)/12),low=buffer.duration*s.start/100,high=buffer.duration*s.end/100;
+ let loopLow=0,loopHigh=0;
+ if(sample.loop&&s.loop==='original'){
+  loopLow=sample.loop[0]/bank.rate;loopHigh=sample.loop[1]/bank.rate;
+  if(s.reverse){const old=loopLow;loopLow=buffer.duration-loopHigh;loopHigh=buffer.duration-old}
+ }
+ const looping=loopHigh>loopLow&&loopLow>=low&&loopHigh<=high;
+ let offset=low+elapsed*rate;if(looping&&offset>=loopHigh)offset=loopLow+(offset-loopLow)%(loopHigh-loopLow);
+ const envelope=envelopePlan(bank,s,length,volume),remaining=Math.min(length+envelope.release-elapsed,looping?Infinity:(high-offset)/rate);
+ if(offset>=high||remaining<=0)return;
+ const source=context.createBufferSource(),env=context.createGain(),nodes=[source,env];source.buffer=buffer;source.playbackRate.value=rate;
+ if(looping){source.loop=true;source.loopStart=loopLow;source.loopEnd=loopHigh}
+ env.gain.setValueAtTime(envelope.value(elapsed),when);
+ for(const [time,value] of envelope.stops)if(time>elapsed)env.gain.linearRampToValueAtTime(value,when+time-elapsed);
+ source.connect(env);let tail=env;
+ if(s.filter!=='off'){
+  const filter=context.createBiquadFilter();filter.type=s.filter;filter.frequency.value=Math.min(s.cutoff,context.sampleRate*.49);filter.Q.value=s.resonance;tail.connect(filter);tail=filter;nodes.push(filter);
+ }
+ if(s.pan!==0){
+  const pan=context.createStereoPanner();pan.pan.value=s.pan/100;tail.connect(pan);tail=pan;nodes.push(pan);
+ }
+ tail.connect(destination);const sources=[source];sources.dispose=()=>{for(const node of nodes){try{node.disconnect()}catch{}}};
+ source.start(when,offset);source.stop(when+remaining);return sources;
+}
+const auditionVariants=new Map();
+function instrumentNote(id,pitch,when,length,volume=100,settings={},variant=null,elapsed=0){
+ if(volume===0)return;
+ while(voices.size>=64)silenceVoice(voices.values().next().value);
+ const bank=instrumentCache.get(id);if(!bank)throw Error('Инструмент ещё не загружен.');
+ if(variant===null){variant=auditionVariants.get(id)||0;auditionVariants.set(id,variant+1)}
+ const sources=createInstrumentVoice(audio,master,bank,settings,pitch,when,length,volume,elapsed,variant);if(!sources)return;
+ voices.add(sources);sources[0].onended=()=>{sources.dispose();voices.delete(sources)};return sources;
+}
+async function preview(pitch,volume=100){
+ if(!volume)return;
+ const lane=lanes[activeLane],id=lane.instrument||'vsco-piano-1',token=++previewSerial,epoch=generation;
+ try{
+  await unlock();await prepareInstrument(id);
+  if(token===previewSerial&&epoch===generation&&lane===lanes[activeLane]&&id===(lane.instrument||'vsco-piano-1')&&!running&&!document.hidden)instrumentNote(id,pitch,audio.currentTime+.006,.48,volume,laneInstrument(lane).settings);
+ }catch(e){if(token===previewSerial&&epoch===generation){byId('status').textContent=e.message||'Звук недоступен.'}}
+}
+const catalogHost=sampleHost&&['soundRead','soundWrite','soundDelete','soundExists','soundDownload','soundStatus','soundText','soundHash','soundValid','soundDiscard'].every(key=>typeof sampleHost[key]==='function')?sampleHost:null;
+const downloadedInstruments=new Set();
+let catalogJob=null,catalogStarted=false,bankJob=null,pendingInstrumentDelete=null;
+const catalogError='Для каталога инструментов обнови APK до 0.33 или новее.';
+const catalogKey='catalog';
+function verifySound(raw){
+ if(typeof raw!=='string'||!raw||raw.length>=8388608)throw Error('Файл инструмента недоступен или слишком велик.');
+ const envelope=JSON.parse(raw);
+ if(typeof envelope.record!=='string'||typeof envelope.signature!=='string'||!catalogHost.soundValid(envelope.record,envelope.signature))throw Error('Не удалось проверить подпись набора звуков.');
+ return JSON.parse(envelope.record);
+}
+function parseSoundCatalog(raw){
+ if(typeof raw!=='string'||raw.length>262144)throw Error('Некорректный каталог звуков.');
+ const data=verifySound(raw),seen=new Set(),assets=new Set();
+ if(data.kind!=='notka.instruments.1'||!Number.isInteger(data.version)||data.version<1||!Array.isArray(data.instruments)||data.instruments.length>200)throw Error('Неизвестный каталог звуков.');
+ const entries=data.instruments.map(d=>{
+  if(!d||typeof d.id!=='string'||!/^lib-[a-z0-9-]{1,43}$/.test(d.id)||seen.has(d.id)||typeof d.asset!=='string'||!/^bank-[a-z0-9-]{1,42}$/.test(d.asset)||assets.has(d.asset)||
+    typeof d.name!=='string'||!d.name.trim()||d.name.length>48||typeof d.short!=='string'||!/^[-\p{L}\p{N}]{1,3}$/u.test(d.short)||
+    !Number.isInteger(d.gm)||d.gm<0||d.gm>127||!Number.isInteger(d.demo)||d.demo<24||d.demo>119||
+    !Number.isInteger(d.revision)||d.revision<1||d.revision>65535||!Number.isInteger(d.bytes)||d.bytes<100||d.bytes>=8388608||
+    typeof d.sha256!=='string'||!/^[A-Za-z0-9+/]{43}=$/.test(d.sha256))throw Error('Некорректный инструмент в каталоге.');
+  seen.add(d.id);assets.add(d.asset);
+  return {id:d.id,name:d.name.trim(),short:d.short,asset:d.asset,gm:d.gm,demo:d.demo,revision:d.revision,bytes:d.bytes,sha256:d.sha256,remote:true};
+ });
+ for(const old of instruments.filter(d=>d.remote)){
+  const next=entries.find(d=>d.id===old.id);
+  if(!next||next.asset!==old.asset||next.sha256!==old.sha256||next.revision!==old.revision)throw Error('Каталог изменил существующий инструмент. Сохранена предыдущая версия.');
+ }
+ return entries;
+}
+function mergeSoundCatalog(entries){
+ for(const entry of entries){
+  remoteAlternatives.set(entry.id,entry);
+  const index=instruments.findIndex(d=>d.id===entry.id);
+  if(index<0)instruments.push(entry);else if(instruments[index].remote)instruments[index]=entry;
+  if(catalogHost.soundExists(entry.asset))downloadedInstruments.add(entry.id);
+ }
+ renderLanes();paintSoon();if(!byId('instrumentSheet').hidden)renderInstruments();
+}
+const shippedSoundCatalog="{\"record\":\"{\\\"kind\\\":\\\"notka.instruments.1\\\",\\\"version\\\":6,\\\"instruments\\\":[{\\\"id\\\":\\\"lib-vsco-trumpet-1\\\",\\\"asset\\\":\\\"bank-trumpet-1\\\",\\\"name\\\":\\\"\\\\u0422\\\\u0440\\\\u0443\\\\u0431\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0422\\\\u0440\\\",\\\"gm\\\":56,\\\"demo\\\":67,\\\"revision\\\":1,\\\"bytes\\\":1435112,\\\"sha256\\\":\\\"hiZHM1m3Psfki5KTh75oWLijGoOW3FbWZ1IRnPJtwpY=\\\"},{\\\"id\\\":\\\"lib-vsco-violin-1\\\",\\\"asset\\\":\\\"bank-violin-1\\\",\\\"name\\\":\\\"\\\\u0421\\\\u043a\\\\u0440\\\\u0438\\\\u043f\\\\u043a\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0421\\\\u043a\\\",\\\"gm\\\":40,\\\"demo\\\":69,\\\"revision\\\":1,\\\"bytes\\\":1913241,\\\"sha256\\\":\\\"l4HKyRDDBJBeMZ2ORrlKEorxIrqG2tj9AXS9DrzhPWc=\\\"},{\\\"id\\\":\\\"lib-vsco-flute-1\\\",\\\"asset\\\":\\\"bank-flute-1\\\",\\\"name\\\":\\\"\\\\u0424\\\\u043b\\\\u0435\\\\u0439\\\\u0442\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0424\\\",\\\"gm\\\":73,\\\"demo\\\":72,\\\"revision\\\":1,\\\"bytes\\\":1674175,\\\"sha256\\\":\\\"JTvrMkDiYffQaLoQRNUDRl5deFq+RSRVi4TyvDGzKzQ=\\\"},{\\\"id\\\":\\\"lib-vsco-bass-1\\\",\\\"asset\\\":\\\"bank-bass-1\\\",\\\"name\\\":\\\"\\\\u041a\\\\u043e\\\\u043d\\\\u0442\\\\u0440\\\\u0430\\\\u0431\\\\u0430\\\\u0441\\\",\\\"short\\\":\\\"\\\\u041a\\\\u0431\\\",\\\"gm\\\":32,\\\"demo\\\":40,\\\"revision\\\":1,\\\"bytes\\\":1449224,\\\"sha256\\\":\\\"c04tJ6rlL2VWSpRaEaUbWk1IAmypj0KDdeTdu7HcnTY=\\\"},{\\\"id\\\":\\\"lib-musicbox-1\\\",\\\"asset\\\":\\\"bank-musicbox-1\\\",\\\"name\\\":\\\"\\\\u041c\\\\u0443\\\\u0437\\\\u044b\\\\u043a\\\\u0430\\\\u043b\\\\u044c\\\\u043d\\\\u0430\\\\u044f \\\\u0448\\\\u043a\\\\u0430\\\\u0442\\\\u0443\\\\u043b\\\\u043a\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0428\\\\u043a\\\",\\\"gm\\\":10,\\\"demo\\\":84,\\\"revision\\\":1,\\\"bytes\\\":585417,\\\"sha256\\\":\\\"txioejeQCS+r8LqjYRWgUZ0/qcNjtmrHbwfXM/gTd08=\\\"},{\\\"id\\\":\\\"lib-mda-grand-1\\\",\\\"asset\\\":\\\"bank-mda-grand-1\\\",\\\"name\\\":\\\"Grand Piano \\\\u00b7 MDA\\\",\\\"short\\\":\\\"\\\\u0413\\\\u041f\\\",\\\"gm\\\":0,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":7684380,\\\"sha256\\\":\\\"/RndDOlwu2e7ulj/hDyvbBkm2/qRpZLcTQHRBrfgKNs=\\\"}]}\",\"signature\":\"S4iE4v8J6kndco2PuaZzwB0ngSzA2+pS/zddDFWT1adpNCFeDM/ukGPehYtqux3FOUsgXR1N/HBOJv1DK7vAGTvYJeUE8bNtfiA/js3n7Z2RbL3H4TrtHyfx+vk71qKARu4E/yKXBKbScE+IBjR1QmbxwbjKdEAYHeberw9rVet8P+HpSCHvnj/H670ptVGRe/rDFj8eIhUt0NvAeJ4vIq4bZnGTc0ITa0V58knD36iSJFYZTppjT3GCxj74nJsPSh76bAiiQxObpw1HzREv4YPM8S/OSLrEGLMCq7GVWlLWiCCxIhc/3YiJWAZJ+XL+CrhcNFBjv4NLFzFb4yNhs9eOALovr34RZwm4S7bIDmWaxqGKTc9nrm/mu4+FqN5wMilBpizdyF00EzBRR0/sx8YW/Pi5W9kV9qghrWWUJUnUlS9u/BnAjNHM03uAGMVVLoINjR7kR5lpQj6MEgCGCRUabGVeqORfUV/M17YjPD+gXs8nNQf1DPmj4kaf3FCj\"}";
+function restoreSoundCatalog(){
+ if(!catalogHost)return;
+ try{mergeSoundCatalog(parseSoundCatalog(shippedSoundCatalog))}catch{}
+ for(const kind of ['pending-catalog','pending-bank']){
+  try{const id=catalogHost.soundRead(kind);if(/^\d+$/.test(id||''))catalogHost.soundDiscard(id);catalogHost.soundDelete(kind)}catch{}
+ }
+ try{const raw=catalogHost.soundRead(catalogKey);if(raw)mergeSoundCatalog(parseSoundCatalog(raw))}catch{}
+}
+function soundMessage(message){byId('instrumentStatus').textContent=message}
+async function fetchSound(asset,job,timeout){
+ const id=catalogHost.soundDownload(asset);
+ if(!id||!/^\d+$/.test(id))throw Error('Не удалось начать загрузку.');
+ job.id=id;const pending=asset===catalogKey?'pending-catalog':'pending-bank';
+ if(!catalogHost.soundWrite(pending,id)){catalogHost.soundDiscard(id);throw Error('Недостаточно места для загрузки.')}
+ const until=Date.now()+timeout;
+ try{
+  while(true){
+   if(job.cancelled)throw Error('Загрузка отменена.');
+   const status=catalogHost.soundStatus(id);
+   if(status===8)return {raw:catalogHost.soundText(id),hash:asset===catalogKey?null:catalogHost.soundHash(id)};
+   if(status===16)throw Error('Загрузка не удалась. Проверь интернет и свободное место.');
+   if(Date.now()>until)throw Error('Загрузка заняла слишком много времени. Попробуй ещё раз.');
+   await new Promise(resolve=>setTimeout(resolve,450));
+  }
+ }finally{catalogHost.soundDiscard(id);catalogHost.soundDelete(pending)}
+}
+async function checkSoundCatalog(){
+ if(!catalogHost||catalogStarted)return;
+ catalogStarted=true;catalogJob={};
+ try{
+  const result=await fetchSound(catalogKey,catalogJob,20000),entries=parseSoundCatalog(result.raw);
+  if(!catalogHost.soundWrite(catalogKey,result.raw))throw Error('Не удалось сохранить каталог. Проверь свободное место.');
+  mergeSoundCatalog(entries);
+ }catch(e){if(!bankJob)soundMessage('Каталог недоступен. Загруженные инструменты работают без интернета.')}
+ finally{catalogJob=null;if(!byId('instrumentSheet').hidden)renderInstruments()}
+}
+function checkBank(data,def){
+ if(data?.format!=='notka.instrument.1'||data.id!==def.asset||data.revision!==(def.revision||1)||!Array.isArray(data.samples)||!data.samples.length||data.samples.length>128)throw Error('Файл не соответствует выбранному инструменту.');
+ if(![data.sampleRate,data.gain,data.attack,data.release].every(Number.isFinite)||data.sampleRate<8000||data.sampleRate>96000||data.gain<=0||data.gain>1||data.attack<0||data.attack>1||data.release<.01||data.release>3)throw Error('Повреждены параметры инструмента.');
+ if(data.roundRobins!==undefined&&(!Number.isInteger(data.roundRobins)||data.roundRobins<1||data.roundRobins>8))throw Error('Повреждены варианты удара.');
+ for(const s of data.samples){
+  if(s.rr!==undefined&&(!Number.isInteger(s.rr)||s.rr<0||s.rr>=(data.roundRobins||1)))throw Error('Повреждён вариант удара.');
+  if(!Number.isInteger(s.root)||s.root<0||s.root>127||!Number.isFinite(s.tune)||Math.abs(s.tune)>1200||typeof s.data!=='string'||s.data.length>2097152||s.data.length<60)throw Error('Повреждён набор звуков.');
+  if(s.loop&&(!Array.isArray(s.loop)||s.loop.length!==2||!s.loop.every(Number.isInteger)||s.loop[0]<0||s.loop[0]>=s.loop[1]))throw Error('Повреждена петля инструмента.');
+ }
+}
+function readInstrumentData(def){
+ if(!def.remote){
+  const raw=pendingBuiltinData.get(def.id)||sampleHost.instrumentData(def.asset);pendingBuiltinData.delete(def.id);
+  if(raw){builtinPresence.set(def.id,true);return JSON.parse(raw)}
+  builtinPresence.set(def.id,false);
+  if(remoteAlternatives.has(def.id))return readInstrumentData(remoteAlternatives.get(def.id));
+  renderMissingSounds();
+  if(instrumentSources.has(def.id))throw Error('Шкатулка FrozenPlain отсутствует. Скачай пакет у автора и импортируй его в библиотеке инструментов.');
+  throw Error('Встроенный инструмент недоступен. Обнови APK.');
+ }
+ if(!catalogHost)throw Error(catalogError);
+ if(!downloadedInstruments.has(def.id))throw Error('Сначала скачай «'+def.name+'» в списке инструментов.');
+ try{const data=verifySound(catalogHost.soundRead(def.asset));checkBank(data,def);return data}
+ catch(e){downloadedInstruments.delete(def.id);renderInstruments();throw Error('Не удалось прочитать «'+def.name+'». Скачай инструмент ещё раз.')}
+}
+async function downloadInstrument(id){
+ const def=downloadableInstrument(id);if(!catalogHost||!def?.remote||bankJob)return;
+ const job={def,cancelled:false};bankJob=job;renderInstruments();soundMessage('Скачиваем «'+def.name+'»…');
+ try{
+  const result=await fetchSound(def.asset,job,180000);
+  if(job.cancelled)throw Error('Загрузка отменена.');
+  if(typeof result.raw!=='string'||result.raw.length!==def.bytes||result.hash!==def.sha256)throw Error('Загруженный файл повреждён. Попробуй ещё раз.');
+  checkBank(verifySound(result.raw),def);
+  if(!catalogHost.soundWrite(def.asset,result.raw))throw Error('Не удалось сохранить инструмент. Проверь свободное место.');
+  downloadedInstruments.add(id);soundMessage('Инструмент «'+def.name+'» загружен.');
+ }catch(e){soundMessage(job.cancelled?'Загрузка отменена.':e.message||'Не удалось скачать инструмент.')}
+ finally{bankJob=null;renderInstruments()}
+}
+function cancelInstrumentDownload(){if(bankJob){bankJob.cancelled=true;if(bankJob.id)catalogHost.soundDiscard(bankJob.id)}}
+function askInstrumentDelete(id){
+ const def=downloadableInstrument(id);
+ if((!def?.remote&&!(id===floeId&&importedMusicbox()))||sourceUsed(id)||instrumentLoads.has(id)||importJob)return;
+ pendingInstrumentDelete=id;byId('instrumentDeleteText').textContent='Удалить «'+def.name+'» с телефона?';byId('instrumentDeleteConfirm').hidden=false;
+}
+function cancelInstrumentDelete(){pendingInstrumentDelete=null;byId('instrumentDeleteConfirm').hidden=true}
+function deleteInstrument(){
+ const id=pendingInstrumentDelete,def=downloadableInstrument(id);
+ if((!def?.remote&&!(id===floeId&&importedMusicbox()))||!catalogHost||sourceUsed(id)||instrumentLoads.has(id)||importJob){cancelInstrumentDelete();return}
+ if(id===floeId&&importedMusicbox()?importHost.deleteImportedInstrument():catalogHost.soundDelete(def.asset)){downloadedInstruments.delete(id);instrumentCache.delete(id);builtinPresence.delete(id);pendingBuiltinData.delete(id);renderMissingSounds();soundMessage('Инструмент удалён. Его можно скачать снова.')}
+ else soundMessage('Не удалось удалить инструмент.');
+ cancelInstrumentDelete();renderInstruments();
+}
+const instrumentGroups=[['keys','Клавишные'],['bells','Колокольчики и шкатулки'],['organs','Органы'],['guitars','Гитары'],['bass','Басы'],['strings','Струнные'],['brass','Медные духовые'],['winds','Деревянные духовые'],['synth','Синтезаторы'],['world','Народные'],['percussion','Ударные'],['other','Прочее']];
+function instrumentGroup(def){
+ const gm=def.gm;
+ return gm<8?'keys':gm<16?'bells':gm<24?'organs':gm<32?'guitars':gm<40?'bass':gm<56?'strings':gm<64?'brass':gm<80?'winds':gm<104?'synth':gm<112?'world':gm<120?'percussion':'other';
+}
+const normalizeInstrumentSearch=s=>String(s||'').toLowerCase().replace(/ё/g,'е').trim();
+const instrumentSearchAliases={0:'piano пианино рояль',10:'music box musicbox шкатулка',32:'bass контрабас',40:'violin скрипка',56:'trumpet труба',73:'flute флейта'};
+let instrumentQuery='',instrumentCategory='all';
+function matchingInstruments(){
+ const words=normalizeInstrumentSearch(instrumentQuery).split(/\s+/).filter(Boolean);
+ return instruments.filter(def=>{
+  if(!visibleInstrumentIds.has(def.id))return false;
+  const group=instrumentGroup(def);
+  if(instrumentCategory==='installed'&&!availableInstrument(def)&&!downloadedInstruments.has(def.id))return false;
+  if(!['all','installed',group].includes(instrumentCategory))return false;
+  const text=normalizeInstrumentSearch(def.name+' '+(instrumentSearchAliases[def.gm]||'')+(def.id==='lib-mda-grand-1'?' гранд':''));
+  return words.every(word=>text.includes(word));
+ });
+}
+byId('instrumentSearch').oninput=e=>{instrumentQuery=e.target.value;renderInstruments()};
+byId('instrumentCategory').onchange=e=>{instrumentCategory=e.target.value;renderInstruments()};
+function renderInstruments(){
+ const sourceBox=byId('instrumentSource');sourceBox.replaceChildren();
+ const missingBox=instrumentById('lib-floe-musicbox-1');sourceBox.hidden=availableInstrument(missingBox);
+ if(!sourceBox.hidden&&!importHost){const hint=document.createElement('p');hint.textContent='Для импорта установи APK 0.51.';sourceBox.append(hint)}
+ const list=byId('instrumentChoices');list.replaceChildren();
+ const categories=byId('instrumentCategory');categories.replaceChildren();
+ for(const [value,label] of [['all','Все инструменты'],['installed','Загруженные'],...instrumentGroups.filter(([id])=>instruments.some(def=>visibleInstrumentIds.has(def.id)&&instrumentGroup(def)===id))]){
+  const option=document.createElement('option');option.value=value;option.textContent=label;categories.append(option);
+ }
+ categories.value=instrumentCategory;
+ const matches=matchingInstruments();byId('instrumentEmpty').hidden=matches.length>0;
+ let previousGroup='';
+ for(const def of matches.sort((a,b)=>instrumentGroups.findIndex(g=>g[0]===instrumentGroup(a))-instrumentGroups.findIndex(g=>g[0]===instrumentGroup(b)))){
+  const group=instrumentGroup(def);
+  if(group!==previousGroup){const heading=document.createElement('h3');heading.className='instrument-group';heading.textContent=instrumentGroups.find(g=>g[0]===group)[1];list.append(heading);previousGroup=group}
+  const row=document.createElement('div'),button=document.createElement('button'),meta=document.createElement('small');row.className='instrument-row';
+  const builtin=!def.remote&&builtinAvailable(def),installed=builtin||downloadedInstruments.has(def.id),used=sourceUsed(def.id);
+  button.className='button instrument-pick';button.textContent=def.name;
+  button.setAttribute('aria-pressed',String((lanes[activeLane].instrument||'vsco-piano-1')===def.id));
+  button.disabled=!installed||running||isBackground(lanes[activeLane]);button.setAttribute('aria-label','Добавить в проект · '+def.name);
+  button.onclick=()=>selectInstrument(def.id);row.append(button);
+  meta.textContent=((def.id===floeId&&importedMusicbox()?Number(importHost.importedBytes?.())||def.bytes:def.bytes||0)/1048576).toFixed(1).replace('.',',')+' МБ';row.append(meta);
+  {
+   const action=document.createElement('button');action.className='button instrument-action';
+   const loading=bankJob?.def.id===def.id;
+   action.textContent=loading?'Отмена':installed?'Удалить…':'Скачать';
+   action.setAttribute('aria-label',(loading?'Отменить загрузку':installed?'Удалить':'Скачать')+' · '+def.name);
+   action.disabled=loading?bankJob.cancelled:installed?(used||instrumentLoads.has(def.id)):!!bankJob;
+   action.onclick=()=>loading?cancelInstrumentDownload():installed?askInstrumentDelete(def.id):downloadInstrument(def.id);
+   if(builtin&&!(def.id===floeId&&importedMusicbox())){action.textContent='Удалить';action.disabled=true;action.title='Входит в APK'}
+   if(!installed&&instrumentSources.has(def.id)){const link=authorLink(def.id);link.className+=' instrument-action';row.append(link);meta.textContent='';}else row.append(action);
+  }
+  list.append(row);
+ }
+
+}
+async function selectInstrument(id){
+ const def=instrumentById(id),lane=lanes[activeLane];
+ if(!def||running||isBackground(lane)||byId('instrumentSheet').hidden)return;
+ const token=++instrumentRequest;cancelInstrumentDelete();
+ soundMessage(def.asset&&!instrumentCache.has(id)?'Загрузка звуков…':'');
+ try{
+  await unlock();await prepareInstrument(id);
+  if(token!==instrumentRequest||lane!==lanes[activeLane]||isBackground(lane)||running||byId('instrumentSheet').hidden||document.hidden)return;
+  previewSerial++;for(const sources of voices)silenceVoice(sources);
+  const item=addProjectInstrument(id);lane.instrument=id;lane.instrumentId=item.id;renderLanes();renderInstruments();showInstrumentView('library');trackChanged();paintSoon();
+  soundMessage('');instrumentNote(id,def.demo||60,audio.currentTime+.006,.8,80);
+ }catch(e){if(token===instrumentRequest)soundMessage(e.message||'Не удалось загрузить звук.')}
+}
+function closeInstrument(){
+ flushDraft();instrumentRequest++;previewSerial++;cancelInstrumentDelete();byId('instrumentSheet').hidden=true;if(!byId('laneSheet').hidden)syncLaneSheet();byId('closeLane').focus?.();
+ if(!running)for(const sources of voices)silenceVoice(sources);
+}
+function openLaneInstrument(){
+ if(running||isBackground(lanes[activeLane]))return;
+ finishGesture();clearSelection();paintSoon();renderInstruments();
+ byId('instrumentSheet').hidden=false;reconcileRack();showInstrumentView('library');byId('closeInstrument').focus?.();
+};
+byId('closeInstrument').onclick=closeInstrument;
+byId('cancelInstrumentDelete').onclick=cancelInstrumentDelete;
+byId('confirmInstrumentDelete').onclick=deleteInstrument;
+
+let editingInstrument=null,instrumentView='library';
+function showInstrumentView(view){
+ instrumentView=view;byId('currentInstrument').hidden=view==='edit';byId('instrumentLibrary').hidden=view!=='library';byId('instrumentEditor').hidden=view!=='edit';
+ byId('instrumentTitle').textContent=view==='edit'?'Настройка инструмента':'Инструменты';
+ renderCurrentInstrument();
+}
+function assignProjectInstrument(id){
+ const item=projectInstruments.find(i=>i.id===id);if(!item||running)return;
+ const lane=lanes[activeLane];lane.instrument=item.source;lane.instrumentId=item.id;
+ renderLanes();renderCurrentInstrument();paintSoon();trackChanged();
+}
+function renderCurrentInstrument(){
+ const list=byId('currentInstrument');list.replaceChildren();
+ const item=laneInstrument(lanes[activeLane]);
+ const row=document.createElement('div');row.className='current-sound';
+ const name=document.createElement('button');name.className='button';name.textContent=item.name;name.setAttribute('aria-label','Текущий инструмент · '+item.name);name.onclick=()=>openInstrumentSettings(item.id);
+ const settings=document.createElement('button');settings.className='button';settings.textContent='⚙';settings.setAttribute('aria-label','Настроить '+item.name);settings.onclick=name.onclick;
+ const copy=document.createElement('button');copy.className='button';copy.textContent='⧉';copy.setAttribute('aria-label','Копировать '+item.name);copy.onclick=()=>{try{const next=addProjectInstrument(item.source,item);assignProjectInstrument(next.id);openInstrumentSettings(next.id)}catch(e){soundMessage(e.message)}};
+ row.append(name,settings,copy);list.append(row);
+}
+const soundFields=[
+ ['volume','Громкость','%',1,'basic'],['pan','Панорама','Л ↔ П',1,'basic'],['transpose','Высота','полутонов',1,'basic'],['attack','Атака · Attack','с',.005,'basic'],['release','Затухание · Release','с',.01,'basic'],
+ ['delay','Задержка · Delay','с',.01,'envelope'],['hold','Удержание · Hold','с',.01,'envelope'],['decay','Спад · Decay','с',.01,'envelope'],['sustain','Уровень · Sustain','%',1,'envelope'],['velocity','Отклик на громкость нот','×',.05,'envelope'],
+ ['fine','Точная высота','центов',1,'tuning'],['cutoff','Частота среза','Гц',10,'filter'],['resonance','Резонанс','Q',.1,'filter'],['start','Начало сэмпла','%',.1,'sample'],['end','Конец сэмпла','%',.1,'sample']
+];
+for(const [key,label,unit,step,group] of soundFields){
+ const row=document.createElement('div');row.className='sound-field';
+ const title=document.createElement('label');title.textContent=label+' · '+unit;title.setAttribute('for','sound-'+key);
+ const input=document.createElement('input'),slider=document.createElement('input');input.id='sound-'+key;input.type='number';slider.id='soundRange-'+key;slider.type='range';
+ for(const el of [input,slider]){el.min=soundBounds[key][0];el.max=soundBounds[key][1];el.step=step;el.setAttribute('aria-label',label+' · '+unit)}
+ if(key==='attack'||key==='release')input.placeholder='Авто';
+ const update=(el,defer)=>{
+  const item=projectInstruments.find(i=>i.id===editingInstrument);if(!item||running)return;
+  const value=el.value===''&&(key==='attack'||key==='release')?null:Number(el.value);
+  try{item.settings=soundSettings({...item.settings,[key]:value},true);soundMessage('');syncSoundEditor();trackChanged(defer)}catch(e){if(!defer){soundMessage(e.message);syncSoundEditor()}}
+ };
+ input.onchange=()=>update(input,false);slider.oninput=()=>update(slider,true);slider.onchange=()=>flushDraft();
+ row.append(title,input,slider);byId('sound-'+group).append(row);
+}
+function syncSoundEditor(){
+ const item=projectInstruments.find(i=>i.id===editingInstrument);if(!item)return;
+ byId('soundName').value=item.name;byId('soundSource').textContent=instrumentById(item.source)?.name||item.source;
+ for(const [key] of soundFields){const value=item.settings[key];byId('sound-'+key).value=value===null?'':String(value);byId('soundRange-'+key).value=String(value??instrumentCache.get(item.source)?.[key]??(key==='attack'?.005:.3))}
+ for(const key of ['filter','loop'])byId(key==='filter'?'sound-filterType':'sound-'+key).value=item.settings[key];byId('sound-reverse').checked=item.settings.reverse;
+ for(const key of ['cutoff','resonance'])for(const prefix of ['sound-','soundRange-'])byId(prefix+key).disabled=item.settings.filter==='off';
+ const s=item.settings,a=s.attack??instrumentCache.get(item.source)?.attack??.005,r=s.release??instrumentCache.get(item.source)?.release??.3,total=s.delay+a+s.hold+s.decay+1+r,px=t=>8+t/total*284,sy=64-s.sustain*.5;
+ byId('soundEnvelope').innerHTML='<svg viewBox="0 0 300 72" role="img" aria-label="Огибающая громкости"><path d="M8 64 H292" stroke="currentColor" opacity=".2"/><path d="M8 64 L'+px(s.delay)+' 64 L'+px(s.delay+a)+' 14 L'+px(s.delay+a+s.hold)+' 14 L'+px(s.delay+a+s.hold+s.decay)+' '+sy+' L'+px(total-r)+' '+sy+' L292 64" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+}
+function soundPage(advanced){byId('sound-basic').hidden=advanced;byId('soundAdvanced').hidden=!advanced;byId('soundBasicTab').setAttribute('aria-pressed',String(!advanced));byId('soundAdvancedTab').setAttribute('aria-pressed',String(advanced))}
+function openInstrumentSettings(id){if(running)return;editingInstrument=id;soundMessage('');showInstrumentView('edit');soundPage(false);syncSoundEditor()}
+byId('soundBasicTab').onclick=()=>soundPage(false);byId('soundAdvancedTab').onclick=()=>soundPage(true);
+byId('soundName').onchange=()=>{const i=projectInstruments.find(i=>i.id===editingInstrument),name=byId('soundName').value.trim();if(!i||running)return;if(name&&name.length<=48){i.name=name;renderLanes();trackChanged()}syncSoundEditor()};
+for(const key of ['filter','loop','reverse'])byId(key==='filter'?'sound-filterType':'sound-'+key).onchange=()=>{const i=projectInstruments.find(i=>i.id===editingInstrument);if(!i||running)return;i.settings=soundSettings({...i.settings,[key]:key==='reverse'?byId('sound-'+key).checked:byId(key==='filter'?'sound-filterType':'sound-'+key).value},true);syncSoundEditor();trackChanged()};
+byId('soundReset').onclick=()=>{const i=projectInstruments.find(i=>i.id===editingInstrument);if(i&&!running){i.settings=soundSettings();syncSoundEditor();trackChanged()}};
+byId('soundPreview').onclick=async()=>{
+ const item=projectInstruments.find(i=>i.id===editingInstrument);if(!item||running)return;const token=++instrumentRequest;
+ try{await unlock();await prepareInstrument(item.source);if(token!==instrumentRequest||byId('instrumentSheet').hidden||editingInstrument!==item.id||running)return;
+  for(const voice of voices)silenceVoice(voice);syncSoundEditor();instrumentNote(item.source,instrumentById(item.source)?.demo||60,audio.currentTime+.01,1.5,85,item.settings);soundMessage('');
+ }catch(e){if(token===instrumentRequest)soundMessage(e.message)}
+};
+
+const roll=byId('roll'),keys=byId('keys'),notes=byId('notes'),ruler=byId('ruler');
+const keyWidth=32,rulerHeight=32;
+const lowestPitch=24,highestPitch=119; // До1 (C1) — Си8 (H8).
+const pitchCount=highestPitch-lowestPitch+1;
+let row=34;
+let lastPaint="";
+let x=0,y=0,col=40,cols=0,rows=0,w=0,h=0,initialized=false,frame=0;
+function clampY(value){return Math.max(0,Math.min(value,pitchCount*row-h))}
+function paintSoon(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;paint()})}
+function fill(layer,count,click){
+ while(layer.children.length>count)layer.lastElementChild.remove();
+ if(layer.children.length===count)return;
+ const fragment=document.createDocumentFragment();
+ for(let i=layer.children.length;i<count;i++){
+  const el=document.createElement('button');el.className='tile';
+  el.onclick=e=>{if(e.detail===0)click(el)};
+  fragment.append(el);
+ }
+ layer.append(fragment);
+}
+const PPQ=960,bar=4*PPQ;
+let templateNote=null,copyNoteLength=false;
+let noteDivision=0,viewDivision=0;
+const divisions=[0,1,2,3,4,6,8,12,16];
+let division=4,selected=null,gesture=null,edgeFrame=0;
+const selection=new Set();
+function clearSelection(){selection.clear();selected=null}
+const selectedNotes=()=>selected?(selection.has(selected)?[...selection]:[selected]):[];
+const inspector=byId('inspector'),blocks=byId('blocks'),blockViews=new Map();
+const gridStep=()=>PPQ/(viewDivision||division||4);
+const minimum=()=>division?PPQ/division:1;
+const pixels=t=>t*col/gridStep();
+const ticks=px=>px*gridStep()/col;
+const barStart=t=>Math.floor(t/bar)*bar;
+
+const snap=t=>Math.max(0,Math.round(t/minimum())*minimum());
+const pitchAt=py=>highestPitch-Math.floor((y+py-rulerHeight)/row);
+function resize(){
+ w=roll.clientWidth-keyWidth;h=roll.clientHeight-rulerHeight;
+ if(w<=0||h<=0)return;
+ if(!initialized){
+  col=w/Math.max(4,Math.round(w/40));
+  y=(highestPitch-66)*row-h/2;initialized=true;
+ }
+ y=clampY(y);
+ if(pinch)beginPinch();
+ paint();
+}
+// Per-pitch interval trees also find long notes containing many shorter notes.
+const rowIndexes=new WeakMap();
+function noteIndex(lane){
+ let index=rowIndexes.get(lane.notes);
+ if(!index){
+  index=new Map();index.layers=new WeakMap();
+  for(const note of lane.notes){
+   let bucket=index.get(note.pitch);if(!bucket){bucket=[];index.set(note.pitch,bucket)}
+   bucket.push({note,start:note.start,end:note.start+note.len});
+  }
+  for(const bucket of index.values()){
+   bucket.sort((a,b)=>a.start-b.start);
+   // Short notes remain visible over sustained notes; ties follow score order.
+   bucket.slice().sort((a,b)=>(b.end-b.start)-(a.end-a.start)||a.start-b.start).forEach((e,i)=>index.layers.set(e.note,i+1));
+   bucket.ends=new Float64Array(bucket.length*4);
+   const build=(node,lo,hi)=>{if(hi-lo===1)return bucket.ends[node]=bucket[lo].end;const mid=(lo+hi)>>1;return bucket.ends[node]=Math.max(build(node*2,lo,mid),build(node*2+1,mid,hi))};
+   build(1,0,bucket.length);
+  }
+  rowIndexes.set(lane.notes,index);
+ }
+ return index;
+}
+function queryNotes(bucket,from,to,visit,point=false){
+ if(!bucket?.length)return false;
+ const walk=(node,lo,hi)=>{
+  if(bucket.ends[node]<=from||(point?bucket[lo].start>to:bucket[lo].start>=to))return false;
+  if(hi-lo===1)return visit(bucket[lo])===true;
+  const mid=(lo+hi)>>1;
+  return walk(node*2,lo,mid)||walk(node*2+1,mid,hi);
+ };
+ return walk(1,0,bucket.length);
+}
+function firstStartingAt(bucket,time){
+ let lo=0,hi=bucket.length;
+ while(lo<hi){const mid=(lo+hi)>>1;if(bucket[mid].start<time)lo=mid+1;else hi=mid}return lo;
+}
+function visibleNotes(lane,top,rowsNeeded,draw){
+ const index=noteIndex(lane);
+ const from=ticks(x-7),to=ticks(x+w),moving=lane===lanes[activeLane]?gesture?.items:null;
+ const movingNotes=new Set(moving?.map(item=>item.note));
+ for(let r=Math.max(0,top-1);r<=Math.min(pitchCount-1,top+rowsNeeded);r++){
+  queryNotes(index.get(highestPitch-r),from,to,e=>{if(!movingNotes.has(e.note))draw(e.note)});
+ }
+ if(moving)for(const item of moving)draw(item.note);
+}
+function setView(object,key,value){if(object[key]!==value)object[key]=value}
+function labelView(el,text){if(el._label!==text){el._label=text;el.setAttribute('aria-label',text)}}
+function paintCursor(){
+ const ph=byId('playhead');ph.hidden=current<0;ph.style.left=(pixels(current)-x)+'px';
+}
+function paint(){
+ if(!initialized)return;
+ const columns=Math.ceil(w/col)+1,rowsNeeded=Math.min(pitchCount,Math.ceil(h/row)+1);
+ if(cols!==columns||rows!==rowsNeeded){
+  cols=columns;rows=rowsNeeded;lastPaint='';
+  roll.style.setProperty('--cols',cols);
+  fill(keys,rows,el=>preview(Number(el.dataset.pitch)));
+  fill(ruler,cols,el=>seek(Number(el.dataset.tick)));
+  fill(notes,rows*cols,el=>{const i=Array.prototype.indexOf.call(notes.children,el);tapCell((Math.floor(x/col)+i%cols)*gridStep(),highestPitch-Math.floor(y/row)-Math.floor(i/cols))});
+ }
+ if(roll._col!==col){roll._col=col;roll.style.setProperty('--col',col+'px')}if(roll._row!==row){roll._row=row;roll.style.setProperty('--row',row+'px')}
+ const first=Math.floor(x/col),top=Math.floor(y/row),dx=first*col-x,dy=top*row-y;
+ keys.style.transform='translateY('+dy+'px)';ruler.style.transform='translateX('+dx+'px)';notes.style.transform='translate('+dx+'px,'+dy+'px)';
+ const stamp=[first,top,gridStep()].join('/');
+ if(stamp!==lastPaint){
+  lastPaint=stamp;
+  for(let c=0;c<cols;c++){
+   const tick=(first+c)*gridStep(),el=ruler.children[c],inBar=tick%bar;
+   el.dataset.tick=tick;el.textContent=inBar===0?String(1+Math.floor(tick/bar)):(tick%PPQ===0?String(1+inBar/PPQ):'·');
+   el.className='tile time'+(inBar===0?' bar':'')+(c===0?' start':'');
+   el.setAttribute('aria-label','Перейти к такту '+(1+Math.floor(tick/bar))+', доля '+(1+inBar/PPQ));
+  }
+  for(let r=0;r<rows;r++){
+   const pitch=highestPitch-top-r,key=keys.children[r],valid=pitch>=lowestPitch,sharp=valid&&names[pitch%12].includes('♯'),name=valid?pitchName(pitch):'';
+   key.hidden=!valid;key.dataset.pitch=pitch;key.textContent=valid?['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'][pitch%12]:'';key.dataset.octave=pitch%12===0?Math.floor(pitch/12)-1:'';key.setAttribute('aria-label',name);key.className='tile key'+(sharp?' sharp':'')+(pitch%12===0?' c':'');
+   for(let c=0;c<cols;c++){
+    const tick=(first+c)*gridStep(),el=notes.children[r*cols+c];
+    setView(el,'hidden',!valid);setView(el,'className','tile'+(sharp?' sharp':'')+(tick%bar===0?' bar':(tick%PPQ===0?' beat':'')));
+    labelView(el,name+', такт '+(Math.floor(tick/bar)+1));
+   }
+  }
+ }
+ setView(blocks.style,'transform','translate('+(-x)+'px,'+(-y)+'px)');
+ const visible=new Set();
+ for(const lane of lanes){
+  const background=isBackground(lane);if(!background&&lane!==lanes[activeLane])continue;
+  const def=instrumentById(lane.instrument||'vsco-piano-1'),layers=noteIndex(lane).layers;
+  visibleNotes(lane,top,rowsNeeded,n=>{
+   const left=pixels(n.start)-x,ntop=(highestPitch-n.pitch)*row-y+2,width=Math.max(6,pixels(n.len)-1);
+   if(left+width<=0||left>=w||ntop+row<=0||ntop>=h)return;
+   visible.add(n);
+   let el=blockViews.get(n);if(!el){el=document.createElement('span');blocks.append(el);blockViews.set(n,el)}
+   setView(el,'className',(background?'note-block ghost':'note-block')+(selected&&(n===selected||selection.has(n))?' active':''));setView(el.style,'left',pixels(n.start)+'px');setView(el.style,'top',((highestPitch-n.pitch)*row+2)+'px');setView(el.style,'width',width+'px');
+   setView(el.style,'zIndex',String(background?0:selected&&(n===selected||selection.has(n))?lane.notes.length+2:layers.get(n)||1));
+   paintInstrumentMark(el,def,width);
+  });
+ }
+ for(const [n,el] of blockViews)if(!visible.has(n)){el.remove();blockViews.delete(n)}
+ paintCursor();
+ const picked=selectedNotes(),anchor=picked.find(n=>visible.has(n));
+ inspector.classList.toggle('group',picked.length>1);
+ byId('volumeToggle').setAttribute('aria-label',picked.length>1?'Громкость выбранных нот':'Громкость ноты');
+ byId('deleteNote').setAttribute('aria-label',picked.length>1?'Удалить выбранные ноты':'Удалить выбранную ноту');
+ inspector.hidden=!anchor||running||gesture?.mode==='select'||!!gesture?.moved;
+ if(!inspector.hidden){
+  const rect=roll.getBoundingClientRect(),ntop=rect.top+rulerHeight+(highestPitch-anchor.pitch)*row-y;
+  const left=rect.left+keyWidth+Math.max(0,pixels(anchor.start)-x);
+  inspector.style.left=Math.max(4,Math.min(left,window.innerWidth-inspector.offsetWidth-4))+'px';
+  const above=ntop-inspector.offsetHeight-5;
+  inspector.style.top=Math.max(4,Math.min(above<4?ntop+row+3:above,window.innerHeight-inspector.offsetHeight-4))+'px';
+  byId('noteName').textContent=picked.length>1?'Нот: '+picked.length:pitchName(selected.pitch);
+  byId('duration').textContent=picked.every(n=>n.len===selected.len)?Number((selected.len/PPQ).toFixed(3))+' уд.':'Разная длина';
+  byId('volume').value=selected.volume;byId('volLabel').textContent=picked.every(n=>n.volume===selected.volume)?selected.volume+'%':'Разная';
+ }
+}
+function controls(){
+ const audible=lanes.some(lane=>!lane.muted&&lane.notes.length);
+ byId('editLane').disabled=byId('addLane').disabled=running;
+ byId('visualPlay').disabled=!audible||running;byId('play').disabled=!audible&&!running;byId('play').textContent=running?'■ Стоп':'▶ Играть';byId('playStart').disabled=!audible||running;
+ const playLabel=running?'Остановить воспроизведение':'Играть с левого края сетки';
+ byId('play').setAttribute('aria-label',playLabel);byId('play').title=playLabel;
+ byId('minus').disabled=running||bpm<=40;byId('plus').disabled=running||bpm>=220;byId('bpm').disabled=running;if(document.activeElement!==byId('bpm'))byId('bpm').value=String(bpm);byId('stepMenu').disabled=running;
+}
+function hit(t,p){
+ if(isBackground(lanes[activeLane]))return null;
+ if(selected&&selected.pitch===p&&t>=selected.start&&t<selected.start+selected.len)return selected;
+ const index=noteIndex(lanes[activeLane]);let found=null,layer=-1;
+ queryNotes(index.get(p),t,t,entry=>{const rank=index.layers.get(entry.note);if(rank>layer){found=entry.note;layer=rank}},true);
+ return found;
+}
+function overlap(start,len,pitch,except=null){
+ return queryNotes(noteIndex(lanes[activeLane]).get(pitch),start,start+len,entry=>entry.note!==except);
+}
+function showVolume(open){
+ byId('volumeRow').hidden=!open;byId('volumeToggle').setAttribute('aria-expanded',String(open));paintSoon();
+}
+byId('volumeToggle').onclick=()=>{if(selected)showVolume(byId('volumeRow').hidden)};
+function selectNote(note){
+ showVolume(false);
+ if(!selected||!selection.has(note)){selection.clear();selection.add(note)}
+ selected=templateNote=note;copyNoteLength=true;
+ preview(note.pitch,note.volume);paintSoon();
+}
+function removeNotes(notes){
+ const removing=new Set(notes);if(!removing.size)return;
+ if(removing.has(templateNote))templateNote={len:templateNote.len,volume:templateNote.volume};
+ let kept=0;for(const n of score)if(!removing.has(n))score[kept++]=n;
+ score.length=kept;rowIndexes.delete(score);clearSelection();trackChanged();controls();paintSoon();
+}
+function removeNote(note){if(score.includes(note))removeNotes([note])}
+function addNote(t,p){
+ if(isBackground(lanes[activeLane]))return;
+ const start=division?Math.floor(t/minimum())*minimum():snap(t);
+ const volume=templateNote?.volume??100;
+ const len=copyNoteLength&&templateNote?templateNote.len:noteDivision?PPQ/noteDivision:gridStep();
+ if(overlap(start,len,p)){
+  byId('status').textContent='Для этой длины здесь не хватает места. Выбери другую позицию.';
+  return;
+ }
+ const note={start,len,pitch:p,volume};
+ score.push(note);rowIndexes.delete(score);templateNote=note;clearSelection();
+ byId('status').textContent='';trackChanged();preview(p,volume);controls();paintSoon();
+}
+function tapCell(t,p){if(running)return;const n=hit(t,p);if(n)selectNote(n);else addNote(t,p)}
+function seek(t){if(!running){clearSelection();x=pixels(barStart(Math.max(0,t)));paintSoon()}}
+byId('volume').oninput=e=>{if(selected){for(const n of selectedNotes())n.volume=Number(e.target.value);trackChanged(true);byId('volLabel').textContent=selected.volume+'%'}};
+byId('volume').onchange=()=>{flushDraft();if(selected)preview(selected.pitch,selected.volume)};
+byId('copyNotes').onclick=()=>{
+ if(running||fileBusy||gesture||pinch||isBackground(lanes[activeLane]))return;
+ const picked=selectedNotes();if(!picked.length)return;
+ let first=Infinity,last=0;for(const n of picked){first=Math.min(first,n.start);last=Math.max(last,n.start+n.len)}
+ const offset=last-first;
+ if(!Number.isSafeInteger(last+offset)){byId('status').textContent='Копия выходит за пределы длины трека.';return}
+ const copies=picked.map(n=>({...n,start:n.start+offset})),anchor=copies[picked.indexOf(selected)]||copies[0];
+ for(const n of copies)score.push(n);
+ clearSelection();for(const n of copies)selection.add(n);selected=templateNote=anchor;copyNoteLength=true;lastNoteTap=null;
+ const left=pixels(anchor.start);if(left<x||left>=x+w)x=Math.max(0,left-col);
+ const top=(highestPitch-anchor.pitch)*row;if(top<y||top>=y+h)y=clampY(top-h/2);
+ rowIndexes.delete(score);showVolume(false);byId('status').textContent='';trackChanged();controls();paintSoon();
+};
+byId('deleteNote').onclick=()=>removeNotes(selectedNotes());
+byId('closeNote').onclick=()=>{flushDraft();clearSelection();paintSoon()};
+function renderGridPreview(){
+ const d=viewDivision||division||4,len=(copyNoteLength&&templateNote?templateNote.len:noteDivision?PPQ/noteDivision:gridStep())/PPQ;
+ let svg='<svg viewBox="0 0 320 140" aria-hidden="true"><path fill="var(--panel)" d="M0 0h320v140H0z"/>';
+ for(let r=0;r<5;r++)svg+='<rect x="30" y="'+(22+r*18)+'" width="280" height="18" fill="var(--'+(r%2?'black':'cell')+')"/><text x="14" y="'+(35+r*18)+'" text-anchor="middle" font-size="10" fill="var(--muted)">'+['G','F','E','D','C'][r]+'</text>';
+ for(let i=0;i<=4*d;i++){const px=30+i*70/d;svg+='<path d="M'+px+' 22v90" stroke="var(--'+(i%d?'border':'line')+')"/>'}
+ for(let i=0;i<=5;i++)svg+='<path d="M30 '+(22+i*18)+'h280" stroke="var(--border)"/>';
+ for(let i=0;i<4;i++)svg+='<text x="'+(34+i*70)+'" y="15" font-size="10" fill="var(--muted)">'+(i+1)+'</text>';
+ svg+='<rect x="31" y="60" width="'+Math.max(2,Math.min(4,len)*70-2)+'" height="14" rx="3" fill="var(--accent)"/>';
+ const label=division?'Привязка: 1/'+division:'Без привязки';
+ svg+='<text x="8" y="131" font-size="10" fill="var(--muted)">'+label+'</text>';
+ const el=byId('gridPreview');el.innerHTML=svg+'</svg>';el.setAttribute('aria-label','Пример одного такта. Сетка: 1/'+d+'. '+label+'. Длина новой ноты: '+Number(len.toFixed(3))+' удара.');
+}
+function closeStep(){flushDraft();byId('stepSheet').hidden=true;byId('stepMenu').focus?.()}
+byId('stepMenu').onclick=()=>{
+ if(running)return;
+ finishGesture(true);contacts.clear();pinch=null;
+ renderGridPreview();byId('stepSheet').hidden=false;byId('closeStep').focus?.();
+};
+byId('closeStep').onclick=closeStep;
+byId('noteSize').onchange=e=>{noteDivision=Number(e.target.value);copyNoteLength=false;renderGridPreview();trackChanged()};
+function updateGrid(setting,value){
+ const left=ticks(x);
+ if(setting==='view')viewDivision=value;else division=value;
+ x=pixels(left);renderGridPreview();trackChanged();paintSoon();
+}
+byId('snap').onchange=e=>updateGrid('snap',Number(e.target.value));
+byId('gridDivision').onchange=e=>updateGrid('view',Number(e.target.value));
+function point(e){const rect=roll.getBoundingClientRect();return {px:e.clientX-rect.left,py:e.clientY-rect.top}}
+// Each pointer retains its own position even when Android changes the primary touch.
+const contacts=new Map();
+let pinch=null,lastNoteTap=null;
+function spans(first,second){
+ return {cx:(first.px+second.px)/2-keyWidth,cy:(first.py+second.py)/2-rulerHeight,
+  sx:Math.abs(first.px-second.px),sy:Math.abs(first.py-second.py)};
+}
+function beginPinch(){
+ const [a,b]=contacts.keys();
+ const span=spans(contacts.get(a),contacts.get(b));
+ // A nearly horizontal or vertical pair locks the other axis against finger jitter.
+ pinch={a,b,span,col,row,colAtCenter:(x+span.cx)/col,rowAtCenter:(y+span.cy)/row,
+  scaleX:span.sx>=Math.max(12,span.sy*.40),scaleY:span.sy>=Math.max(12,span.sx*.40)};
+}
+function applyPinch(){
+ const g=pinch,now=spans(contacts.get(g.a),contacts.get(g.b));
+ if(g.scaleX)col=Math.max(12,Math.min(160,g.col*now.sx/g.span.sx));
+ if(g.scaleY)row=Math.max(16,Math.min(96,g.row*now.sy/g.span.sy));
+ x=Math.max(0,g.colAtCenter*col-now.cx);
+ y=clampY(g.rowAtCenter*row-now.cy);
+ paintSoon();
+}
+function endContact(e){
+ if(!contacts.delete(e.pointerId))return false;
+ if(!pinch)return false;
+ if(e.pointerId!==pinch.a&&e.pointerId!==pinch.b)return true;
+ pinch=null;
+ if(contacts.size>=2)beginPinch();
+ else if(contacts.size===1){
+  const [[id,pos]]=contacts;
+  gesture={id,...pos,mx:pos.px,my:pos.py,x,y,mode:'pan',moved:true,n:null,originalTemplate:templateNote,originalCopyLength:copyNoteLength};
+ }
+ return true;
+}
+roll.oncontextmenu=e=>e.preventDefault();
+roll.onpointerdown=e=>{
+ if(e.button!==0||contacts.has(e.pointerId))return;
+ const pos=point(e),previousTap=lastNoteTap;lastNoteTap=null;
+ contacts.set(e.pointerId,pos);roll.setPointerCapture(e.pointerId);
+ if(contacts.size>=2){
+  if(!pinch){
+   if(gesture){templateNote=gesture.originalTemplate;copyNoteLength=gesture.originalCopyLength;finishGesture(true)}
+   if(selection.size<2)clearSelection();beginPinch();paintSoon();
+  }
+  return;
+ }
+ const {px,py}=pos,t=ticks(x+px-keyWidth),pitch=pitchAt(py);
+ const inside=!running&&!isBackground(lanes[activeLane])&&px>=keyWidth&&py>=rulerHeight;
+ let n=inside?hit(t,pitch):null;
+ // A sub-pixel free note keeps the same selectable width as its drawn block.
+ if(inside&&!n){
+  const bucket=noteIndex(lanes[activeLane]).get(pitch)||[];
+  for(let i=firstStartingAt(bucket,t-ticks(6));i<bucket.length&&bucket[i].start<=t;i++)
+   if(pixels(t-bucket[i].start)<6)n=bucket[i].note;
+ }
+ const now=Date.now();
+ const doubleTap=selection.size<2&&n&&previousTap?.note===n&&previousTap.score===score&&now-previousTap.time<=320&&Math.hypot(px-previousTap.px,py-previousTap.py)<=24;
+ const g={id:e.pointerId,px,py,mx:px,my:py,x,y,n,mode:'tap',moved:false,downTime:now,doubleTap,originalTemplate:templateNote,originalCopyLength:copyNoteLength,previousSelection:selectedNotes(),previousSelected:selected};
+ gesture=g;
+ if(n){
+  g.start=n.start;g.len=n.len;g.pitch=n.pitch;
+  const width=Math.max(6,pixels(n.len)),fromEnd=width-pixels(t-n.start);
+  g.mode=fromEnd<=Math.min(14,width*.35)?'resize':'move';
+  selectNote(n);
+  g.items=selectedNotes().map(note=>({note,start:note.start,len:note.len,pitch:note.pitch}));
+ }else if(inside&&pitch>=lowestPitch&&pitch<=highestPitch){
+  g.hold=setTimeout(()=>{if(gesture!==g||g.moved||contacts.size!==1)return;g.mode='select';lastNoteTap=null;showVolume(false);selectRegion(g)},350);
+ }
+};
+function selectRegion(g){
+ const ax=Math.max(0,g.x+g.px-keyWidth),ay=Math.max(0,g.y+g.py-rulerHeight),bx=Math.max(0,x+g.mx-keyWidth),by=Math.max(0,y+g.my-rulerHeight);
+ const left=Math.min(ax,bx),right=Math.max(ax,bx),top=Math.min(ay,by),bottom=Math.max(ay,by),box=byId('selectionBox');
+ box.hidden=false;box.style.left=left-x+'px';box.style.top=top-y+'px';box.style.width=Math.max(1,right-left)+'px';box.style.height=Math.max(1,bottom-top)+'px';
+ selection.clear();
+ const index=noteIndex(lanes[activeLane]);
+ for(let p=Math.max(lowestPitch,highestPitch-Math.floor(bottom/row));p<=Math.min(highestPitch,highestPitch-Math.floor(top/row));p++){
+  queryNotes(index.get(p),ticks(left-6),ticks(right),e=>{const n=e.note,ny=(highestPitch-p)*row+2;if(ny<bottom&&ny+row-4>top&&pixels(n.start)+Math.max(6,pixels(n.len)-1)>left)selection.add(n)});
+ }
+ selected=selection.values().next().value||null;paintSoon();
+}
+function edit(g){
+ if(g.mode==='select'){selectRegion(g);return}
+ let delta=Math.round(ticks(x-g.x+g.mx-g.px)/minimum())*minimum();
+ const items=g.items;
+ if(g.mode==='move'){
+  delta=Math.max(delta,-items.reduce((m,n)=>Math.min(m,n.start),Infinity));
+  const low=items.reduce((m,n)=>Math.min(m,n.pitch),highestPitch),high=items.reduce((m,n)=>Math.max(m,n.pitch),lowestPitch);
+  const pitch=Math.max(lowestPitch-low,Math.min(highestPitch-high,-Math.round((y-g.y+g.my-g.py)/row)));
+  for(const item of items){item.note.start=item.start+delta;item.note.pitch=item.pitch+pitch}
+ }else{
+  delta=Math.max(delta,items.reduce((m,n)=>Math.max(m,Math.min(n.len,minimum())-n.len),-Infinity));
+  for(const item of items)item.note.len=item.len+delta;
+ }
+ paintSoon();
+}
+function edge(g){
+ if(edgeFrame||!g.moved)return;
+ const speed=(p,lo,hi)=>p<lo+14?-Math.min(10,(lo+14-p)*.35):p>hi-14?Math.min(10,(p-hi+14)*.35):0;
+ const vx=speed(g.mx,keyWidth,keyWidth+w),vy=g.mode!=='resize'?speed(g.my,rulerHeight,rulerHeight+h):0;
+ if((vx===0||vx<0&&x===0)&&(!vy||clampY(y+vy)===y))return;
+ edgeFrame=requestAnimationFrame(()=>{edgeFrame=0;if(gesture!==g)return;x=Math.max(0,x+vx);y=clampY(y+vy);edit(g);edge(g)});
+}
+function move(e){
+ const g=gesture;if(!g||e.pointerId!==g.id)return;
+ const {px,py}=point(e);g.mx=px;g.my=py;const dx=px-g.px,dy=py-g.py;
+ if(g.mode==='select'){g.moved=true;selectRegion(g);edge(g);return}
+ if(!g.moved&&Math.hypot(dx,dy)<(g.mode==='resize'||g.mode==='move'?2:7))return;
+ clearTimeout(g.hold);g.moved=true;
+ if(g.mode==='move'||g.mode==='resize'){edit(g);edge(g);return}
+ g.mode='pan';if(selection.size<2)clearSelection();
+ if(g.px>=keyWidth&&!running)x=Math.max(0,g.x-dx);
+ if(g.py>=rulerHeight)y=clampY(g.y-dy);
+ paintSoon();
+}
+function finishGesture(cancelled=false){
+ if(cancelled)lastNoteTap=null;
+ const g=gesture;if(!g)return;
+ clearTimeout(g.hold);if(edgeFrame)cancelAnimationFrame(edgeFrame);edgeFrame=0;gesture=null;byId('selectionBox').hidden=true;
+ if(g.items){
+  rowIndexes.delete(score);
+  if(cancelled){for(const item of g.items)Object.assign(item.note,{start:item.start,len:item.len,pitch:item.pitch})}
+  else if(g.items.some(i=>i.note.start!==i.start||i.note.len!==i.len||i.note.pitch!==i.pitch))trackChanged();
+ }
+ if(g.mode==='select'){
+  if(cancelled){selection.clear();for(const n of g.previousSelection)selection.add(n);selected=g.previousSelected}
+  else if(selected){templateNote=selected;copyNoteLength=true}
+ }
+ paintSoon();
+}
+roll.onpointermove=e=>{
+ if(!contacts.has(e.pointerId))return;
+ contacts.set(e.pointerId,point(e));
+ if(pinch)applyPinch();else move(e);
+};
+roll.onpointerup=e=>{
+ if(!contacts.has(e.pointerId))return;
+ if(pinch){contacts.set(e.pointerId,point(e));applyPinch()}
+ if(endContact(e))return;
+ const g=gesture;if(!g||e.pointerId!==g.id)return;
+ move(e);finishGesture();
+ // Only two completed taps on the same note count; drags, holds and pinches do not.
+ if(g.n&&selection.size<2&&!running&&!isBackground(lanes[activeLane])&&!g.moved&&Date.now()-g.downTime<=300){
+  if(g.doubleTap){removeNote(g.n);lastNoteTap=null}
+  else lastNoteTap={note:g.n,score,time:Date.now(),px:g.px,py:g.py};
+  return;
+ }
+ if(g.mode!=='tap'||running)return;
+ const t=ticks(x+g.px-keyWidth),p=pitchAt(g.py);
+ if(p<lowestPitch&&g.py>=rulerHeight)return;
+ if(g.px<keyWidth){if(g.py>=rulerHeight)preview(p)}
+ else if(g.py<rulerHeight)seek(t);
+ else if(g.previousSelection.length>1){clearSelection();paintSoon()}else addNote(t,p);
+};
+function cancelContact(e){
+ if(!endContact(e)&&gesture?.id===e.pointerId)finishGesture(true);
+}
+roll.onpointercancel=cancelContact;
+roll.onlostpointercapture=e=>{if(e.target===roll)cancelContact(e)};
+roll.addEventListener('wheel',e=>{e.preventDefault();if(!running)x=Math.max(0,x+(e.shiftKey?e.deltaY:e.deltaX));if(!e.shiftKey)y=clampY(y+e.deltaY);paintSoon()},{passive:false});
+const sceneDefaults={loop:false,palette:'aurora',rangeMode:'auto',keyStart:48,keyCount:49,keyboardHeight:16,keyLabels:'c',guides:true,speed:1,stretch:1.25,noteWidth:78,roundness:22,noteStyle:'glass',colorMode:'lane',backdrop:'aurora',background:'#080e19',glow:true,glowAmount:40,sparks:true,sparkAmount:30,rays:28,rings:20,trails:15,keyLights:true,fps:30,quality:1.5};
+const palettes={aurora:['#62dfc4','#a898ff','#ffbc79','#74bfff','#f794bc','#d9e59b'],ember:['#ffbc79','#ff7e76','#efcf8b','#f596b2'],ice:['#76d9ff','#8cabff','#8ff0dc','#bdc9ff'],iris:['#bca1ff','#f597d0','#81b5ff','#dcadff']};
+const sceneBounds={keyStart:[0,116],keyCount:[12,88],keyboardHeight:[8,26],speed:[.5,3],stretch:[.25,2.5],noteWidth:[40,96],roundness:[0,50],glowAmount:[0,100],sparkAmount:[0,100],rays:[0,100],rings:[0,100],trails:[0,100]};
+const sceneChoices={palette:Object.keys(palettes),rangeMode:['auto','manual'],keyLabels:['c','all','none'],noteStyle:['glass','solid','neon'],colorMode:['lane','instrument','single'],backdrop:['aurora','stars','plain'],fps:[30,60],quality:[1,1.5,2]};
+function cleanSceneOptions(saved){
+ const result={...sceneDefaults,colors:{}};
+ if(!saved||typeof saved!=='object')return result;
+ for(const k of Object.keys(sceneDefaults)){
+  const value=saved[k];
+  if(sceneBounds[k]&&typeof value==='number'&&Number.isFinite(value)){const [lo,hi]=sceneBounds[k];result[k]=Math.max(lo,Math.min(hi,value));if(!['speed','stretch'].includes(k))result[k]=Math.round(result[k])}
+  else if(sceneChoices[k]?.includes(value))result[k]=value;
+  else if(typeof sceneDefaults[k]==='boolean'&&typeof value==='boolean')result[k]=value;
+  else if(k==='background'&&/^#[\da-f]{6}$/i.test(value))result[k]=value;
+ }
+ if(saved.speed===undefined&&[1.3,2.4,4].includes(saved.fall))result.speed=Math.max(.5,Math.min(3,3.6/saved.fall));
+ result.keyCount=Math.min(result.keyCount,128-result.keyStart);
+ if(saved.colors&&typeof saved.colors==='object')for(const [k,v] of Object.entries(saved.colors).slice(0,250))if(/^(lane-\d{1,4}|instrument-[a-z0-9-]{1,48}|single)$/.test(k)&&/^#[\da-f]{6}$/i.test(v))result.colors[k]=v;
+ return result;
+}
+let options=cleanSceneOptions(null);
+let scene=null,sceneFrame=0,prefReturn,scenePreviewLayout=null,playback=null;
+const sceneTravel=()=>3.6/(options.speed*options.stretch);
+function saveSceneOptions(){
+ trackChanged();
+}
+function sceneColorKey(n){return options.colorMode==='single'?'single':options.colorMode==='instrument'?'instrument-'+(n.instrumentId||n.instrument):'lane-'+(n.lane||0)}
+function sceneColor(n){
+ const key=sceneColorKey(n);if(options.colors[key])return options.colors[key];
+ const list=palettes[options.palette];
+ const index=options.colorMode==='instrument'?Math.max(0,n.instrumentId?projectInstruments.findIndex(d=>d.id===n.instrumentId):instruments.findIndex(d=>d.id===n.instrument)):options.colorMode==='single'?0:n.lane||0;
+ return list[index%list.length];
+}
+function renderSceneColors(){
+ const list=byId('sceneColors');list.replaceChildren();const seen=new Set();
+ lanes.forEach((lane,i)=>{
+  const n={lane:i,instrument:lane.instrument||'vsco-piano-1',instrumentId:laneInstrument(lane).id},key=sceneColorKey(n);if(seen.has(key))return;seen.add(key);
+  const label=document.createElement('label'),name=document.createElement('span'),input=document.createElement('input');
+  name.textContent=options.colorMode==='single'?'Все ноты':options.colorMode==='lane'?lane.name:laneInstrument(lane).name;
+  input.type='color';input.value=sceneColor(n);input.setAttribute('aria-label','Цвет · '+name.textContent);
+  input.oninput=()=>{if(/^#[\da-f]{6}$/i.test(input.value)){options.colors[key]=input.value;refreshScenePreview()}};
+  input.onchange=saveSceneOptions;label.append(name,input);list.append(label);
+ });
+}
+function syncSceneControls(){
+ for(const [k,defaultValue] of Object.entries(sceneDefaults)){
+  const el=byId(k);if(typeof defaultValue==='boolean')el.checked=options[k];else el.value=String(options[k]);
+  if(sceneBounds[k]&&!['keyStart','keyCount'].includes(k))byId(k+'Value').textContent=['speed','stretch'].includes(k)?Number(options[k].toFixed(2))+'×':options[k]+'%';
+ }
+ byId('manualRange').hidden=options.rangeMode!=='manual';byId('keyCount').max=String(Math.min(88,128-options.keyStart));
+ syncLoopButton();renderSceneColors();
+}
+function refreshScenePreview(){if(scene)drawScene();drawScenePreview()}
+let scenePresets=[],presetReady=false,presetAction=null,presetNaming=false;
+function presetIndex(){const value=byId('presetChoice').value;return value===''?-1:Number(value)}
+function presetSnapshot(name){return {name,scene:cleanSceneOptions(options),rack:projectInstruments.map(i=>({source:i.source,color:options.colors['instrument-'+i.id]||options.colors['instrument-'+i.source]||null}))}}
+function presetMessage(text){byId('presetStatus').textContent=text}
+function cancelPresetAction(){presetAction=null;byId('presetConfirm').hidden=true}
+function renderScenePresets(selected=''){
+ const list=byId('presetChoice');list.replaceChildren();
+ const empty=document.createElement('option');empty.value='';empty.textContent=scenePresets.length?'Выбери пресет':'Нет сохранённых пресетов';list.append(empty);
+ scenePresets.forEach((p,i)=>{const el=document.createElement('option');el.value=String(i);el.textContent=p.name;list.append(el)});
+ presetNaming=false;list.value=String(selected);presetButtons();
+}
+function presetButtons(){
+ const chosen=!!scenePresets[presetIndex()];
+ byId('presetSaveSplit').hidden=!chosen||presetNaming;byId('presetNewForm').hidden=chosen&&!presetNaming;byId('cancelNewPreset').hidden=!chosen;
+ byId('replaceScenePreset').disabled=!chosen||!presetReady;byId('newScenePreset').disabled=!presetReady;
+ byId('loadScenePreset').disabled=byId('deleteScenePreset').disabled=!chosen;
+ byId('saveScenePreset').disabled=!presetReady;
+}
+function readScenePresets(){
+ const selected=scenePresets[presetIndex()]?.name;
+ cancelPresetAction();presetMessage('');
+ try{
+  const raw=typeof NotkaPlayer!=='undefined'&&NotkaPlayer.soundRead?NotkaPlayer.soundRead('scene-presets'):localStorage.getItem('notka.scene-presets');
+  const saved=JSON.parse(raw||'[]');if(!Array.isArray(saved)||saved.length>50)throw Error();
+  scenePresets=saved.filter(p=>p&&typeof p.name==='string'&&p.name.trim()&&p.name.length<=48).map(p=>({name:p.name,scene:cleanSceneOptions(p.scene),rack:Array.isArray(p.rack)?p.rack.slice(0,128).filter(i=>i&&typeof i.source==='string'&&/^[a-z0-9-]{1,48}$/.test(i.source)).map(i=>({source:i.source,color:/^#[\da-f]{6}$/i.test(i.color)?i.color:null})):[]}));presetReady=true;
+ }catch{scenePresets=[];presetReady=false;presetMessage('Не удалось прочитать пресеты.')}
+ const index=scenePresets.findIndex(p=>p.name===selected);renderScenePresets(index<0?'':index);
+}
+function writeScenePresets(next,selected=''){
+ try{
+  const raw=JSON.stringify(next);
+  if(typeof NotkaPlayer!=='undefined'&&NotkaPlayer.soundWrite){if(!NotkaPlayer.soundWrite('scene-presets',raw))throw Error()}
+  else localStorage.setItem('notka.scene-presets',raw);
+  scenePresets=next;renderScenePresets(selected);presetMessage('Готово.');
+ }catch{presetMessage('Не удалось сохранить пресеты. Проверь свободное место.')}
+}
+function confirmPresetAction(text,action){presetAction=action;byId('presetConfirmText').textContent=text;byId('presetConfirm').hidden=false}
+byId('confirmScenePreset').onclick=()=>{const action=presetAction;cancelPresetAction();action?.()};
+byId('cancelScenePreset').onclick=cancelPresetAction;
+byId('presetChoice').onchange=()=>{cancelPresetAction();presetNaming=false;presetMessage('');presetButtons()};
+byId('newScenePreset').onclick=()=>{cancelPresetAction();presetNaming=true;byId('presetName').value='';presetMessage('');presetButtons();byId('presetName').focus?.()};
+byId('cancelNewPreset').onclick=()=>{presetNaming=false;cancelPresetAction();presetMessage('');presetButtons()};
+byId('presetName').oninput=cancelPresetAction;
+byId('saveScenePreset').onclick=()=>{
+ if(!presetReady||byId('presetNewForm').hidden)return;cancelPresetAction();
+ const name=byId('presetName').value.trim();
+ if(!name||name.length>48||/[\u0000-\u001f\u007f]/.test(name)){presetMessage('Введи название до 48 символов.');return}
+ const index=scenePresets.findIndex(p=>p.name.toLowerCase()===name.toLowerCase());
+ if(index>=0){presetMessage('Имя уже занято. Введи другое название.');return}
+ if(scenePresets.length>=50){presetMessage('Сохранено 50 пресетов. Удали ненужный.');return}
+ writeScenePresets([...scenePresets,presetSnapshot(name)],scenePresets.length);
+};
+byId('replaceScenePreset').onclick=()=>{
+ const index=presetIndex(),preset=scenePresets[index];if(!presetReady||!preset)return;
+ const replacement=presetSnapshot(preset.name);
+ confirmPresetAction('Заменить пресет «'+preset.name+'»?',()=>{const next=scenePresets.slice();next[index]=replacement;writeScenePresets(next,index)});
+};
+byId('deleteScenePreset').onclick=()=>{
+ const index=presetIndex(),preset=scenePresets[index];if(!preset)return;
+ confirmPresetAction('Удалить пресет «'+preset.name+'»?',()=>writeScenePresets(scenePresets.filter((_,i)=>i!==index)));
+};
+byId('loadScenePreset').onclick=()=>{
+ cancelPresetAction();const preset=scenePresets[presetIndex()];if(!preset)return;
+ presetNaming=false;presetButtons();
+ options=cleanSceneOptions(preset.scene);
+ for(const key of Object.keys(options.colors))if(key.startsWith('instrument-'))delete options.colors[key];
+ const used=new Map();for(const i of projectInstruments){const at=used.get(i.source)||0,color=preset.rack.filter(p=>p.source===i.source)[at]?.color;used.set(i.source,at+1);if(color)options.colors['instrument-'+i.id]=color}
+ scenePreviewLayout=null;if(scene)Object.assign(scene,keyLayout(scene.events));applySceneLoop();syncSceneControls();saveSceneOptions();refreshScenePreview();
+ byId('presetName').value=preset.name;presetMessage('Применён: '+preset.name);
+};
+
+function showPrefs(visual,opener){
+ cancelSongDelete();
+ if(fileBusy)return;
+ pendingTrack=null;byId('exportOptions').hidden=true;byId('songSave').hidden=byId('trackChoices').hidden=byId('replaceTrack').hidden=true;
+ trackActions();trackMessage(visual||trackHost?'':panelHint);
+ if(opener)prefReturn=opener;
+ byId('preferences').hidden=false;byId('visualOptions').hidden=!visual;byId('prefHome').hidden=visual;
+ byId('preferences').classList.toggle('scene-settings',visual);
+ byId('prefTitle').textContent=visual?'Оформление сцены':'';byId('preferences').setAttribute('aria-label',visual?'Оформление сцены':'Меню трека');
+ if(visual){readScenePresets();scenePreviewLayout=null;syncSceneControls();drawScenePreview()}
+ byId('closePrefs').focus?.();
+}
+function closePrefs(){if(!byId('visualOptions').hidden)saveSceneOptions();flushDraft();cancelPresetAction();pendingTrack=null;byId('replaceTrack').hidden=true;byId('preferences').hidden=true;prefReturn?.focus?.()}
+byId('prefs').onclick=()=>showPrefs(false,byId('prefs'));
+byId('stagePrefs').onclick=()=>showPrefs(true,byId('stagePrefs'));
+byId('closePrefs').onclick=closePrefs;
+for(let p=0;p<=116;p++){const item=document.createElement('option');item.value=String(p);item.textContent=pitchName(p);byId('keyStart').append(item)}
+for(const [k,defaultValue] of Object.entries(sceneDefaults)){
+ const el=byId(k),check=typeof defaultValue==='boolean';
+ const update=commit=>{
+  const value=check?el.checked:typeof defaultValue==='number'?Number(el.value):el.value;
+  if(!check&&typeof defaultValue==='number'&&el.value==='')return;
+  options=cleanSceneOptions({...options,[k]:value});syncSceneControls();
+  if(['rangeMode','keyStart','keyCount'].includes(k)){scenePreviewLayout=null;if(scene)Object.assign(scene,keyLayout(scene.events))}
+  if(k==='loop')applySceneLoop();refreshScenePreview();if(commit)saveSceneOptions();
+ };
+ el.oninput=()=>{if(k!=='keyCount')update(false)};el.onchange=()=>update(true);
+}
+const sceneLooks={
+ sceneCalm:{palette:'aurora',noteStyle:'solid',roundness:18,glow:true,glowAmount:15,sparks:false,sparkAmount:20,rays:0,rings:0,trails:0,backdrop:'plain'},
+ sceneCinema:{palette:'aurora',noteStyle:'glass',roundness:22,glow:true,glowAmount:40,sparks:true,sparkAmount:30,rays:28,rings:20,trails:15,backdrop:'aurora'},
+ sceneNeon:{palette:'iris',noteStyle:'neon',roundness:32,glow:true,glowAmount:65,sparks:true,sparkAmount:55,rays:45,rings:45,trails:30,backdrop:'stars'}
+};
+for(const [id,look] of Object.entries(sceneLooks))byId(id).onclick=()=>{options=cleanSceneOptions({...options,...look});syncSceneControls();saveSceneOptions();refreshScenePreview()};
+byId('resetSceneColors').onclick=()=>{options.colors={};renderSceneColors();saveSceneOptions();refreshScenePreview()};
+syncSceneControls();
+const sharp=p=>[1,3,6,8,10].includes(p%12);
+function keyLayout(events){
+ let lo=options.keyStart,hi=Math.min(127,lo+options.keyCount-1);
+ if(options.rangeMode==='auto'){
+  let first=127,last=0;for(const n of events){first=Math.min(first,n.pitch);last=Math.max(last,n.pitch)}
+  if(!events.length){first=48;last=83}
+  lo=Math.max(0,Math.floor((first-2)/12)*12);hi=Math.min(127,Math.ceil((last+3)/12)*12-1);
+  if(hi-lo+1<48){const extra=48-(hi-lo+1);lo=Math.max(0,lo-Math.floor(extra/24)*12);hi=Math.min(127,lo+47);lo=Math.max(0,hi-47)}
+ }
+ const keys=new Map();let whites=0;
+ for(let p=lo;p<=hi;p++){const black=sharp(p);keys.set(p,{black,center:whites+(black?0:.5),width:black?.6:1});if(!black)whites++}
+ const left=sharp(lo)?-.3:0,right=whites+(sharp(hi)?.3:0);
+ for(const k of keys.values())k.center-=left;
+ return {keys,whites:right-left,lo,hi};
+}
+function sceneNoteGeometry(n,now,sec,line,travel){
+ const age=now-n.start*sec,duration=n.len*sec,speed=line/travel;
+ const head=line+age*speed;
+ const tail=head-duration*speed;
+ return {age,held:age>=0&&age<duration,top:tail,bottom:Math.min(line,head)};
+}
+function sceneVisible(s,now){
+ const tick=now/s.sec,period=s.last*s.sec,until=s.loopUntil??0;
+ s.cycle??=0;
+ // Skip missed rounds after a suspended frame; never replay an accumulated backlog.
+ if(period>0&&s.cycle<Math.floor(now/period)-1){s.cycle=Math.min(until,Math.max(0,Math.floor(now/period)-1));s.next=0;s.visible=[]}
+ let added=0;
+ while(s.events.length&&added<4096){
+  if(s.next>=s.events.length){if(s.cycle>=until)break;s.cycle++;s.next=0}
+  if(s.cycle>until)break;
+  const n=s.events[s.next],offset=s.cycle*(s.last||0);
+  if((n.start+offset)*s.sec>now+sceneTravel())break;
+  s.next++;added++;
+  if(n.start+offset+n.len>tick||(n.start+offset)*s.sec>now-.9)s.visible.push(s.cycle?{...n,start:n.start+offset,cycle:s.cycle}:n);
+ }
+ let kept=0;for(const n of s.visible)if((n.cycle||0)<=until&&(n.start+n.len>tick||n.start*s.sec>now-.9))s.visible[kept++]=n;s.visible.length=kept;
+ return s.visible;
+}
+function sceneLocalTime(s,now){
+ const period=s.last*s.sec;
+ return now<0||!period?now:now-Math.min(s.loopUntil??0,Math.floor(now/period))*period;
+}
+function syncLoopButton(){byId('stageLoop').setAttribute('aria-pressed',String(options.loop));byId('loop').checked=options.loop}
+function applySceneLoop(){
+ syncLoopButton();
+ if(!playback?.visual)return;
+ const p=playback,cycle=Math.max(0,Math.floor((audio.currentTime-p.start)/(p.last*p.sec)));
+ p.loopUntil=options.loop?Infinity:cycle;
+ if(!options.loop){
+  for(const voice of voices)if(voice.playback===p&&voice.cycle>cycle)silenceVoice(voice);
+  if(p.cycle>cycle){p.cycle=cycle+1;p.next=0}
+ }
+ if(scene){scene.loopUntil=p.loopUntil;scene.cycle=Math.max(0,cycle-1);scene.next=0;scene.visible=[]}
+}
+byId('stageLoop').onclick=()=>{options.loop=!options.loop;applySceneLoop();saveSceneOptions();refreshScenePreview()};
+syncLoopButton();
+function endScene(){
+ if(sceneFrame)cancelAnimationFrame(sceneFrame);sceneFrame=0;
+ if(!scene&&!running)return;
+ if(!byId('stage').hidden){
+  if(scene){scene.frozenTime=audio.currentTime-scene.start;scene.still=true;drawScene()}
+  byId('stageTransport').textContent='▶';byId('stageTransport').setAttribute('aria-label','Играть с начала');
+ }
+}
+function beginScene(events,start,sec,last,loopUntil=0){
+ scene={events,start,sec,last,loopUntil,...keyLayout(events),next:0,visible:[],still:false,stamp:-Infinity};
+ function animate(ms){
+  if(!scene||scene.still)return;
+  const interval=1000/options.fps,elapsed=ms-scene.stamp;
+  if(elapsed>=interval-.5){const remainder=elapsed%interval;scene.stamp=Number.isFinite(remainder)&&remainder<interval-.5?ms-remainder:ms;drawScene()}
+  sceneFrame=requestAnimationFrame(animate);
+ }
+ drawScene();sceneFrame=requestAnimationFrame(animate);
+}
+function sceneRGBA(hex,a){const v=parseInt(hex.slice(1),16);return 'rgba('+[(v>>16)&255,(v>>8)&255,v&255,a].join(',')+')'}
+function sceneRound(g,x,y,w,h,r){
+ r=Math.max(0,Math.min(r,w/2,h/2));g.beginPath?.();g.moveTo(x+r,y);g.lineTo(x+w-r,y);g.quadraticCurveTo(x+w,y,x+w,y+r);g.lineTo(x+w,y+h-r);g.quadraticCurveTo(x+w,y+h,x+w-r,y+h);g.lineTo(x+r,y+h);g.quadraticCurveTo(x,y+h,x,y+h-r);g.lineTo(x,y+r);g.quadraticCurveTo(x,y,x+r,y);g.closePath();
+}
+function renderScene(canvas,s,now,mini=false){
+ const g=canvas.getContext?.('2d'),width=canvas.clientWidth,height=canvas.clientHeight;
+ if(!g||!s||width<1||height<1)return;
+ const dpr=s.exporting?1:Math.min(options.quality,window.devicePixelRatio||1),cw=Math.round(width*dpr),ch=Math.round(height*dpr);
+ if(canvas.width!==cw||canvas.height!==ch){canvas.width=cw;canvas.height=ch}
+ g.setTransform(dpr,0,0,dpr,0,0);
+ const bottom=height,keyH=Math.min(height*.3,Math.max(mini?18:36,height*options.keyboardHeight/100)),line=Math.max(20,bottom-keyH);
+ const pad=mini?8:Math.min(24,width*.018),unit=(width-2*pad)/s.whites,travel=sceneTravel(),active=new Map(),primary=palettes[options.palette][0];
+ const glow=options.glow?options.glowAmount/100:0;
+ g.fillStyle=options.background;g.fillRect(0,0,width,height);
+ if(options.backdrop==='aurora'){
+  const wash=g.createRadialGradient(width*.3,line,0,width*.3,line,width*.8);
+  wash.addColorStop(0,sceneRGBA(primary,.13));wash.addColorStop(.5,sceneRGBA(palettes[options.palette][1],.045));wash.addColorStop(1,sceneRGBA(primary,0));g.fillStyle=wash;g.fillRect(0,0,width,line);
+ }
+ if(options.backdrop==='stars')for(let i=1;i<54;i++){
+  const sx=((i*137.509)%97)/97*width,sy=((i*i*13.27)%89)/89*line;
+  g.fillStyle='rgba(210,225,255,'+(.06+.12*(.5+.5*Math.sin(i+now*.35)))+')';g.fillRect(sx,sy,i%7===0?1.5:1,1);
+ }
+ if(options.guides)for(const [p,k] of s.keys)if(!k.black){g.fillStyle=p%12===0?'#bcd4f011':'#bcd4f006';g.fillRect(pad+(k.center-.5)*unit,0,1,line)}
+ g.save();g.beginPath();g.rect(pad,0,width-2*pad,line);g.clip();
+ const visible=sceneVisible(s,now);let particles=0,litNotes=0;
+ for(const n of visible){
+  const key=s.keys.get(n.pitch);if(!key)continue;
+  const cx=pad+key.center*unit,ink=sceneColor(n),geo=sceneNoteGeometry(n,now,s.sec,line,travel),age=geo.age;
+  if(geo.held&&n.volume>0&&(!active.has(n.pitch)||active.get(n.pitch).v<n.volume))active.set(n.pitch,{ink,v:n.volume});
+  if(age<0&&geo.bottom<0)continue;
+  if(geo.held&&options.rays>0&&n.volume>0){
+   const rh=line*.48,ray=g.createLinearGradient(0,line-rh,0,line);ray.addColorStop(0,sceneRGBA(ink,0));ray.addColorStop(1,sceneRGBA(ink,options.rays/360));g.fillStyle=ray;
+   g.beginPath();g.moveTo(cx-unit*1.2,line-rh);g.lineTo(cx+unit*1.2,line-rh);g.lineTo(cx+unit*.45,line);g.lineTo(cx-unit*.45,line);g.closePath();g.fill();
+  }
+  if(geo.bottom>0&&geo.top<line&&n.start+n.len>now/s.sec){
+   const bw=Math.max(2,unit*options.noteWidth/100*(key.black?.64:1)),bx=cx-bw/2,top=Math.max(-bw,geo.top),bh=Math.max(1,geo.bottom-top),r=bw*options.roundness/100;
+   if(options.trails>0){const length=Math.min(line*.2,20+options.trails*.6),trail=g.createLinearGradient(0,top-length,0,top+3);trail.addColorStop(0,sceneRGBA(ink,0));trail.addColorStop(1,sceneRGBA(ink,options.trails/500));g.fillStyle=trail;g.fillRect(bx,top-length,bw,length)}
+   const glowThis=glow>0&&litNotes++<100;if(glowThis){g.shadowColor=ink;g.shadowBlur=Math.min(18,bw*.8)*glow}
+   const alpha=.48+.0052*n.volume;
+   if(options.noteStyle==='glass'){
+    const glass=g.createLinearGradient(bx,0,bx+bw,0);glass.addColorStop(0,sceneRGBA(ink,.7*alpha));glass.addColorStop(.35,sceneRGBA(ink,alpha));glass.addColorStop(1,sceneRGBA(ink,.62*alpha));g.fillStyle=glass;
+   }else g.fillStyle=sceneRGBA(ink,options.noteStyle==='neon'?.12:alpha*.88);
+   sceneRound(g,bx,top,bw,bh,r);g.fill();g.shadowBlur=0;
+   g.strokeStyle=sceneRGBA(ink,options.noteStyle==='neon'?.95:.65);g.lineWidth=options.noteStyle==='neon'?1.5:.7;g.stroke();
+   if(options.noteStyle==='glass'&&bw>5&&bh>5){g.strokeStyle='#ffffff44';g.lineWidth=.7;sceneRound(g,bx+1.5,top+1.5,bw-3,bh-3,Math.max(0,r-1));g.stroke()}
+  }
+  if(age>=0&&age<.85&&n.volume>0){
+   const phase=age/.85;
+   if(options.rings>0){g.strokeStyle=sceneRGBA(ink,(1-phase)*options.rings/150);g.lineWidth=1;g.beginPath();g.ellipse(cx,line,unit*(.3+phase*1.6),3+phase*12,0,Math.PI,Math.PI*2);g.stroke()}
+   if(options.sparks){
+    const count=Math.round(options.sparkAmount/8);
+    for(let i=0;i<count&&particles<160;i++,particles++){
+     const seed=(i*2.399+n.pitch*.73+(n.lane||0)*1.7),dx=Math.sin(seed)*(14+i*4)*phase,dy=(24+Math.abs(Math.cos(seed))*60)*phase-20*phase*phase;
+     g.fillStyle=sceneRGBA(ink,(1-phase)*.8);g.beginPath();g.arc(cx+dx,line-dy,mini?.6:1+i%2*.35,0,Math.PI*2);g.fill();
+    }
+   }
+  }
+ }
+ g.restore();
+ const shape=[line,keyH,pad,unit].join('/'),rebuild=s.shape!==shape;s.shape=shape;
+ // A slim dark keybed and individually rounded keys replace the heavy block keyboard.
+ g.fillStyle='#03060c';sceneRound(g,pad-2,line-1,width-pad*2+4,keyH+5,4);g.fill();
+ for(const black of [false,true]){
+  const kh=black?keyH*.62:keyH,ivory=g.createLinearGradient(0,line,0,line+kh);
+  ivory.addColorStop(0,black?'#283343':'#d7e0e8');ivory.addColorStop(.12,black?'#141d2c':'#f4f7f8');ivory.addColorStop(1,black?'#080c14':'#bdc9d5');
+  for(const [p,k] of s.keys){
+   if(k.black!==black)continue;
+   const kw=Math.max(1,unit*k.width-1),kx=pad+unit*k.center-unit*k.width/2,a=active.get(p),round=Math.min(3,unit*.1);
+   if(typeof Path2D==='function'){if(rebuild||!k.path){k.path=new Path2D();sceneRound(k.path,kx,line,kw,kh,round)}}
+   g.fillStyle=ivory;if(k.path)g.fill(k.path);else{sceneRound(g,kx,line,kw,kh,round);g.fill()}
+   if(a&&options.keyLights){const light=g.createLinearGradient(0,line,0,line+kh);light.addColorStop(0,sceneRGBA(a.ink,.95));light.addColorStop(.4,sceneRGBA(a.ink,black?.6:.65));light.addColorStop(1,sceneRGBA(a.ink,.1));g.fillStyle=light;if(k.path)g.fill(k.path);else{sceneRound(g,kx,line,kw,kh,round);g.fill()}}
+   if(black){g.fillStyle='#ffffff0d';g.fillRect(kx+2,line+3,Math.max(0,kw-4),2)}
+   if(!mini&&options.keyLabels!=='none'&&(options.keyLabels==='all'||p%12===0)&&unit>(black?28:18)){
+    g.fillStyle=black?'#98a6b9':'#536175';g.font=Math.min(11,unit*.32)+'px system-ui,sans-serif';g.textAlign='center';g.fillText(pitchName(p),kx+kw/2,line+kh-7);
+   }
+  }
+ }
+ if(glow){g.shadowColor=primary;g.shadowBlur=8+12*glow}
+ g.fillStyle=sceneRGBA(primary,.35+glow*.5);g.fillRect(pad,line-1,width-2*pad,1.5);g.shadowBlur=0;
+ for(const [p,a] of active){const k=s.keys.get(p);if(!k)continue;const cx=pad+k.center*unit;g.fillStyle=a.ink;if(glow){g.shadowColor=a.ink;g.shadowBlur=14*glow}g.fillRect(cx-unit*.35,line-1,unit*.7,2);g.shadowBlur=0}
+ if(!mini&&!s.exporting&&!byId('stageHud').hidden){
+  const fade=g.createLinearGradient(0,0,0,72);fade.addColorStop(0,sceneRGBA(options.background,.9));fade.addColorStop(1,sceneRGBA(options.background,0));g.fillStyle=fade;g.fillRect(0,0,width,72);
+ }
+}
+function drawScene(){
+ if(!scene)return;const now=scene.still?scene.frozenTime:audio.currentTime-scene.start;renderScene(byId('scene'),scene,now);
+}
+function drawScenePreview(){
+ if(byId('visualOptions').hidden)return;
+ const layout=scenePreviewLayout||(scenePreviewLayout=keyLayout(lanes.flatMap(l=>l.notes))),pitches=[...layout.keys.keys()].filter(p=>!sharp(p)),base=Math.max(0,Math.floor(pitches.length/2)-5),events=[];
+ for(let i=0;i<12;i++){const lane=i%Math.min(3,lanes.length),pitch=pitches[Math.min(pitches.length-1,base+[0,4,2,7,4,9][i%6])];events.push({start:Math.floor(i/3)*.8+.1*(i%3),len:.6+(i%3)*.3,pitch,volume:80,lane,instrument:lanes[lane].instrument||'vsco-piano-1',instrumentId:laneInstrument(lanes[lane]).id})}
+ events.sort((a,b)=>a.start-b.start);renderScene(byId('scenePreview'),{...layout,events,sec:1,last:5,next:0,visible:[]},1.2,true);
+}
+function sceneMode(open){
+ document.documentElement.classList.toggle('scene-open',open);
+ try{if(typeof NotkaPlayer!=='undefined')NotkaPlayer.setSceneMode?.(open)}catch(e){}
+}
+function setSceneHud(show){
+ byId('stageHud').hidden=!show;byId('scene').tabIndex=show?-1:0;
+ (show?byId('stageHide'):byId('scene')).focus?.();drawScene();
+}
+byId('stageHide').onclick=()=>setSceneHud(false);
+byId('scene').onclick=()=>{if(byId('stageHud').hidden)setSceneHud(true)};
+byId('scene').onkeydown=e=>{if(byId('stageHud').hidden&&(e.key==='Enter'||e.key===' ')){e.preventDefault();setSceneHud(true)}};
+function leaveStage(){
+ stop();scene=null;byId('stage').hidden=true;sceneMode(false);byId('visualPlay').focus?.();
+}
+byId('visualPlay').onclick=()=>play('visual');
+byId('stageTransport').onclick=()=>play('visual');
+byId('leaveStage').onclick=leaveStage;
+window.addEventListener('resize',()=>{if(scene)drawScene()});
+// The native host calls this global entry point; each invocation closes one layer.
+function notkaBack(){
+ document.activeElement?.blur?.();
+ if(mediaExport?.back())return;
+ if(importJob){byId('cancelInstrumentImport').onclick();return}
+ if(exportJob){byId('cancelExport').onclick();return}
+ if(fileBusy)return;
+ if(!byId('exitSheet').hidden){cancelExit();return}
+ if(!byId('instrumentSheet').hidden){
+  if(!byId('instrumentDeleteConfirm').hidden)cancelInstrumentDelete();
+  else if(instrumentView==='edit'){flushDraft();if(!byId('soundAdvanced').hidden)soundPage(false);else showInstrumentView('library')}
+  else closeInstrument();return;
+ }
+ if(!byId('laneSheet').hidden){if(!byId('laneDeleteConfirm').hidden)cancelLaneDelete();else if(!byId('laneRename').hidden)closeLaneRename();else closeLane();return}
+ if(!byId('stepSheet').hidden){closeStep();return}
+ if(!byId('preferences').hidden){
+  if(!byId('presetConfirm').hidden)cancelPresetAction();
+  else if(!byId('songDeleteConfirm').hidden)cancelSongDelete();
+  else if(!byId('replaceTrack').hidden){pendingTrack=null;byId('replaceTrack').hidden=true;trackMessage('')}
+  else if(!byId('visualOptions').hidden&&presetNaming)byId('cancelNewPreset').onclick();
+  else if(byId('visualOptions').hidden&&byId('prefHome').hidden)showPrefs(false);
+  else closePrefs();return;
+ }
+ if(!byId('stage').hidden){leaveStage();return}
+ if(selected||selection.size){if(!byId('volumeRow').hidden)showVolume(false);else byId('closeNote').onclick();return}
+ askExit();
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();notkaBack()}});
+// Only a tap begun and ended on the backdrop counts. A slider drag never closes a sheet.
+for(const id of ['preferences','laneSheet','stepSheet','instrumentSheet','importProgress','exitSheet']){
+ const sheet=byId(id);let outside=false;
+ sheet.onpointerdown=e=>{outside=e.target===sheet};
+ sheet.onpointercancel=()=>outside=false;
+ sheet.onclick=e=>{const close=outside&&e.target===sheet;outside=false;if(close&&!sheet.hidden){e.stopPropagation();notkaBack()}};
+}
+function cancelExit(){byId('exitSheet').hidden=true;byId('prefs').focus?.()}
+function askExit(){
+ stop();finishGesture();flushDraft();
+ byId('exitSheet').hidden=false;byId('exitActions').hidden=false;
+ byId('exitChoices').hidden=byId('exitNameForm').hidden=true;byId('exitStatus').textContent='';byId('cancelExit').focus?.();
+}
+function finishExit(saved=false){
+ finishGesture();draftPending=true;flushDraft();
+ if(draftPending&&!saved){byId('exitStatus').textContent='Не удалось записать автокопию. Сохрани трек или попробуй снова.';return}
+ try{NotkaPlayer.leave()}catch(e){byId('exitStatus').textContent='Не удалось выйти. Попробуй снова.'}
+}
+byId('cancelExit').onclick=cancelExit;
+byId('exitDiscard').onclick=()=>finishExit();
+byId('exitSave').onclick=()=>{
+ byId('exitActions').hidden=true;
+ if(songFile){byId('exitChoices').hidden=false;byId('exitOverwrite').textContent='Заменить «'+songFile.slice(0,-6)+'»'}
+ else byId('exitNew').onclick();
+};
+byId('exitNew').onclick=()=>{byId('exitChoices').hidden=true;byId('exitNameForm').hidden=false;byId('exitStatus').textContent='';byId('exitName').value='';byId('exitName').focus?.()};
+byId('exitOverwrite').onclick=()=>writeSong(songFile,true,true);
+byId('exitConfirm').onclick=()=>{try{writeSong(songNameFile(byId('exitName').value),false,true)}catch(e){byId('exitStatus').textContent=e.message}};
+byId('exitName').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();byId('exitConfirm').onclick()}};
+
+function stop(mute=true){
+ generation++;clearInterval(timer);endScene();playback=null;running=false;current=-1;
+ if(mute)for(const sources of voices)silenceVoice(sources);
+ controls();paintSoon();
+}
+async function play(mode='visible'){
+ if(importJob)return;
+ if(running){stop();return}
+ finishGesture();clearSelection();
+ const visual=mode==='visual',origin=mode==='visible'?ticks(x):0;
+ const events=[];
+ for(const [laneIndex,lane] of lanes.entries())if(!lane.muted){
+  for(const [variant,note] of lane.notes.entries())if(note.start+note.len>origin)events.push({...note,variant,lane:laneIndex,instrument:lane.instrument||'vsco-piano-1',instrumentId:laneInstrument(lane).id,settings:{...laneInstrument(lane).settings}});
+ }
+ events.sort((a,b)=>a.start-b.start);
+ if(!events.length){byId('status').textContent='От левого края сетки дальше нет звучащих нот. Нажми |▶, чтобы сыграть с начала.';return}
+ byId('status').textContent='';
+ const token=++generation;running=true;controls();paintSoon();
+ if(visual){byId('stage').hidden=false;byId('stageHud').hidden=false;byId('scene').tabIndex=-1;sceneMode(true);byId('stageTransport').textContent='■';byId('stageTransport').setAttribute('aria-label','Остановить');byId('leaveStage').focus?.()}
+ try{
+  await unlock();
+  await Promise.all([...new Set(events.map(n=>n.instrument))].map(prepareInstrument));
+  if(token!==generation)return;
+  const sec=60/bpm/PPQ,start=audio.currentTime+(visual?sceneTravel():.045),last=events.reduce((end,n)=>Math.max(end,n.start+n.len),0);
+  const p=playback={start,sec,last,visual,cycle:0,next:0,loopUntil:visual&&options.loop?Infinity:0};
+  if(visual)beginScene(events,start,sec,last,p.loopUntil);
+  function pulse(){
+   const now=audio.currentTime,period=last*sec;
+   if(visual&&p.cycle<Math.floor((now-start)/period)){p.cycle=Math.min(p.loopUntil,Math.max(0,Math.floor((now-start)/period)));p.next=0}
+   let scheduled=0;
+   while(scheduled<512){
+    if(p.next>=events.length){if(p.cycle>=p.loopUntil)break;p.cycle++;p.next=0}
+    if(p.cycle>p.loopUntil)break;
+    const n=events[p.next],on=Math.max(n.start,origin),when=start+p.cycle*period+(on-origin)*sec,off=start+p.cycle*period+(n.start+n.len-origin)*sec;
+    if(when>now+.12)break;
+    const at=Math.max(when,now);
+    // Keep the original envelope length and skip audio already elapsed before this start.
+    if(off>at){const voice=instrumentNote(n.instrument,n.pitch,at,n.len*sec,n.volume,n.settings,n.variant,Math.max(0,at-(off-n.len*sec)));if(voice){voice.playback=p;voice.cycle=p.cycle}}
+    p.next++;scheduled++;
+   }
+   const elapsed=Math.max(0,(now-start)/sec),cycle=visual?Math.min(p.loopUntil,Math.floor(elapsed/last)):0;
+   current=origin+elapsed-cycle*last;
+   if(elapsed>=(p.loopUntil+1)*last-origin){stop(false);return}
+   if(visual)return;
+   if(pixels(current)<x||pixels(current)>=x+w){x=pixels(current);paintSoon()}else paintCursor();
+  }
+  timer=setInterval(pulse,32);pulse();
+ }catch(e){if(token===generation){audioFail();byId('status').textContent=e.message||'Звук недоступен.'}}
+}
+const trackHost=typeof NotkaPlayer!=='undefined'&&typeof NotkaPlayer.writeDraft==='function'?NotkaPlayer:null;
+const songHost=trackHost&&typeof trackHost.songList==='function'?trackHost:null;
+const panelHint='Для файлов и автосохранения обнови APK через настройки стартовой панели.';
+let draftTimer=0,draftPending=false,trackStarted=false,fileBusy=false,pendingTrack=null;
+function encodeTrack(draft=false){
+ reconcileRack();return JSON.stringify({format:'notka.track',version:3,ppq:PPQ,bpm,division,noteDivision,viewDivision,activeLane,lanes,instruments:projectInstruments,scene:cleanSceneOptions(options),instrumentSources:instrumentReferences(lanes),...(draft&&songFile?{draftFile:songFile}:{})});
+}
+function readTrack(raw){
+ if(!raw)throw Error('Файл пуст, слишком велик или недоступен.');
+ const t=JSON.parse(raw),integer=Number.isSafeInteger;
+ if(t?.format!=='notka.track'||![1,2,3].includes(t.version)||t.ppq!==PPQ||!integer(t.bpm)||t.bpm<40||t.bpm>220||
+  !divisions.includes(t.division)||
+  ![t.noteDivision,t.viewDivision].every(value=>value===undefined||divisions.includes(value)))throw Error('Неизвестный формат трека.');
+ const list=t.version===1?[{name:'Дорожка 1',muted:false,notes:t.notes}]:t.lanes;
+ const active=t.version===1?0:t.activeLane;
+ if(!Array.isArray(list)||!list.length||!integer(active)||active<0||active>=list.length)throw Error('Неверный список дорожек.');
+ const cleanLanes=list.map(lane=>{
+  if(!lane||typeof lane.name!=='string'||!lane.name.trim()||lane.name.length>48||
+   typeof lane.muted!=='boolean'||(lane.ghost!==undefined&&typeof lane.ghost!=='boolean')||!Array.isArray(lane.notes))throw Error('Некорректная дорожка.');
+  const instrument=normalizeInstrument(lane.instrument);
+  if(typeof instrument!=='string'||(!instrumentById(instrument)&&!/^lib-[a-z0-9-]{1,43}$/.test(instrument)))throw Error('Неизвестный инструмент дорожки. Обнови редактор.');
+  return {name:lane.name,muted:lane.muted,ghost:lane.ghost===true,instrument,instrumentId:lane.instrumentId,notes:readNotes(lane.notes)};
+ });
+ let rack=[];
+ if(t.version===3){
+  if(!Array.isArray(t.instruments)||!t.instruments.length||t.instruments.length>128)throw Error('Неверный набор инструментов проекта.');
+  const ids=new Set();rack=t.instruments.map(i=>{
+   if(!i||typeof i.id!=='string'||!/^inst-[a-z0-9-]{1,40}$/.test(i.id)||ids.has(i.id)||typeof i.name!=='string'||!i.name.trim()||i.name.length>48||typeof i.source!=='string'||(!instrumentById(i.source)&&!/^lib-[a-z0-9-]{1,43}$/.test(i.source)))throw Error('Некорректный инструмент проекта.');
+   ids.add(i.id);return {id:i.id,source:i.source,name:i.name.trim(),settings:soundSettings(i.settings,true)};
+  });
+  for(const lane of cleanLanes)if(!rack.some(i=>i.id===lane.instrumentId&&i.source===lane.instrument))throw Error('Дорожка ссылается на отсутствующий инструмент.');
+ }else for(const lane of cleanLanes){
+  let item=rack.find(i=>i.source===lane.instrument);
+  if(!item){item={id:'inst-'+(rack.length+1),source:lane.instrument,name:instrumentById(lane.instrument)?.name||'Инструмент '+(rack.length+1),settings:soundSettings()};rack.push(item)}
+  lane.instrumentId=item.id;
+ }
+ return {bpm:t.bpm,division:t.division,noteDivision:t.noteDivision??0,viewDivision:t.viewDivision??0,activeLane:active,lanes:cleanLanes,instruments:rack,scene:cleanSceneOptions(t.scene)};
+}
+function readNotes(notes){
+ const integer=Number.isSafeInteger;
+ const clean=notes.map(n=>{
+  if(!n||!integer(n.start)||n.start<0||!integer(n.len)||n.len<1||!integer(n.start+n.len)||
+   !integer(n.pitch)||n.pitch<lowestPitch||n.pitch>highestPitch||!integer(n.volume)||n.volume<0||n.volume>100)
+   throw Error('Некорректная нота.');
+  return {start:n.start,len:n.len,pitch:n.pitch,volume:n.volume};
+ });
+ return clean;
+}
+function flushDraft(){
+ clearTimeout(draftTimer);draftTimer=0;
+ if(!draftPending||!trackHost)return;
+ if(gesture?.n){draftTimer=setTimeout(flushDraft,180);return}
+ try{if(trackHost.writeDraft(encodeTrack(true))){draftPending=false;return}}catch{}
+ byId('status').textContent='Не удалось записать автокопию. Проверь свободное место.';
+}
+function trackChanged(defer=false){
+ trackStarted=true;draftPending=true;
+ if(defer){if(!draftTimer)draftTimer=setTimeout(flushDraft,180)}
+ else flushDraft();
+}
+function applyTrack(t){
+ stop();finishGesture(true);contacts.clear();pinch=null;clearSelection();templateNote=null;
+ songFile=t.songFile||null;projectInstruments=t.instruments;lanes=t.lanes;activeLane=t.activeLane;score=lanes[activeLane].notes;renderLanes();
+ options=cleanSceneOptions(t.scene);scenePreviewLayout=null;syncSceneControls();
+ bpm=t.bpm;division=t.division;noteDivision=t.noteDivision;viewDivision=t.viewDivision;
+ byId('noteSize').value=String(noteDivision);byId('gridDivision').value=String(viewDivision);byId('snap').value=String(division);
+ x=0;
+ if(score.length){let first=score[0];for(const n of score)if(n.start<first.start)first=n;y=clampY((highestPitch-first.pitch+.5)*row-h/2)}
+ trackStarted=true;byId('status').textContent='Трек загружен.';
+ if(t.presetName){
+  const preset=presetSongs.find(p=>p.name===t.presetName),missing=[...new Set(lanes.map(l=>l.instrument))].filter(id=>instrumentById(id)?.remote&&!downloadedInstruments.has(id));
+  if(missing.length)byId('status').textContent='Трек загружен. Скачай в инструментах: '+missing.map(id=>instrumentById(id)?.name||preset?.instruments?.[id]||id).join(', ')+'.';
+ }
+ trackChanged();controls();paintSoon();closePrefs();
+}
+function trackMessage(message){byId('trackStatus').textContent=message}
+function presentTrack(raw,file=null,presetName=null){
+ const t=readTrack(raw);t.songFile=file;t.presetName=presetName;
+ if(!trackStarted){applyTrack(t);return}
+ pendingTrack=t;byId('replaceTrack').hidden=false;
+ trackMessage('Заменить открытый трек?');
+}
+function recoverDraft(){
+ try{
+  const raw=trackHost?.readDraft();if(!raw)throw Error('Автокопии пока нет.');
+  const t=JSON.parse(raw);
+  // Only an old local draft inherits the pre-0.55 device-wide appearance.
+  if(t.scene===undefined)try{t.scene=cleanSceneOptions(JSON.parse(trackHost.readSceneOptions?.()||localStorage.getItem('notka.scene')||'{}'))}catch{}
+  presentTrack(JSON.stringify(t),t.draftFile||null);
+ }
+ catch(e){trackMessage(e.message)}
+}
+function trackActions(){
+ byId('saveAs').hidden=!songFile;byId('saveAs').disabled=byId('saveTrack').disabled=byId('loadFile').disabled=byId('lastTrack').disabled=fileBusy||!trackHost;
+ byId('exportTrack').disabled=fileBusy;byId('closePrefs').disabled=byId('loadTrack').disabled=fileBusy;
+}
+async function importTrack(){
+ if(!trackHost||fileBusy)return;
+ fileBusy=true;trackActions();pendingTrack=null;byId('replaceTrack').hidden=true;
+ try{
+  if(!trackHost.pickTrack(false))throw Error('Не удалось открыть выбор файла.');
+  let result;
+  while(!(result=trackHost.trackResult()))await new Promise(resolve=>setTimeout(resolve,200));
+  if(result==='cancelled'){trackMessage('Импорт отменён.');return}
+  presentTrack(trackHost.readDocument());
+ }catch(e){trackMessage(e instanceof SyntaxError?'Это не файл трека «Нотки».':e.message)}
+ finally{fileBusy=false;trackActions()}
+}
+// Compact built-in notes keep signed editions within older launchers' size limit.
+const presetSongs=[{"id":"memory","name":"Memory","instruments":{"lib-mda-grand-1":"Grand Piano · MDA"},"track":{"format":"notka.track","version":2,"ppq":960,"bpm":150,"division":4,"noteDivision":0,"viewDivision":0,"activeLane":1,"lanes":[{"name":"Дорожка 1","muted":false,"ghost":true,"instrument":"lib-mda-grand-1","notes":[[0,1200,60,100],[960,1200,67,100],[1920,1200,65,100],[2880,1200,60,100],[3840,1200,64,100],[5280,1200,64,100],[6720,1200,65,100],[8640,1200,60,100],[9600,1200,65,100],[10560,1200,60,100],[11520,1200,64,100],[12960,1200,64,100],[14400,1200,65,100],[15360,1200,60,100],[16320,1200,67,100],[17280,1200,65,100],[18240,1200,60,100],[19200,1200,64,100],[20640,1200,64,100],[22080,1200,65,100],[24000,1200,60,100],[24960,1200,65,100],[25920,1200,69,100],[26880,1200,67,100],[28320,1200,65,100],[29760,960,67,100],[30720,1200,60,100],[31680,1200,67,100],[32640,1200,65,100],[33600,1200,60,100],[34560,1200,64,100],[36000,1200,64,100],[37440,1200,65,100],[39360,1200,60,100],[40320,1200,65,100],[41280,1200,60,100],[42240,1200,64,100],[43680,1200,64,100],[45120,1200,65,100],[46080,1200,60,100],[47040,1200,67,100],[48000,1200,65,100],[48960,1200,60,100],[49920,1200,64,100],[51360,1200,64,100],[52800,1200,65,100],[54720,1200,60,100],[55680,1200,65,100],[56640,1200,69,100],[57600,1200,67,100],[59040,1200,65,100],[60480,960,67,100]]},{"name":"Дорожка 2","muted":false,"ghost":false,"instrument":"vsco-piano-1","notes":[[960,1440,53,100],[2880,1440,53,100],[4800,1440,53,100],[6720,1440,53,100],[8640,1440,53,100],[10560,1440,53,100],[12480,1440,53,100],[14400,1440,53,100],[16320,1440,53,100],[18240,1440,53,100],[20160,1440,53,100],[22080,1440,53,100],[24000,1440,53,100],[25920,1440,53,100],[27840,1440,53,100],[29760,1440,53,100],[31680,1440,52,100],[33600,1440,52,100],[35520,1440,52,100],[37440,1440,52,100],[39360,1440,52,100],[41280,1440,52,100],[43200,1440,52,100],[45120,1440,52,100],[47040,1440,52,100],[48960,1440,52,100],[50880,1440,52,100],[52800,1440,52,100],[54720,1440,57,100],[56640,1440,57,100],[58560,1440,57,100],[60480,960,57,100]]}]}}];
+for(const preset of presetSongs)for(const lane of preset.track.lanes)lane.notes=lane.notes.map(([start,len,pitch,volume])=>({start,len,pitch,volume}));
+let songNames=[],songFile=null,pendingSongDelete=null;
+function cancelSongDelete(){pendingSongDelete=null;byId('songDeleteConfirm').hidden=true}
+function askSongDelete(file){if(fileBusy||!songNames.includes(file))return;pendingTrack=null;byId('replaceTrack').hidden=true;pendingSongDelete=file;byId('songDeleteName').textContent='Удалить «'+file.slice(0,-6)+'»?';byId('songDeleteConfirm').hidden=false;byId('songDeleteConfirm').scrollIntoView?.({block:'nearest'})}
+byId('cancelSongDelete').onclick=cancelSongDelete;
+byId('confirmSongDelete').onclick=()=>{
+ const file=pendingSongDelete;if(!file||fileBusy)return;
+ if(typeof songHost?.deleteSong!=='function'){trackMessage('Для удаления треков установи APK 0.48.');return}
+ try{if(!songHost.deleteSong(file))throw Error('Не удалось удалить трек.');songNames=songNames.filter(f=>f!==file);if(songFile===file){songFile=null;trackChanged()}cancelSongDelete();renderSongs();trackMessage('Трек удалён.')}catch(e){trackMessage(e.message)}
+};
+const folderHint=()=>songHost.publicSongs()?'Папка: Загрузки/Notka':'Папка приложения: files/Download/Notka';
+const songUpdateHint='Для списка треков и сохранения по имени обнови APK «Нотки» до 0.25 или новее.';
+function renderSongs(){
+ const list=byId('songList'),query=byId('songQuery').value.trim().toLowerCase();
+ list.replaceChildren();
+ for(const file of songNames){
+  const name=file.slice(0,-6);
+  if(!name.toLowerCase().includes(query))continue;
+  const row=document.createElement('div');row.className='song-row';const button=document.createElement('button');button.className='button';button.textContent=name;
+  button.onclick=()=>{
+   pendingTrack=null;byId('replaceTrack').hidden=true;
+   cancelSongDelete();try{presentTrack(songHost.openSong(file),file)}
+   catch(error){trackMessage(error instanceof SyntaxError?'Файл повреждён.':error.message)}
+  };const remove=document.createElement('button');remove.className='button song-remove';remove.innerHTML='<svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg>';remove.setAttribute('aria-label','Удалить '+name);remove.onclick=()=>askSongDelete(file);row.append(button,remove);list.append(row);
+ }
+ for(const preset of presetSongs){
+  if(!preset.name.toLowerCase().includes(query))continue;
+  const button=document.createElement('button');button.className='button';button.textContent=preset.name+' · Предустановленный';
+  button.onclick=()=>{
+   if(fileBusy)return;
+   cancelSongDelete();pendingTrack=null;byId('replaceTrack').hidden=true;
+   try{presentTrack(JSON.stringify(preset.track),null,preset.name)}catch(error){trackMessage(error.message)}
+  };list.append(button);
+ }
+ if(!list.children.length)list.textContent=query?'Совпадений нет.':'Сохранённых треков пока нет.';
+}
+byId('saveAs').onclick=()=>{
+ if(!songHost){trackMessage(songUpdateHint);return}
+ byId('prefHome').hidden=true;byId('songSave').hidden=false;byId('prefTitle').textContent=songFile?'Сохранить как…':'Сохранить';
+ byId('songName').value='';trackMessage(folderHint());byId('songName').focus?.();
+};
+byId('saveTrack').onclick=()=>{
+ if(!songFile){byId('saveAs').onclick();return}
+ if(!songHost?.overwriteSong){trackMessage('Для записи в открытый файл обнови APK до 0.27.');return}
+ writeSong(songFile,true);
+};
+function songNameFile(value){
+ const name=value.trim().replace(/\.notka$/i,'').trim();
+ if(!name||name.startsWith('.')||/[\/\\:*?"<>|\u0000-\u001f\u007f]/.test(name)||name.length>80||new Blob([name]).size>240)throw Error('Введи название до 80 символов без знаков пути.');
+ return name+'.notka';
+}
+byId('confirmSave').onclick=()=>{try{writeSong(songNameFile(byId('songName').value),false)}catch(e){trackMessage(e.message)}};
+function writeSong(file,overwrite,exiting=false){
+ const message=text=>exiting?byId('exitStatus').textContent=text:trackMessage(text);
+ try{
+  const data=encodeTrack();if(new Blob([data]).size>=8388608)throw Error('Трек превышает лимит в 8 МБ.');
+  const result=overwrite?songHost.overwriteSong(file,data):songHost.saveSong(file,data);
+  if(result===2){message('Такое название уже есть. Введи другое имя, чтобы сохранить отдельную копию.');return}
+  if(result!==1)throw Error('Не удалось записать трек. Проверь свободное место.');
+  songFile=file;trackChanged();
+  if(exiting)finishExit(true);else{showPrefs(false);message('Сохранено: '+file)}
+ }catch(e){message(e.message)}
+}
+byId('songName').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();byId('confirmSave').onclick()}};
+byId('loadTrack').onclick=()=>{
+ cancelSongDelete();
+ byId('prefHome').hidden=true;byId('trackChoices').hidden=false;byId('prefTitle').textContent='Загрузить';
+ byId('songQuery').value='';byId('songQuery').hidden=true;byId('songSearchButton').setAttribute('aria-expanded','false');
+ songNames=[];byId('songSearchButton').hidden=false;renderSongs();
+ if(!songHost){trackMessage(songUpdateHint);return}
+ try{
+  const names=JSON.parse(songHost.songList());
+  if(!Array.isArray(names))throw Error();
+  songNames=names.filter(f=>typeof f==='string'&&f.endsWith('.notka')).sort((a,b)=>a.localeCompare(b,'ru'));
+  renderSongs();trackMessage(folderHint());
+ }catch{trackMessage('Не удалось прочитать папку с треками.')}
+};
+byId('songSearchButton').onclick=()=>{
+ const input=byId('songQuery');input.hidden=!input.hidden;byId('songSearchButton').setAttribute('aria-expanded',String(!input.hidden));
+ if(input.hidden){input.value='';renderSongs()}else input.focus?.();
+};
+byId('songQuery').oninput=()=>{cancelSongDelete();renderSongs()};
+byId('loadFile').onclick=importTrack;
+byId('lastTrack').onclick=recoverDraft;
+byId('replaceTrack').onclick=()=>{if(pendingTrack)applyTrack(pendingTrack);pendingTrack=null};
+
+byId('playStart').onclick=()=>play('start');
+byId('play').onclick=()=>play();
+const tempoInput=byId('bpm');
+function setTempo(value){
+ if(!running&&Number.isInteger(value)){
+  const next=Math.max(40,Math.min(220,value));
+  if(bpm!==next){bpm=next;trackChanged()}
+ }
+ tempoInput.value=String(bpm);controls();
+}
+tempoInput.onfocus=()=>tempoInput.select?.();
+tempoInput.onblur=()=>setTempo(/^\d+$/.test(tempoInput.value)?Number(tempoInput.value):bpm);
+tempoInput.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();tempoInput.blur()}};
+for(const [id,d] of [['minus',-5],['plus',5]])byId(id).onclick=()=>setTempo(bpm+d);
+// Translucent ink blends with the actual note fill, including its depth gradient.
+function instrumentInk(accent){
+ if(!/^#[0-9a-f]{6}$/i.test(accent))return '#000';
+ const linear=[1,3,5].map(i=>{const c=parseInt(accent.slice(i,i+2),16)/255;return c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4)});
+ return .2126*linear[0]+.7152*linear[1]+.0722*linear[2]<.075?'#fff':'#000';
+}
+try{
+ const colors=JSON.parse(NotkaPlayer.themeColors());
+ for(const [key,value] of Object.entries(colors))if(/^#[0-9a-f]{6}$/i.test(value))document.documentElement.style.setProperty('--'+key,value);
+ document.documentElement.style.setProperty('--instrument-ink',instrumentInk(colors.accent));
+ document.documentElement.setAttribute('data-note-depth',String(colors.depth===true));
+ document.documentElement.style.colorScheme=colors.scheme==='light'?'light':'dark';
+}catch{}
+function suspendEditor(){cancelLaneHold();instrumentRequest++;previewSerial++;contacts.clear();pinch=null;finishGesture(true);flushDraft();stop()}
+document.addEventListener('visibilitychange',()=>{sourceVisibility();if(document.hidden)suspendEditor()});
+window.addEventListener('resize',resize);
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(resize).observe(roll);
+const exportHost=trackHost&&['beginExport','appendExport','finishExport','cancelExport'].every(k=>typeof trackHost[k]==='function')?trackHost:null;
+let exportJob=null;
+const editorVersion='0.71';
+const exportBase=name=>name.trim().replace(/\.notka$/i,'').replace(/(?:\(v\d+(?:\.\d+)+\))+$/i,'').trim();
+const exportRate=32000,exportLimit=256*1024*1024;
+const exportText=s=>new Uint8Array(Array.from(unescape(encodeURIComponent(s)),c=>c.charCodeAt(0)));
+const joinBytes=parts=>{const out=new Uint8Array(parts.reduce((n,p)=>n+p.length,0));let at=0;for(const p of parts){out.set(p,at);at+=p.length}return out};
+const numberBytes=(n,size,little=false)=>{const b=new Uint8Array(size);for(let i=0;i<size;i++){b[little?i:size-1-i]=n%256;n=Math.floor(n/256)}return b};
+function midiVar(n){
+ if(!Number.isSafeInteger(n)||n<0||n>0x0fffffff)throw Error('Слишком большой промежуток времени для MIDI.');
+ const bytes=[n&127];while(n=Math.floor(n/128))bytes.unshift((n&127)|128);return bytes;
+}
+function makeMidi(track,title){
+ if(track.lanes.length>15)throw Error('Для экспорта MIDI оставь не больше 15 непустых дорожек.');
+ const meta=(kind,text)=>[255,kind,...midiVar(exportText(text).length),...exportText(text)];
+ const chunk=body=>joinBytes([exportText('MTrk'),numberBytes(body.length,4),body]);
+ const tempo=Math.round(60000000/track.bpm);
+ const conductor=chunk(new Uint8Array([0,...meta(3,title),0,255,81,3,...numberBytes(tempo,3),0,255,88,4,4,2,24,8,0,255,47,0]));
+ const tracks=track.lanes.map((lane,i)=>{
+  const channel=i<9?i:i+1,def=instrumentById(lane.instrument),instance=laneInstrument(lane,track.instruments||projectInstruments),settings=instance.settings;
+  if(!def)throw Error('Нет данных об инструменте дорожки «'+lane.name+'». Обнови каталог инструментов.');
+  const parts=[new Uint8Array([0,...meta(3,lane.name),0,...meta(4,instance.name),0,0xb0|channel,0,0,0,0xb0|channel,32,0,0,0xc0|channel,def.gm,0,0xb0|channel,7,Math.round(Math.min(100,settings.volume)*127/100),0,0xb0|channel,10,Math.round((settings.pan+100)*127/200)])];
+  const source=instrumentSources.get(lane.instrument);if(source)parts.push(new Uint8Array([0,...meta(1,source.name+' — '+source.url)]));
+  const events=[];let end=0;
+  for(const note of lane.notes){
+   if(!note.volume||!settings.volume)continue;
+   if(note.pitch+settings.transpose<0||note.pitch+settings.transpose>127)throw Error('Высота ноты после транспонирования выходит за диапазон MIDI.');
+   end=Math.max(end,note.start+note.len);
+   events.push({time:note.start,on:true,pitch:Math.max(0,Math.min(127,note.pitch+settings.transpose)),velocity:Math.max(1,Math.round(Math.pow(note.volume/100,settings.velocity)*127))},{time:note.start+note.len,on:false,pitch:Math.max(0,Math.min(127,note.pitch+settings.transpose)),velocity:0});
+  }
+  events.sort((a,b)=>a.time-b.time||Number(a.on)-Number(b.on)||a.pitch-b.pitch);
+  let tick=0;
+  for(const e of events){parts.push(new Uint8Array([...midiVar(e.time-tick),(e.on?0x90:0x80)|channel,e.pitch,e.velocity]));tick=e.time}
+  parts.push(new Uint8Array([...midiVar(end-tick),255,47,0]));return chunk(joinBytes(parts));
+ });
+ return joinBytes([exportText('MThd'),numberBytes(6,4),numberBytes(1,2),numberBytes(tracks.length+1,2),numberBytes(PPQ,2),conductor,...tracks]);
+}
+const crcTable=Array.from({length:256},(_,n)=>{for(let i=0;i<8;i++)n=(n&1)?0xedb88320^(n>>>1):n>>>1;return n>>>0});
+function crcUpdate(crc,bytes){for(const b of bytes)crc=crcTable[(crc^b)&255]^(crc>>>8);return crc>>>0}
+function exportCheck(job){if(job.cancelled)throw Error('Экспорт отменён.')}
+async function exportWrite(job,bytes){
+ for(let at=0;at<bytes.length;at+=32768){
+  exportCheck(job);const part=bytes.subarray(at,at+32768);job.bytes+=part.length;
+  if(job.bytes>exportLimit)throw Error('Экспорт превышает 256 МБ. Экспортируй MIDI или сократи число дорожек.');
+  let binary='';for(const b of part)binary+=String.fromCharCode(b);
+  if(!exportHost.appendExport(btoa(binary)))throw Error('Не удалось записать файл. Проверь свободное место.');
+  if(++job.chunks%16===0)await new Promise(resolve=>setTimeout(resolve,0));
+ }
+}
+async function zipFile(job,name,generate){
+ const filename=exportText(name),offset=job.bytes;
+ await exportWrite(job,joinBytes([numberBytes(0x04034b50,4,true),numberBytes(20,2,true),numberBytes(0x808,2,true),new Uint8Array(4),numberBytes(33,2,true),new Uint8Array(12),numberBytes(filename.length,2,true),new Uint8Array(2),filename]));
+ let crc=0xffffffff,size=0;
+ const write=async bytes=>{crc=crcUpdate(crc,bytes);size+=bytes.length;await exportWrite(job,bytes)};
+ await generate(write);crc=(crc^0xffffffff)>>>0;
+ await exportWrite(job,joinBytes([numberBytes(0x08074b50,4,true),numberBytes(crc,4,true),numberBytes(size,4,true),numberBytes(size,4,true)]));
+ job.entries.push(joinBytes([numberBytes(0x02014b50,4,true),numberBytes(20,2,true),numberBytes(20,2,true),numberBytes(0x808,2,true),new Uint8Array(4),numberBytes(33,2,true),numberBytes(crc,4,true),numberBytes(size,4,true),numberBytes(size,4,true),numberBytes(filename.length,2,true),new Uint8Array(12),numberBytes(offset,4,true),filename]));
+}
+async function zipFinish(job){
+ const offset=job.bytes,central=joinBytes(job.entries);await exportWrite(job,central);
+ await exportWrite(job,joinBytes([numberBytes(0x06054b50,4,true),new Uint8Array(4),numberBytes(job.entries.length,2,true),numberBytes(job.entries.length,2,true),numberBytes(central.length,4,true),numberBytes(offset,4,true),new Uint8Array(2)]));
+}
+function waveHeader(frames){return joinBytes([exportText('RIFF'),numberBytes(36+frames*4,4,true),exportText('WAVEfmt '),numberBytes(16,4,true),numberBytes(1,2,true),numberBytes(2,2,true),numberBytes(exportRate,4,true),numberBytes(exportRate*4,4,true),numberBytes(4,2,true),numberBytes(16,2,true),exportText('data'),numberBytes(frames*4,4,true)])}
+// Render short windows with one second of compressor warm-up. Long songs never
+// allocate a full-length AudioBuffer; stems use the same samples and timing.
+async function renderWave(job,track,frames,write,label){
+ await write(waveHeader(frames));
+ const secondsPerTick=60/track.bpm/PPQ;
+ const events=track.lanes.flatMap(lane=>lane.notes.map((note,variant)=>({note,variant,bank:instrumentCache.get(lane.instrument),settings:laneInstrument(lane,track.instruments||projectInstruments).settings}))).sort((a,b)=>a.note.start-b.note.start);
+ let cursor=0,active=[];
+ for(let frame=0;frame<frames;frame+=exportRate*8){
+  exportCheck(job);const count=Math.min(exportRate*8,frames-frame),warm=Math.min(frame,exportRate),begin=(frame-warm)/exportRate,end=(frame+count)/exportRate;
+  while(cursor<events.length&&events[cursor].note.start*secondsPerTick<end)active.push(events[cursor++]);
+  active=active.filter(e=>(e.note.start+e.note.len)*secondsPerTick+(e.settings.release??e.bank.release)>begin);
+  const Context=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+  if(!Context)throw Error('Для WAV обнови Android System WebView. MIDI можно экспортировать отдельно.');
+  const context=new Context(2,count+warm,exportRate),gain=context.createGain(),limiter=context.createDynamicsCompressor();gain.gain.value=.65;gain.connect(limiter);limiter.connect(context.destination);
+  for(const {note,bank,settings,variant} of active){
+   const start=note.start*secondsPerTick,length=note.len*secondsPerTick,elapsed=Math.max(0,begin-start),when=Math.max(0,start-begin);
+   createInstrumentVoice(context,gain,bank,settings,note.pitch,when,length,note.volume,elapsed,variant);
+  }
+  const buffer=await new Promise((resolve,reject)=>{context.oncomplete=e=>resolve(e.renderedBuffer);try{const promise=context.startRendering();if(promise?.then)promise.then(resolve,reject)}catch(e){reject(e)}});
+  exportCheck(job);const left=buffer.getChannelData(0),right=buffer.getChannelData(1),pcm=new Uint8Array(count*4),view=new DataView(pcm.buffer);
+  for(let i=0;i<count;i++)for(let channel=0;channel<2;channel++){const value=Math.max(-1,Math.min(1,(channel?right:left)[i+warm]));view.setInt16(i*4+channel*2,Math.round(value*(value<0?32768:32767)),true)}
+  await write(pcm);byId('exportStatus').textContent=label+' · '+Math.round((frame+count)*100/frames)+'%';
+  await new Promise(resolve=>setTimeout(resolve,0));
+ }
+}
+function exportBusy(busy){
+ fileBusy=busy;trackActions();for(const id of ['exportMidi','exportAudio','exportName','exportMuted'])byId(id).disabled=busy;
+ byId('exportNotka').disabled=busy||!songHost?.saveSong;byId('cancelExport').hidden=!busy;
+}
+byId('exportTrack').onclick=()=>{
+ stop();flushDraft();byId('prefHome').hidden=true;byId('exportOptions').hidden=false;byId('prefTitle').textContent='Экспорт';
+ byId('exportName').value=exportBase(songFile||'Мой трек').slice(0,48);byId('exportMuted').checked=false;
+ byId('exportStatus').textContent=exportHost?'': 'Для экспорта установи APK 0.35 или новее.';
+ byId('exportNotka').disabled=!songHost?.saveSong;byId('exportMidi').disabled=byId('exportAudio').disabled=!exportHost;
+};
+byId('cancelExport').onclick=()=>{if(exportJob){exportJob.cancelled=true;byId('exportStatus').textContent='Отмена…'}};
+async function exportMusic(withAudio){
+ const notka=withAudio==='notka';
+ if(exportJob||(notka?!songHost?.saveSong:!exportHost))return;
+ const name=notka?exportBase(byId('exportName').value):byId('exportName').value.trim();
+ if(!name||name.startsWith('.')||/[\/\\:*?"<>|\u0000-\u001f\u007f]/.test(name)||name.length>48){byId('exportStatus').textContent='Введи название до 48 символов без знаков пути.';return}
+ const job={cancelled:false,bytes:0,chunks:0,entries:[]};exportJob=job;exportBusy(true);
+ try{
+  stop();flushDraft();const original=encodeTrack();
+  if(notka){
+   const file=name+'(v'+editorVersion+').notka',result=songHost.saveSong(file,original);
+   if(result!==1)throw Error(result===2?'Такая копия уже есть. Введи другое название.':'Не удалось сохранить копию.');
+   byId('exportStatus').textContent='Готово: '+file+'\n'+folderHint();return;
+  }
+  const track=readTrack(original);
+  track.lanes=track.lanes.filter(lane=>lane.notes.some(n=>n.volume>0)&&(!lane.muted||byId('exportMuted').checked));
+  if(!track.lanes.length)throw Error('Нет звучащих нот для экспорта.');
+  const midi=makeMidi(track,name);
+  let frames=0;
+  if(withAudio){
+   byId('exportStatus').textContent='Подготовка звуков…';await unlock();
+   for(const id of new Set(track.lanes.map(l=>l.instrument))){exportCheck(job);await prepareInstrument(id)}
+   let seconds=0;for(const lane of track.lanes)for(const n of lane.notes)if(n.volume)seconds=Math.max(seconds,(n.start+n.len)*60/track.bpm/PPQ+(laneInstrument(lane,track.instruments).settings.release??instrumentCache.get(lane.instrument).release)+.25);
+   frames=Math.ceil(seconds*exportRate);
+   if(!Number.isSafeInteger(frames)||frames*4*(track.lanes.length+1)+midi.length+exportText(original).length+65536>exportLimit)throw Error('WAV займут больше 256 МБ. Экспортируй MIDI или сократи число дорожек.');
+  }
+  exportCheck(job);if(!exportHost.beginExport())throw Error('Не удалось создать файл экспорта.');
+  if(withAudio){
+   await zipFile(job,'Track.mid',write=>write(midi));
+   await zipFile(job,'Original.notka',write=>write(exportText(original)));
+   const map=track.lanes.map((lane,i)=>({file:'Tracks/'+String(i+1).padStart(2,'0')+' - '+lane.name.replace(/[\/\\:*?"<>|\u0000-\u001f\u007f]/g,'-')+'.wav',name:lane.name,instrument:laneInstrument(lane,track.instruments).name,instrumentId:lane.instrumentId,source:lane.instrument,settings:laneInstrument(lane,track.instruments).settings,originallyMuted:lane.muted}));
+   await zipFile(job,'Tracks.json',write=>write(exportText(JSON.stringify({bpm:track.bpm,sampleRate:exportRate,tracks:map},null,2))));
+   let readme='НОТКА — '+name+'\n\nTrack.mid — ноты всех экспортированных дорожек, темп и типы инструментов.\nMix.wav — общий звук. Tracks/ — отдельные дорожки с одинаковым началом и длительностью.\nTracks.json — соответствие файлов названиям дорожек. Original.notka — исходный проект со всеми дорожками.\n\nFL Studio: File > Import > MIDI file; включи Create one channel per track, отключи Realign events, чтобы сохранить начальную паузу. MIDI передаёт ноты, темп, панораму, громкость и транспонирование; огибающая, фильтр, реверс, обрезка и точная высота сэмплера сохраняются в Original.notka / Tracks.json и звуке WAV, но не в MIDI. Для нашего звучания перенеси WAV из Tracks в Playlist, все с нулевой позиции. Не включай одновременно MIDI-инструменты и WAV, иначе звук удвоится. WAV — готовое аудио, отдельные ноты в нём не редактируются.\n\nEmbers: открой Track.mid. Разделение на MIDI-дорожки сохранено; цвета настраиваются в Embers. Сам MIDI не содержит нашего звука. Mix.wav можно использовать как звуковую дорожку при монтаже видео; автоматический импорт WAV или банка инструментов в Embers не предусмотрен этим экспортом.\n\nWAV: PCM 16 bit, stereo, 32000 Hz, инструменты Нотки. Звук отрендерен отдельно; мастер-обработка и пересчёт могут немного отличаться от живого воспроизведения.\nИсточники звуков: VSCO 2 CE (CC0), MDA Piano / Paul Kellett (MIT), Music box / Joseph SARDIN (CC0). Сведения и лицензии: https://notka-piano-updates.zentas.chatgpt.site/instrument-credits.txt\n';
+   const sources=instrumentReferences(track.lanes);if(sources.length)readme+='\nВнешние инструменты:\n'+sources.map(s=>s.name+' — '+s.url).join('\n');
+   await zipFile(job,'Readme.txt',write=>write(exportText(readme)));
+   await zipFile(job,'Mix.wav',write=>renderWave(job,track,frames,write,'Общий звук'));
+   for(let i=0;i<track.lanes.length;i++)await zipFile(job,map[i].file,write=>renderWave(job,{...track,lanes:[track.lanes[i]]},frames,write,'Дорожка '+(i+1)+'/'+track.lanes.length));
+   await zipFinish(job);
+  }else await exportWrite(job,midi);
+  exportCheck(job);const stamp=new Date().toISOString().replace(/[-:]/g,'').replace('T','-').slice(0,15),file=name+'-'+stamp+(withAudio?'.zip':'.mid');
+  if(!exportHost.finishExport(file))throw Error('Не удалось сохранить экспорт. Проверь свободное место.');
+  byId('exportStatus').textContent='Готово: '+file+'\n'+folderHint();
+ }catch(e){if(!notka)exportHost.cancelExport();byId('exportStatus').textContent=e.message||'Не удалось экспортировать трек.'}
+ finally{exportJob=null;exportBusy(false)}
+}
+byId('exportNotka').onclick=()=>exportMusic('notka');byId('exportMidi').onclick=()=>exportMusic(false);byId('exportAudio').onclick=()=>exportMusic(true);
+window.addEventListener('pagehide',()=>{if(exportJob){exportJob.cancelled=true;exportHost.cancelExport()}});
+
+let mediaExport;
+byId('stageExport').onclick=()=>{
+ if(typeof NotkaPlayer.backgroundBegin!=='function'){alert('Для сохранения аудио и видео установи APK 0.57 или новее.');return}
+ try{
+  if(!mediaExport){const script=document.createElement('script');script.textContent=NotkaPlayer.mediaExportScript();document.body.append(script);script.remove();mediaExport=window.NotkaMediaExport({
+   host:exportHost,snapshot:()=>({track:readTrack(encodeTrack()),name:exportBase(songFile||'Мой трек'),folder:folderHint()}),
+   stop:()=>{stop();flushDraft()},busy:v=>{fileBusy=v;trackActions()},
+   prepare:async id=>{if(!audio)await unlock();return prepareInstrument(id)},bank:id=>instrumentCache.get(id),
+   settings:(lane,track)=>laneInstrument(lane,track.instruments).settings,voice:createInstrumentVoice,
+   layout:keyLayout,render:renderScene,travel:sceneTravel,write:exportWrite,wave:renderWave
+  })}
+  mediaExport.open();
+ }catch(e){console.error(e);alert('Не удалось открыть сохранение: '+e.message)}
+};
+restoreSourceStep();restoreSoundCatalog();renderLanes();resize();controls();
+// Fixed personal library: no automatic remote catalogue requests.
+window.addEventListener('pagehide',suspendEditor);
+if(!trackHost)byId('status').textContent=panelHint;
+else if(trackHost.restoreRequested()){showPrefs(false,byId('prefs'));byId('loadTrack').onclick();recoverDraft()}
+</script></html>

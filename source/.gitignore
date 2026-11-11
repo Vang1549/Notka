@@ -1,0 +1,7 @@
+private-48/
+Notka-*.apk
+node_modules/
+app/media-export.bundle.js
+__pycache__/
+.native-tools/
+.native-build/

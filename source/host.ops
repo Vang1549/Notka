@@ -1,0 +1,2454 @@
+method Main:<init>:V 1
+direct Activity:<init>:V 0
+done
+
+method Main:onCreate:V:Bundle 6
+super Activity:onCreate:V:Bundle 4 5
+new 0 Web
+direct Web:<init>:V:Context 0 4
+virtual Web:getSettings:Settings 0
+resultobj 1
+const 2 1
+virtual Settings:setJavaScriptEnabled:V:Z 1 2
+virtual Settings:setDomStorageEnabled:V:Z 1 2
+str 3 NotkaUpdates
+virtual Web:addJavascriptInterface:V:Object:String 0 4 3
+str 3 file:///android_asset/index.html
+virtual Web:loadUrl:V:String 0 3
+virtual Activity:setContentView:V:View 4 0
+static Lstudio/notka/piano/SystemUi;:apply:V:Activity 4
+done
+
+method Main:onResume:V 1
+super Activity:onResume:V 0
+static Lstudio/notka/piano/SystemUi;:apply:V:Activity 0
+done
+
+method Main:onWindowFocusChanged:V:Z 2
+super Activity:onWindowFocusChanged:V:Z 0 1
+static Lstudio/notka/piano/SystemUi;:focus:V:Activity:Z 0 1
+done
+
+method Player:onWindowFocusChanged:V:Z 2
+super Activity:onWindowFocusChanged:V:Z 0 1
+static Lstudio/notka/piano/SystemUi;:focus:V:Activity:Z 0 1
+done
+
+method Main:manager:DM 3
+str 0 download
+virtual Context:getSystemService:Object:String 2 0
+resultobj 0
+cast 0 DM
+retobj 0
+
+method Main:storageList:String 2 bridge
+static Lstudio/notka/piano/StorageFiles;:list:String:Activity 1
+resultobj 0
+retobj 0
+
+method Main:storageDelete:String:String 3 bridge
+static Lstudio/notka/piano/StorageFiles;:remove:String:Activity:String 1 2
+resultobj 0
+retobj 0
+
+method Main:onBackPressed:V 4 catch
+str 0 16908290
+static Integer:parseInt:I:String 0
+result 0
+virtual Activity:findViewById:View:I 3 0
+resultobj 0
+cast 0 Landroid/view/ViewGroup;
+const 1 0
+virtual Landroid/view/ViewGroup;:getChildAt:View:I 0 1
+resultobj 0
+cast 0 Web
+str 1 if(typeof panelBack==='function')panelBack()
+const 2 0
+virtual Web:evaluateJavascript:V:String:Landroid/webkit/ValueCallback; 0 1 2
+done
+error:
+exception 0
+super Activity:onBackPressed:V 3
+done
+
+method Main:closePanel:V 1 bridge
+virtual Activity:finish:V 0
+done
+
+# kind=0 gets only the channel. A validated positive release number chooses its versioned APK.
+method Main:begin:String:I 8 bridge catch
+zero 7 channel
+str 0 https://github.com/Vang1549/Notka/releases/download/apk-
+static String:valueOf:String:I 7
+resultobj 1
+virtual String:concat:String:String 0 1
+resultobj 0
+str 2 /Notka-
+virtual String:concat:String:String 0 2
+resultobj 0
+virtual String:concat:String:String 0 1
+resultobj 0
+str 1 .apk
+virtual String:concat:String:String 0 1
+resultobj 0
+goto enqueue
+channel:
+str 0 @ORIGIN@/channel.json
+enqueue:
+virtual Main:queue:String:String:I 6 0 7
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+method Main:editionDownload:String:I 6 bridge catch
+zero 5 catalog
+str 0 @ORIGIN@/editions/
+static String:valueOf:String:I 5
+resultobj 1
+virtual String:concat:String:String 0 1
+resultobj 0
+str 1 .json
+virtual String:concat:String:String 0 1
+resultobj 0
+goto queue
+catalog:
+str 0 @ORIGIN@/editions/catalog.json
+queue:
+const 1 0
+virtual Main:queue:String:String:I 4 0 1
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+method Main:queue:String:String:I 9 catch
+static Uri:parse:Uri:String 7
+resultobj 0
+new 1 Request
+direct Request:<init>:V:Uri 1 0
+str 2 Cache-Control
+str 3 no-cache
+virtual Request:addRequestHeader:Request:String:String 1 2 3
+zero 8 send
+str 2 application/vnd.android.package-archive
+virtual Request:setMimeType:Request:String 1 2
+send:
+virtual Main:manager:DM 6
+resultobj 2
+virtual DM:enqueue:J:Request 2 1
+resultw 3
+static Long:toString:String:J 3 4
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+method Main:status:I:String 10 bridge catch
+const 5 0
+tryStart:
+static Long:parseLong:J:String 9
+resultw 1
+const 0 1
+array 3 0 Longs
+const 0 0
+putwide 1 3 0
+new 4 Query
+direct Query:<init>:V 4
+virtual Query:setFilterById:Query:Longs 4 3
+virtual Main:manager:DM 8
+resultobj 0
+virtual DM:query:Cursor:Query 0 4
+resultobj 5
+interface Cursor:moveToFirst:Z 5
+result 0
+zero 0 missing
+str 3 status
+interface Cursor:getColumnIndexOrThrow:I:String 5 3
+result 0
+interface Cursor:getInt:I:I 5 0
+result 0
+goto close
+missing:
+const 0 16
+close:
+interface Cursor:close:V 5
+ret 0
+error:
+exception 0
+virtual Main:closeResource:V:Closeable 8 5
+const 0 16
+ret 0
+
+method Main:downloadUri:Uri:String 6
+static Long:parseLong:J:String 5
+resultw 1
+virtual Main:manager:DM 4
+resultobj 0
+virtual DM:getUriForDownloadedFile:Uri:J 0 1 2
+resultobj 0
+retobj 0
+
+method Main:stream:IS:String 4
+virtual Main:downloadUri:Uri:String 2 3
+resultobj 0
+virtual Context:getContentResolver:Resolver 2
+resultobj 1
+virtual Resolver:openInputStream:IS:Uri 1 0
+resultobj 0
+retobj 0
+
+# Read at most 8192 bytes, even if the access gateway serves an HTML login page.
+method Main:channel:String:String 4 bridge
+const 0 8192
+virtual Main:readText:String:String:I 2 3 0
+resultobj 0
+retobj 0
+
+method Main:editionText:String:String 4 bridge
+high 0 4
+virtual Main:readText:String:String:I 2 3 0
+resultobj 0
+retobj 0
+
+method Main:readText:String:String:I 10 catch
+const 6 0
+tryStart:
+virtual Main:stream:IS:String 7 8
+resultobj 0
+moveobj 6 0
+const 1 8192
+array 2 1 Bytes
+new 3 Output
+direct Output:<init>:V 3
+again:
+virtual IS:read:I:Bytes 0 2
+result 4
+negative 4 finish
+const 5 0
+virtual Output:write:V:Bytes:I:I 3 2 5 4
+virtual Output:size:I 3
+result 5
+lt 5 9 again
+virtual IS:close:V 0
+const 0 0
+retobj 0
+finish:
+virtual IS:close:V 0
+str 1 UTF-8
+virtual Output:toString:String:String 3 1
+resultobj 0
+retobj 0
+error:
+exception 0
+virtual Main:closeResource:V:Closeable 7 6
+const 0 0
+retobj 0
+
+method Main:hash:String:String 8 bridge catch
+const 5 0
+tryStart:
+virtual Main:stream:IS:String 6 7
+resultobj 0
+moveobj 5 0
+str 1 SHA-256
+static Digest:getInstance:Digest:String 1
+resultobj 1
+const 2 16384
+array 2 2 Bytes
+read:
+virtual IS:read:I:Bytes 0 2
+result 3
+negative 3 finish
+const 4 0
+virtual Digest:update:V:Bytes:I:I 1 2 4 3
+goto read
+finish:
+virtual IS:close:V 0
+virtual Digest:digest:Bytes 1
+resultobj 0
+const 1 2
+static B64:encodeToString:String:Bytes:I 0 1
+resultobj 0
+retobj 0
+error:
+exception 0
+virtual Main:closeResource:V:Closeable 6 5
+const 0 0
+retobj 0
+
+method Main:discard:V:String 7 bridge catch
+static Long:parseLong:J:String 6
+resultw 1
+const 0 1
+array 3 0 Longs
+const 0 0
+putwide 1 3 0
+virtual Main:manager:DM 5
+resultobj 4
+virtual DM:remove:I:Longs 4 3
+done
+error:
+exception 0
+done
+
+method Main:install:Z:String 6 bridge catch
+virtual Main:downloadUri:Uri:String 4 5
+resultobj 0
+new 1 Intent
+str 2 android.intent.action.VIEW
+direct Intent:<init>:V:String 1 2
+str 2 application/vnd.android.package-archive
+virtual Intent:setDataAndType:Intent:Uri:String 1 0 2
+const 3 1
+virtual Intent:addFlags:Intent:I 1 3
+virtual Context:startActivity:V:Intent 4 1
+const 0 1
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+method Main:openPage:Z 5 bridge catch
+str 0 https://github.com/Vang1549/Notka/releases
+static Uri:parse:Uri:String 0
+resultobj 0
+str 2 android.intent.action.VIEW
+new 1 Intent
+direct Intent:<init>:V:String:Uri 1 2 0
+virtual Context:startActivity:V:Intent 4 1
+const 0 1
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+method Main:valid:Z:String:String 9 bridge catch
+str 0 MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAr1GBkXBwtVRD6bm6J1uK++wEuq7PLb61sJGBStvBtR/v8xcksFuOzlKM6WzezRd5gbn7ab+gw6+OQ6iRtgo3YpGjKT0feNmj8vt7//IwNLerN2V0v8fPditanxQ012rxRX4qfkYPXMYVZcwY9ZUu3osQ/tQSIL+DbOAjY+rk6mTa5lhrHaGe2x0YK7OLoh13ooy2Xu5V6/habyL6J8pcJ2Y+iM/tDhIaKsrnpmHz45y6XlT2GWfAHmCuYT5wNwsBxxdrzcn2thA1Mef2wT3+/UYcG4BOKmcJ4238jRwBaRz+KvXU3POH6xhJt2ggLi6Hgo/5MivlZHvlBJT940/VnW7qPL2BiXHkMU0tqsAm6AcienPPLHmagWATAxZ9/QG6InY8ZJmmmT9PRbahFT3r6I7YrNAFkt7Ped3XS2VlYqtVu4aecf8cap8YLP3Od4nUp4725yJkEloIY1mnGEAdUpccCRXRYk7Kbu7gZlm+lGbYzGojzjqe4T8fSi9LqKxnAgMBAAE=
+const 1 0
+static B64:decode:Bytes:String:I 0 1
+resultobj 0
+new 2 X509Key
+direct X509Key:<init>:V:Bytes 2 0
+str 0 RSA
+static KeyFactory:getInstance:KeyFactory:String 0
+resultobj 0
+virtual KeyFactory:generatePublic:PublicKey:KeySpec 0 2
+resultobj 2
+str 0 SHA256withRSA
+static Signature:getInstance:Signature:String 0
+resultobj 0
+virtual Signature:initVerify:V:PublicKey 0 2
+str 3 UTF-8
+virtual String:getBytes:Bytes:String 7 3
+resultobj 3
+virtual Signature:update:V:Bytes 0 3
+static B64:decode:Bytes:String:I 8 1
+resultobj 3
+virtual Signature:verify:Z:Bytes 0 3
+result 0
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+# Pass only a verified, bounded editor document in an explicit in-app Intent.
+method Main:openEditor:Z:String 4 bridge
+const 0 0
+virtual Main:startEditor:Z:String:Z 2 3 0
+result 0
+ret 0
+
+method Main:resumeEditor:Z:String 4 bridge
+const 0 1
+virtual Main:startEditor:Z:String:Z 2 3 0
+result 0
+ret 0
+
+method Main:startEditor:Z:String:Z 10 catch
+str 0 android.os.Build$VERSION
+static Class:forName:Class:String 0
+resultobj 0
+str 1 SDK_INT
+virtual Class:getField:Field:String 0 1
+resultobj 0
+const 1 0
+virtual Field:getInt:I:Object 0 1
+result 0
+const 1 28
+lt 0 1 legacy
+str 2 studio.notka.piano.Player
+goto launch
+legacy:
+str 2 studio.notka.piano.PlayerLegacy
+launch:
+new 0 Intent
+direct Intent:<init>:V 0
+virtual Intent:setClassName:Intent:Context:String 0 7 2
+virtual Activity:getIntent:Intent 7
+resultobj 3
+str 1 colors
+virtual Intent:getStringExtra:String:String 3 1
+resultobj 3
+virtual Intent:putExtra:Intent:String:String 0 1 3
+str 1 edition
+virtual Intent:putExtra:Intent:String:String 0 1 8
+str 1 restore
+virtual Intent:putExtra:Intent:String:Z 0 1 9
+virtual Context:startActivity:V:Intent 7 0
+const 0 1
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+method Player:<init>:V 1
+direct Activity:<init>:V 0
+done
+
+method Legacy:<init>:V 1
+direct Player:<init>:V 0
+done
+
+# Legacy Android reuses the UI process. Newer Android isolates the editor WebView.
+method Legacy:setupDirectory:V 1
+done
+
+method Player:setupDirectory:V 5
+str 0 studio.notka.editor.webview
+static System:getProperty:String:String 0
+resultobj 1
+zero 1 first
+done
+first:
+str 2 notka_editor
+static Web:setDataDirectorySuffix:V:String 2
+static System:setProperty:String:String:String 0 2
+done
+
+method Player:onCreate:V:Bundle 9 catch
+super Activity:onCreate:V:Bundle 7 8
+zero 8 chosen
+goto finish
+chosen:
+virtual Activity:getIntent:Intent 7
+resultobj 0
+str 1 edition
+virtual Intent:getStringExtra:String:String 0 1
+resultobj 3
+zero 3 finish
+virtual Player:cancelExport:V 7
+virtual Player:setupDirectory:V 7
+new 0 Web
+direct Web:<init>:V:Context 0 7
+const 1 1
+virtual View:setKeepScreenOn:V:Z 0 1
+virtual Web:getSettings:Settings 0
+resultobj 1
+const 2 0
+virtual Settings:setAllowFileAccess:V:Z 1 2
+virtual Settings:setAllowContentAccess:V:Z 1 2
+const 2 1
+virtual Settings:setBlockNetworkLoads:V:Z 1 2
+virtual Settings:setJavaScriptEnabled:V:Z 1 2
+str 1 NotkaPlayer
+virtual Web:addJavascriptInterface:V:Object:String 0 7 1
+const 2 0
+static B64:decode:Bytes:String:I 3 2
+resultobj 2
+str 1 UTF-8
+new 6 String
+direct String:<init>:V:Bytes:String 6 2 1
+moveobj 2 6
+str 1 https://appassets.androidplatform.net/notka/
+str 3 text/html
+const 4 0
+moveobj 5 1
+virtual Web:loadDataWithBaseURL:V:String:String:String:String:String 0 1 2 3 4 5
+virtual Activity:setContentView:V:View 7 0
+static Lstudio/notka/piano/SystemUi;:apply:V:Activity 7
+done
+finish:
+virtual Activity:finish:V 7
+done
+error:
+exception 0
+virtual Activity:finish:V 7
+done
+
+method Player:leave:V 1 bridge
+virtual Activity:finish:V 0
+done
+
+# Both editor activities start with unspecified orientation. Keep the same WebView
+# during rotation (manifest configChanges) and restore sensor policy on exit.
+method Player:setSceneMode:V:Z 3 bridge catch
+const 0 -1
+zero 2 apply
+const 0 6
+apply:
+virtual Activity:setRequestedOrientation:V:I 1 0
+done
+error:
+exception 0
+done
+
+method Player:restoreRequested:Z 5 bridge
+virtual Activity:getIntent:Intent 4
+resultobj 0
+str 1 restore
+const 2 0
+virtual Intent:getBooleanExtra:Z:String:Z 0 1 2
+result 2
+virtual Intent:removeExtra:V:String 0 1
+ret 2
+
+method Player:draftFile:Atomic 4
+str 0 track-draft.json
+virtual Context:getFileStreamPath:File:String 3 0
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+retobj 1
+
+method Main:hasDraft:Z 4 bridge catch
+str 0 track-draft.json
+virtual Context:getFileStreamPath:File:String 3 0
+resultobj 0
+virtual File:exists:Z 0
+result 1
+zero 1 backup
+ret 1
+backup:
+str 0 track-draft.json.bak
+virtual Context:getFileStreamPath:File:String 3 0
+resultobj 0
+virtual File:exists:Z 0
+result 1
+ret 1
+error:
+exception 0
+const 0 0
+ret 0
+
+method Player:readDraft:String 3 bridge
+str 0 track-draft.json
+virtual Player:readPrivate:String:String 2 0
+resultobj 0
+retobj 0
+
+method Player:writeDraft:Z:String 4 bridge
+str 0 track-draft.json
+virtual Player:writePrivate:Z:String:String 2 0 3
+result 0
+ret 0
+
+method Player:pickTrack:Z:Z 8 bridge catch
+virtual Activity:getIntent:Intent 6
+resultobj 0
+str 1 trackUri
+virtual Intent:removeExtra:V:String 0 1
+zero 7 load
+str 2 android.intent.action.CREATE_DOCUMENT
+const 3 4211
+goto picker
+load:
+str 2 android.intent.action.OPEN_DOCUMENT
+const 3 4212
+picker:
+new 0 Intent
+direct Intent:<init>:V:String 0 2
+str 1 android.intent.category.OPENABLE
+virtual Intent:addCategory:Intent:String 0 1
+zero 7 anytype
+str 1 android.intent.extra.TITLE
+str 2 Melody.notka
+virtual Intent:putExtra:Intent:String:String 0 1 2
+str 1 application/octet-stream
+goto launch
+anytype:
+str 1 */*
+launch:
+virtual Intent:setType:Intent:String 0 1
+virtual Activity:startActivityForResult:V:Intent:I 6 0 3
+const 0 1
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+method Player:onActivityResult:V:I:I:Intent 9
+super Activity:onActivityResult:V:I:I:Intent 5 6 7 8
+const 0 4211
+ne 0 6 testLoad
+goto handle
+testLoad:
+const 0 4212
+ne 0 6 instrumentResult
+handle:
+str 2 cancelled
+const 1 -1
+ne 1 7 marked
+zero 8 marked
+virtual Intent:getData:Uri 8
+resultobj 0
+zero 0 marked
+virtual Uri:toString:String 0
+resultobj 2
+marked:
+virtual Activity:getIntent:Intent 5
+resultobj 0
+str 1 trackUri
+virtual Intent:putExtra:Intent:String:String 0 1 2
+goto exit
+instrumentResult:
+const 0 4213
+ne 0 6 exit
+str 2 cancelled
+const 1 -1
+ne 1 7 instrumentMarked
+zero 8 instrumentMarked
+virtual Intent:getData:Uri 8
+resultobj 0
+zero 0 instrumentMarked
+virtual Uri:toString:String 0
+resultobj 2
+instrumentMarked:
+virtual Activity:getIntent:Intent 5
+resultobj 0
+str 1 instrumentUri
+virtual Intent:putExtra:Intent:String:String 0 1 2
+exit:
+done
+
+method Player:trackResult:String 3 bridge
+virtual Activity:getIntent:Intent 2
+resultobj 0
+str 1 trackUri
+virtual Intent:getStringExtra:String:String 0 1
+resultobj 0
+retobj 0
+
+method Player:writeDocument:Z:String 8 bridge catch
+const 0 0
+tryStart:
+virtual Player:trackResult:String 6
+resultobj 1
+static Uri:parse:Uri:String 1
+resultobj 1
+virtual Context:getContentResolver:Resolver 6
+resultobj 2
+str 3 wt
+virtual Resolver:openOutputStream:Out:Uri:String 2 1 3
+resultobj 0
+str 3 UTF-8
+virtual String:getBytes:Bytes:String 7 3
+resultobj 1
+virtual Out:write:V:Bytes 0 1
+virtual Out:close:V 0
+const 0 1
+ret 0
+error:
+exception 2
+zero 0 failed
+virtual Player:closeResource:V:Closeable 6 0
+failed:
+const 0 0
+ret 0
+
+method Player:readDocument:String 9 bridge catch
+const 0 0
+tryStart:
+virtual Player:trackResult:String 8
+resultobj 1
+static Uri:parse:Uri:String 1
+resultobj 1
+virtual Context:getContentResolver:Resolver 8
+resultobj 2
+virtual Resolver:openInputStream:IS:Uri 2 1
+resultobj 0
+virtual Player:readSongStream:String:IS 8 0
+resultobj 1
+retobj 1
+error:
+exception 0
+const 1 0
+retobj 1
+
+method Player:readSongStream:String:IS 10 catch
+moveobj 0 9
+tryStart:
+new 1 Output
+direct Output:<init>:V 1
+const 2 8192
+array 2 2 Bytes
+const 3 0
+high 4 128
+again:
+virtual IS:read:I:Bytes 0 2
+result 5
+negative 5 finish
+virtual Output:write:V:Bytes:I:I 1 2 3 5
+virtual Output:size:I 1
+result 5
+lt 5 4 again
+goto failed
+finish:
+virtual IS:close:V 0
+str 2 UTF-8
+virtual Output:toString:String:String 1 2
+resultobj 1
+retobj 1
+error:
+exception 1
+failed:
+zero 0 empty
+virtual Player:closeResource:V:Closeable 8 0
+empty:
+const 1 0
+retobj 1
+
+# Android 10+ stores new songs in the public Downloads collection.
+method Player:publicSongs:Z 5 bridge
+str 0 android.os.Build$VERSION
+static Class:forName:Class:String 0
+resultobj 0
+str 1 SDK_INT
+virtual Class:getField:Field:String 0 1
+resultobj 0
+const 1 0
+virtual Field:getInt:I:Object 0 1
+result 0
+const 1 29
+lt 0 1 old
+const 0 1
+ret 0
+old:
+const 0 0
+ret 0
+
+method Player:songCollection:Uri 2
+str 0 external_primary
+static Downloads:getContentUri:Uri:String 0
+resultobj 0
+retobj 0
+
+# Only owned/readable, published .notka entries from our folder can be opened.
+method Player:songMap:Json 14 catch
+const 0 0
+tryStart:
+virtual Context:getContentResolver:Resolver 13
+resultobj 1
+virtual Player:songCollection:Uri 13
+resultobj 2
+new 3 Bundle
+direct Bundle:<init>:V 3
+str 4 android:query-arg-sql-selection
+str 5 relative_path='Download/Notka/' AND is_pending=0
+virtual Bundle:putString:V:String:String 3 4 5
+const 4 0
+virtual Resolver:query:Cursor:Uri:Strings:Bundle:Cancel 1 2 4 3 4
+resultobj 0
+new 6 Json
+direct Json:<init>:V 6
+str 4 _id
+interface Cursor:getColumnIndexOrThrow:I:String 0 4
+result 4
+str 5 _display_name
+interface Cursor:getColumnIndexOrThrow:I:String 0 5
+result 5
+next:
+interface Cursor:moveToNext:Z 0
+result 7
+zero 7 end
+interface Cursor:getString:String:I 0 5
+resultobj 7
+zero 7 next
+str 8 .notka
+virtual String:endsWith:Z:String 7 8
+result 8
+zero 8 next
+interface Cursor:getLong:J:I 0 4
+resultw 8
+static Uris:withAppendedId:Uri:Uri:J 2 8 9
+resultobj 10
+virtual Uri:toString:String 10
+resultobj 10
+virtual Json:put:Json:String:Object 6 7 10
+goto next
+end:
+interface Cursor:close:V 0
+retobj 6
+error:
+exception 1
+zero 0 failed
+virtual Player:closeResource:V:Closeable 13 0
+failed:
+const 0 0
+retobj 0
+
+# Older releases have an app-specific Downloads directory without runtime permissions.
+method Player:songDir:File 4
+str 0 Download
+virtual Context:getExternalFilesDir:File:String 3 0
+resultobj 0
+zero 0 end
+new 1 File
+str 2 Notka
+direct File:<init>:V:File:String 1 0 2
+virtual File:mkdirs:Z 1
+retobj 1
+end:
+retobj 0
+
+method Player:songList:String 5 bridge catch
+virtual Player:publicSongs:Z 4
+result 0
+zero 0 legacy
+virtual Player:songMap:Json 4
+resultobj 1
+virtual Json:names:JsonArray 1
+resultobj 2
+zero 2 empty
+goto serialize
+legacy:
+virtual Player:songDir:File 4
+resultobj 0
+virtual File:list:Strings 0
+resultobj 1
+new 2 JsonArray
+direct JsonArray:<init>:V:Object 2 1
+serialize:
+virtual JsonArray:toString:String 2
+resultobj 0
+retobj 0
+empty:
+str 0 []
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+method Player:validSongName:Z:String 3
+str 0 (?![.])[^/\\:*?"<>|\p{Cntrl}]{1,80}\.notka
+virtual String:matches:Z:String 2 0
+result 0
+ret 0
+
+method Player:openSong:String:String 6 bridge catch
+virtual Player:validSongName:Z:String 4 5
+result 0
+zero 0 failed
+virtual Player:publicSongs:Z 4
+result 0
+zero 0 legacy
+virtual Player:songMap:Json 4
+resultobj 0
+virtual Json:getString:String:String 0 5
+resultobj 0
+static Uri:parse:Uri:String 0
+resultobj 1
+virtual Player:finishSongWrite:Z:Uri 4 1
+result 0
+zero 0 failed
+virtual Context:getContentResolver:Resolver 4
+resultobj 0
+virtual Resolver:openInputStream:IS:Uri 0 1
+resultobj 2
+goto read
+legacy:
+virtual Player:songDir:File 4
+resultobj 0
+zero 0 failed
+new 1 File
+direct File:<init>:V:File:String 1 0 5
+new 2 FileInput
+direct FileInput:<init>:V:File 2 1
+read:
+virtual Player:readSongStream:String:IS 4 2
+resultobj 0
+retobj 0
+error:
+exception 0
+failed:
+const 0 0
+retobj 0
+
+method Player:saveSong:I:String:String 12 bridge catch
+virtual Player:validSongName:Z:String 9 10
+result 0
+zero 0 failed
+str 0 UTF-8
+virtual String:getBytes:Bytes:String 11 0
+resultobj 1
+arraylen 0 1
+high 2 128
+lt 0 2 ready
+goto failed
+ready:
+virtual Player:publicSongs:Z 9
+result 0
+zero 0 legacy
+virtual Player:songMap:Json 9
+resultobj 0
+virtual Json:has:Z:String 0 10
+result 0
+zero 0 create
+goto duplicate
+create:
+virtual Player:publishSong:I:String:Bytes 9 10 1
+result 0
+ret 0
+legacy:
+const 3 0
+virtual Player:saveLegacySong:I:String:Bytes:Z 9 10 1 3
+result 0
+ret 0
+duplicate:
+const 0 2
+ret 0
+error:
+exception 0
+failed:
+const 0 0
+ret 0
+
+method Player:publishSong:I:String:Bytes 14 catch
+const 0 0
+const 1 0
+const 2 0
+tryStart:
+virtual Context:getContentResolver:Resolver 11
+resultobj 2
+new 3 Values
+direct Values:<init>:V 3
+str 4 _display_name
+virtual Values:put:V:String:String 3 4 12
+str 4 relative_path
+str 5 Download/Notka/
+virtual Values:put:V:String:String 3 4 5
+str 4 mime_type
+str 5 application/octet-stream
+virtual Values:put:V:String:String 3 4 5
+str 4 is_pending
+const 5 1
+static Integer:valueOf:Integer:I 5
+resultobj 5
+virtual Values:put:V:String:Integer 3 4 5
+virtual Player:songCollection:Uri 11
+resultobj 4
+virtual Resolver:insert:Uri:Uri:Values 2 4 3
+resultobj 0
+zero 0 failed
+virtual Resolver:openOutputStream:Out:Uri 2 0
+resultobj 1
+virtual Out:write:V:Bytes 1 13
+virtual Out:close:V 1
+const 1 0
+virtual Values:clear:V 3
+str 4 is_pending
+const 5 0
+static Integer:valueOf:Integer:I 5
+resultobj 5
+virtual Values:put:V:String:Integer 3 4 5
+const 4 0
+virtual Resolver:update:I:Uri:Values:String:Strings 2 0 3 4 4
+result 5
+zero 5 cleanup
+const 0 1
+ret 0
+error:
+exception 3
+zero 1 cleanup
+virtual Player:closeSongOutput:V:Out 11 1
+cleanup:
+zero 0 failed
+const 4 0
+virtual Resolver:delete:I:Uri:String:Strings 2 0 4 4
+failed:
+const 0 0
+ret 0
+
+method Player:closeSongOutput:V:Out 3 catch
+virtual Out:close:V 2
+done
+error:
+exception 0
+done
+
+method Player:saveLegacySong:I:String:Bytes:Z 11 catch
+const 0 0
+const 1 0
+tryStart:
+virtual Player:songDir:File 7
+resultobj 2
+zero 2 failed
+new 3 File
+direct File:<init>:V:File:String 3 2 8
+virtual File:exists:Z 3
+result 4
+zero 10 newOnly
+zero 4 failed
+goto create
+newOnly:
+zero 4 create
+const 0 2
+ret 0
+create:
+str 4 tmp
+str 5 .part
+static File:createTempFile:File:String:String:File 4 5 2
+resultobj 0
+new 5 FileOut
+direct FileOut:<init>:V:File 5 0
+moveobj 1 5
+virtual Out:write:V:Bytes 1 9
+virtual FileOut:getFD:Ljava/io/FileDescriptor; 1
+resultobj 4
+virtual Ljava/io/FileDescriptor;:sync:V 4
+virtual Out:close:V 1
+const 1 0
+virtual File:renameTo:Z:File 0 3
+result 4
+zero 4 cleanup
+const 0 1
+ret 0
+error:
+exception 2
+zero 1 cleanup
+virtual Player:closeSongOutput:V:Out 7 1
+cleanup:
+zero 0 failed
+virtual File:delete:Z 0
+failed:
+const 0 0
+ret 0
+
+method Main:setThemeColors:V:String 4 bridge
+virtual Activity:getIntent:Intent 2
+resultobj 0
+str 1 colors
+virtual Intent:putExtra:Intent:String:String 0 1 3
+done
+
+method Player:themeColors:String 3 bridge
+virtual Activity:getIntent:Intent 2
+resultobj 0
+str 1 colors
+virtual Intent:getStringExtra:String:String 0 1
+resultobj 0
+retobj 0
+
+# Retain a complete new version privately until the public file has been committed.
+method Player:songJournal:Atomic:Uri 6
+virtual Uri:getLastPathSegment:String 5
+resultobj 0
+str 1 song-write-
+virtual String:concat:String:String 1 0
+resultobj 0
+virtual Context:getFileStreamPath:File:String 4 0
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+retobj 1
+
+method Player:finishSongWrite:Z:Uri 9 catch
+const 1 0
+tryStart:
+virtual Player:songJournal:Atomic:Uri 7 8
+resultobj 2
+virtual Player:atomicExists:Z:Atomic 7 2
+result 0
+zero 0 success
+virtual Atomic:readFully:Bytes 2
+resultobj 3
+virtual Context:getContentResolver:Resolver 7
+resultobj 4
+str 5 rwt
+virtual Resolver:openFileDescriptor:Landroid/os/ParcelFileDescriptor;:Uri:String 4 8 5
+resultobj 4
+new 5 Landroid/os/ParcelFileDescriptor$AutoCloseOutputStream;
+direct Landroid/os/ParcelFileDescriptor$AutoCloseOutputStream;:<init>:V:Landroid/os/ParcelFileDescriptor; 5 4
+moveobj 1 5
+virtual Out:write:V:Bytes 1 3
+virtual FileOut:getFD:Ljava/io/FileDescriptor; 1
+resultobj 4
+virtual Ljava/io/FileDescriptor;:sync:V 4
+virtual Out:close:V 1
+const 1 0
+virtual Atomic:delete:V 2
+success:
+const 0 1
+ret 0
+error:
+exception 0
+zero 1 failed
+virtual Player:closeSongOutput:V:Out 7 1
+failed:
+const 0 0
+ret 0
+
+method Player:stageSongWrite:Z:Atomic:Bytes 6 catch
+const 0 0
+tryStart:
+virtual Atomic:startWrite:FileOut 4
+resultobj 0
+virtual Out:write:V:Bytes 0 5
+virtual FileOut:getFD:Ljava/io/FileDescriptor; 0
+resultobj 2
+virtual Ljava/io/FileDescriptor;:sync:V 2
+virtual Atomic:finishWrite:V:FileOut 4 0
+const 0 0
+virtual Atomic:readFully:Bytes 4
+resultobj 2
+static Ljava/util/Arrays;:equals:Z:Bytes:Bytes 2 5
+result 1
+ret 1
+error:
+exception 1
+zero 0 failed
+virtual Atomic:failWrite:V:FileOut 4 0
+failed:
+const 1 0
+ret 1
+
+method Player:overwriteSong:I:String:String 11 bridge catch
+virtual Player:validSongName:Z:String 8 9
+result 0
+zero 0 failed
+str 0 UTF-8
+virtual String:getBytes:Bytes:String 10 0
+resultobj 1
+arraylen 0 1
+high 2 128
+lt 0 2 ready
+goto failed
+ready:
+virtual Player:publicSongs:Z 8
+result 0
+zero 0 legacy
+virtual Player:songMap:Json 8
+resultobj 0
+virtual Json:getString:String:String 0 9
+resultobj 0
+static Uri:parse:Uri:String 0
+resultobj 2
+virtual Player:songJournal:Atomic:Uri 8 2
+resultobj 3
+virtual Player:stageSongWrite:Z:Atomic:Bytes 8 3 1
+result 0
+zero 0 failed
+virtual Player:finishSongWrite:Z:Uri 8 2
+result 0
+ret 0
+legacy:
+const 3 1
+virtual Player:saveLegacySong:I:String:Bytes:Z 8 9 1 3
+result 0
+ret 0
+error:
+exception 0
+failed:
+const 0 0
+ret 0
+
+method Main:closeResource:V:Closeable 3 catch
+zero 2 end
+interface Closeable:close:V 2
+end:
+done
+error:
+exception 0
+done
+
+method Player:closeResource:V:Closeable 3 catch
+zero 2 end
+interface Closeable:close:V 2
+end:
+done
+error:
+exception 0
+done
+
+method Player:atomicExists:Z:Atomic 5
+virtual Atomic:getBaseFile:File 4
+resultobj 0
+virtual File:exists:Z 0
+result 1
+zero 1 backup
+ret 1
+backup:
+virtual File:getPath:String 0
+resultobj 0
+str 1 .bak
+virtual String:concat:String:String 0 1
+resultobj 0
+new 1 File
+direct File:<init>:V:String 1 0
+virtual File:exists:Z 1
+result 0
+ret 0
+
+method Player:writePrivate:Z:String:String 7 catch
+virtual Context:getFileStreamPath:File:String 4 5
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+str 0 UTF-8
+virtual String:getBytes:Bytes:String 6 0
+resultobj 2
+arraylen 0 2
+high 3 128
+lt 0 3 ready
+const 0 0
+ret 0
+ready:
+virtual Player:stageSongWrite:Z:Atomic:Bytes 4 1 2
+result 0
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+method Player:readPrivate:String:String 5 catch
+virtual Context:getFileStreamPath:File:String 3 4
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+virtual Atomic:openRead:FileInput 1
+resultobj 0
+virtual Player:readSongStream:String:IS 3 0
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+method Player:readSceneOptions:String 3 bridge
+str 0 scene-options.json
+virtual Player:readPrivate:String:String 2 0
+resultobj 0
+retobj 0
+
+method Player:writeSceneOptions:Z:String 4 bridge
+str 0 scene-options.json
+virtual Player:writePrivate:Z:String:String 2 0 3
+result 0
+ret 0
+
+# Only bundled, named instrument banks; no arbitrary filesystem paths exposed.
+method Player:instrumentData:String:String 6 bridge catch
+str 0 musicbox-floe
+virtual String:equals:Z:Object 0 5
+result 0
+zero 0 bundled
+str 0 musicbox-import.json
+virtual Player:readPrivate:String:String 4 0
+resultobj 0
+zero 0 bundled
+retobj 0
+bundled:
+str 0 ^(piano|bank-mda-grand-1|musicbox-floe)$
+virtual String:matches:Z:String 5 0
+result 0
+zero 0 empty
+str 0 instruments/
+virtual String:concat:String:String 0 5
+resultobj 0
+str 1 .json
+virtual String:concat:String:String 0 1
+resultobj 0
+virtual Context:getAssets:Landroid/content/res/AssetManager; 4
+resultobj 1
+virtual Landroid/content/res/AssetManager;:open:IS:String 1 0
+resultobj 0
+virtual Player:readBankStream:String:IS 4 0
+resultobj 0
+retobj 0
+error:
+exception 0
+empty:
+const 0 0
+retobj 0
+
+method Player:manager:DM 3
+str 0 download
+virtual Context:getSystemService:Object:String 2 0
+resultobj 0
+cast 0 DM
+retobj 0
+
+# kind=0 gets only the channel. A validated positive release number chooses its versioned APK.
+
+method Player:queue:String:String:I 9 catch
+static Uri:parse:Uri:String 7
+resultobj 0
+new 1 Request
+direct Request:<init>:V:Uri 1 0
+str 2 Cache-Control
+str 3 no-cache
+virtual Request:addRequestHeader:Request:String:String 1 2 3
+zero 8 send
+str 2 application/vnd.android.package-archive
+virtual Request:setMimeType:Request:String 1 2
+send:
+virtual Player:manager:DM 6
+resultobj 2
+virtual DM:enqueue:J:Request 2 1
+resultw 3
+static Long:toString:String:J 3 4
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+
+method Player:soundStatus:I:String 10 bridge catch
+const 5 0
+tryStart:
+static Long:parseLong:J:String 9
+resultw 1
+const 0 1
+array 3 0 Longs
+const 0 0
+putwide 1 3 0
+new 4 Query
+direct Query:<init>:V 4
+virtual Query:setFilterById:Query:Longs 4 3
+virtual Player:manager:DM 8
+resultobj 0
+virtual DM:query:Cursor:Query 0 4
+resultobj 5
+interface Cursor:moveToFirst:Z 5
+result 0
+zero 0 missing
+str 3 status
+interface Cursor:getColumnIndexOrThrow:I:String 5 3
+result 0
+interface Cursor:getInt:I:I 5 0
+result 0
+goto close
+missing:
+const 0 16
+close:
+interface Cursor:close:V 5
+ret 0
+error:
+exception 0
+virtual Player:closeResource:V:Closeable 8 5
+const 0 16
+ret 0
+
+
+method Player:downloadUri:Uri:String 6
+static Long:parseLong:J:String 5
+resultw 1
+virtual Player:manager:DM 4
+resultobj 0
+virtual DM:getUriForDownloadedFile:Uri:J 0 1 2
+resultobj 0
+retobj 0
+
+
+method Player:stream:IS:String 4
+virtual Player:downloadUri:Uri:String 2 3
+resultobj 0
+virtual Context:getContentResolver:Resolver 2
+resultobj 1
+virtual Resolver:openInputStream:IS:Uri 1 0
+resultobj 0
+retobj 0
+
+# Read at most 8192 bytes, even if the access gateway serves an HTML login page.
+
+method Player:readText:String:String:I 10 catch
+const 6 0
+tryStart:
+virtual Player:stream:IS:String 7 8
+resultobj 0
+moveobj 6 0
+const 1 8192
+array 2 1 Bytes
+new 3 Output
+direct Output:<init>:V 3
+again:
+virtual IS:read:I:Bytes 0 2
+result 4
+negative 4 finish
+const 5 0
+virtual Output:write:V:Bytes:I:I 3 2 5 4
+virtual Output:size:I 3
+result 5
+lt 5 9 again
+virtual IS:close:V 0
+const 0 0
+retobj 0
+finish:
+virtual IS:close:V 0
+str 1 UTF-8
+virtual Output:toString:String:String 3 1
+resultobj 0
+retobj 0
+error:
+exception 0
+virtual Player:closeResource:V:Closeable 7 6
+const 0 0
+retobj 0
+
+
+method Player:soundHash:String:String 8 bridge catch
+const 5 0
+tryStart:
+virtual Player:stream:IS:String 6 7
+resultobj 0
+moveobj 5 0
+str 1 SHA-256
+static Digest:getInstance:Digest:String 1
+resultobj 1
+const 2 16384
+array 2 2 Bytes
+read:
+virtual IS:read:I:Bytes 0 2
+result 3
+negative 3 finish
+const 4 0
+virtual Digest:update:V:Bytes:I:I 1 2 4 3
+goto read
+finish:
+virtual IS:close:V 0
+virtual Digest:digest:Bytes 1
+resultobj 0
+const 1 2
+static B64:encodeToString:String:Bytes:I 0 1
+resultobj 0
+retobj 0
+error:
+exception 0
+virtual Player:closeResource:V:Closeable 6 5
+const 0 0
+retobj 0
+
+
+method Player:soundDiscard:V:String 7 bridge catch
+static Long:parseLong:J:String 6
+resultw 1
+const 0 1
+array 3 0 Longs
+const 0 0
+putwide 1 3 0
+virtual Player:manager:DM 5
+resultobj 4
+virtual DM:remove:I:Longs 4 3
+done
+error:
+exception 0
+done
+
+
+method Player:soundValid:Z:String:String 9 bridge catch
+str 0 MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAr1GBkXBwtVRD6bm6J1uK++wEuq7PLb61sJGBStvBtR/v8xcksFuOzlKM6WzezRd5gbn7ab+gw6+OQ6iRtgo3YpGjKT0feNmj8vt7//IwNLerN2V0v8fPditanxQ012rxRX4qfkYPXMYVZcwY9ZUu3osQ/tQSIL+DbOAjY+rk6mTa5lhrHaGe2x0YK7OLoh13ooy2Xu5V6/habyL6J8pcJ2Y+iM/tDhIaKsrnpmHz45y6XlT2GWfAHmCuYT5wNwsBxxdrzcn2thA1Mef2wT3+/UYcG4BOKmcJ4238jRwBaRz+KvXU3POH6xhJt2ggLi6Hgo/5MivlZHvlBJT940/VnW7qPL2BiXHkMU0tqsAm6AcienPPLHmagWATAxZ9/QG6InY8ZJmmmT9PRbahFT3r6I7YrNAFkt7Ped3XS2VlYqtVu4aecf8cap8YLP3Od4nUp4725yJkEloIY1mnGEAdUpccCRXRYk7Kbu7gZlm+lGbYzGojzjqe4T8fSi9LqKxnAgMBAAE=
+const 1 0
+static B64:decode:Bytes:String:I 0 1
+resultobj 0
+new 2 X509Key
+direct X509Key:<init>:V:Bytes 2 0
+str 0 RSA
+static KeyFactory:getInstance:KeyFactory:String 0
+resultobj 0
+virtual KeyFactory:generatePublic:PublicKey:KeySpec 0 2
+resultobj 2
+str 0 SHA256withRSA
+static Signature:getInstance:Signature:String 0
+resultobj 0
+virtual Signature:initVerify:V:PublicKey 0 2
+str 3 UTF-8
+virtual String:getBytes:Bytes:String 7 3
+resultobj 3
+virtual Signature:update:V:Bytes 0 3
+static B64:decode:Bytes:String:I 8 1
+resultobj 3
+virtual Signature:verify:Z:Bytes 0 3
+result 0
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+# Pass only a verified, bounded editor document in an explicit in-app Intent.
+
+# Sound downloads stay on the fixed release origin and are verified by the signed editor.
+method Player:soundDownload:String:String 6 bridge catch
+str 0 ^[a-z][a-z0-9-]{0,47}$
+virtual String:matches:Z:String 5 0
+result 0
+zero 0 empty
+str 0 @ORIGIN@/soundbank/
+virtual String:concat:String:String 0 5
+resultobj 0
+str 1 .json
+virtual String:concat:String:String 0 1
+resultobj 0
+const 1 0
+virtual Player:queue:String:String:I 4 0 1
+resultobj 0
+retobj 0
+error:
+exception 0
+empty:
+const 0 0
+retobj 0
+
+method Player:soundText:String:String 4 bridge
+high 0 128
+virtual Player:readText:String:String:I 2 3 0
+resultobj 0
+retobj 0
+
+method Player:soundName:String:String 4
+str 0 ^[a-z][a-z0-9-]{0,47}$
+virtual String:matches:Z:String 3 0
+result 0
+zero 0 empty
+str 0 sound-
+virtual String:concat:String:String 0 3
+resultobj 0
+str 1 .json
+virtual String:concat:String:String 0 1
+resultobj 0
+retobj 0
+empty:
+const 0 0
+retobj 0
+
+method Player:soundRead:String:String 4 bridge catch
+virtual Player:soundName:String:String 2 3
+resultobj 0
+zero 0 empty
+virtual Player:readPrivate:String:String 2 0
+resultobj 0
+retobj 0
+error:
+exception 0
+empty:
+const 0 0
+retobj 0
+
+method Player:soundWrite:Z:String:String 5 bridge catch
+virtual Player:soundName:String:String 2 3
+resultobj 0
+zero 0 empty
+virtual Player:writePrivate:Z:String:String 2 0 4
+result 0
+ret 0
+error:
+exception 0
+empty:
+const 0 0
+ret 0
+
+method Player:soundFile:Atomic:String 5
+virtual Player:soundName:String:String 3 4
+resultobj 0
+zero 0 empty
+virtual Context:getFileStreamPath:File:String 3 0
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+retobj 1
+empty:
+const 0 0
+retobj 0
+
+method Player:soundExists:Z:String 4 bridge catch
+virtual Player:soundFile:Atomic:String 2 3
+resultobj 0
+zero 0 empty
+virtual Player:atomicExists:Z:Atomic 2 0
+result 0
+ret 0
+error:
+exception 0
+empty:
+const 0 0
+ret 0
+
+method Player:soundDelete:Z:String 4 bridge catch
+virtual Player:soundFile:Atomic:String 2 3
+resultobj 0
+zero 0 empty
+virtual Atomic:delete:V 0
+virtual Player:atomicExists:Z:Atomic 2 0
+result 0
+zero 0 deleted
+empty:
+const 0 0
+ret 0
+deleted:
+const 0 1
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+# Stream exports through one private staging file, then publish only a complete file.
+method Player:exportFile:File 3
+str 0 music-export.part
+virtual Context:getFileStreamPath:File:String 2 0
+resultobj 0
+retobj 0
+
+method Player:cancelExport:V 2 bridge catch
+virtual Player:exportFile:File 1
+resultobj 0
+virtual File:delete:Z 0
+done
+error:
+exception 0
+done
+
+method Player:beginExport:Z 3 bridge catch
+virtual Player:cancelExport:V 2
+virtual Player:exportFile:File 2
+resultobj 0
+virtual File:createNewFile:Z 0
+result 1
+ret 1
+error:
+exception 0
+const 0 0
+ret 0
+
+method Player:appendExport:Z:String 9 bridge catch
+const 0 0
+tryStart:
+virtual String:length:I 8
+result 1
+high 2 1
+lt 1 2 bounded
+goto failed
+bounded:
+virtual Player:exportFile:File 7
+resultobj 1
+virtual File:exists:Z 1
+result 2
+zero 2 failed
+virtual File:length:J 1
+resultw 2
+static Long:valueOf:Long:J 2 3
+resultobj 2
+virtual Long:intValue:I 2
+result 2
+negative 2 failed
+high 3 4096
+lt 2 3 decode
+goto failed
+decode:
+const 2 0
+static B64:decode:Bytes:String:I 8 2
+resultobj 2
+arraylen 3 2
+high 4 1
+lt 3 4 write
+goto failed
+write:
+new 5 FileOut
+const 3 1
+direct FileOut:<init>:V:File:Z 5 1 3
+moveobj 0 5
+virtual Out:write:V:Bytes 0 2
+virtual Out:close:V 0
+const 0 1
+ret 0
+error:
+exception 1
+zero 0 failed
+virtual Player:closeSongOutput:V:Out 7 0
+failed:
+const 0 0
+ret 0
+
+method Player:copyExport:Z:Out 8 catch
+const 0 0
+tryStart:
+virtual Player:exportFile:File 6
+resultobj 1
+new 4 FileInput
+direct FileInput:<init>:V:File 4 1
+moveobj 0 4
+const 1 16384
+array 1 1 Bytes
+const 2 0
+next:
+virtual IS:read:I:Bytes 0 1
+result 3
+negative 3 finish
+virtual Out:write:V:Bytes:I:I 7 1 2 3
+goto next
+finish:
+virtual IS:close:V 0
+const 0 1
+ret 0
+error:
+exception 1
+zero 0 failed
+virtual Player:closeResource:V:Closeable 6 0
+failed:
+const 0 0
+ret 0
+
+method Player:finishExport:Z:String 13 bridge catch
+const 0 0
+const 1 0
+const 2 0
+tryStart:
+str 3 (?![.])[^/\\:*?"<>|\p{Cntrl}]{1,110}\.(mid|zip|wav|m4a|weba|webm|mp4|ogg)
+virtual String:matches:Z:String 12 3
+result 3
+zero 3 failed
+virtual Player:publicSongs:Z 11
+result 3
+zero 3 legacy
+virtual Context:getContentResolver:Resolver 11
+resultobj 2
+new 3 Values
+direct Values:<init>:V 3
+str 4 _display_name
+virtual Values:put:V:String:String 3 4 12
+str 4 relative_path
+str 5 Download/Notka/
+virtual Values:put:V:String:String 3 4 5
+str 4 mime_type
+str 5 application/zip
+str 6 .mid
+virtual String:endsWith:Z:String 12 6
+result 6
+zero 6 mimeReady
+str 5 audio/midi
+mimeReady:
+str 6 .wav
+virtual String:endsWith:Z:String 12 6
+result 6
+zero 6 m4a
+str 5 audio/wav
+m4a:
+str 6 .m4a
+virtual String:endsWith:Z:String 12 6
+result 6
+zero 6 webm
+str 5 audio/mp4
+webm:
+str 6 .webm
+virtual String:endsWith:Z:String 12 6
+result 6
+zero 6 mp4
+str 5 video/webm
+mp4:
+str 6 .mp4
+virtual String:endsWith:Z:String 12 6
+result 6
+zero 6 ogg
+str 5 video/mp4
+ogg:
+str 6 .ogg
+virtual String:endsWith:Z:String 12 6
+result 6
+zero 6 mediaMimeReady
+str 5 audio/ogg
+mediaMimeReady:
+str 6 .weba
+virtual String:endsWith:Z:String 12 6
+result 6
+zero 6 allMimeReady
+str 5 audio/webm
+allMimeReady:
+virtual Values:put:V:String:String 3 4 5
+str 4 is_pending
+const 5 1
+static Integer:valueOf:Integer:I 5
+resultobj 5
+virtual Values:put:V:String:Integer 3 4 5
+virtual Player:songCollection:Uri 11
+resultobj 4
+virtual Resolver:insert:Uri:Uri:Values 2 4 3
+resultobj 0
+zero 0 failed
+virtual Resolver:openOutputStream:Out:Uri 2 0
+resultobj 1
+virtual Player:copyExport:Z:Out 11 1
+result 4
+virtual Out:close:V 1
+const 1 0
+zero 4 cleanup
+virtual Values:clear:V 3
+str 4 is_pending
+const 5 0
+static Integer:valueOf:Integer:I 5
+resultobj 5
+virtual Values:put:V:String:Integer 3 4 5
+const 4 0
+virtual Resolver:update:I:Uri:Values:String:Strings 2 0 3 4 4
+result 5
+zero 5 cleanup
+virtual Player:cancelExport:V 11
+const 0 1
+ret 0
+legacy:
+virtual Player:finishLegacyExport:Z:String 11 12
+result 0
+ret 0
+error:
+exception 3
+zero 1 cleanup
+virtual Player:closeSongOutput:V:Out 11 1
+cleanup:
+zero 0 failed
+const 4 0
+virtual Resolver:delete:I:Uri:String:Strings 2 0 4 4
+failed:
+const 0 0
+ret 0
+
+method Player:finishLegacyExport:Z:String 9 catch
+const 0 0
+const 1 0
+tryStart:
+virtual Player:songDir:File 7
+resultobj 2
+zero 2 failed
+new 3 File
+direct File:<init>:V:File:String 3 2 8
+virtual File:exists:Z 3
+result 4
+zero 4 create
+goto failed
+create:
+str 4 export
+str 5 .part
+static File:createTempFile:File:String:String:File 4 5 2
+resultobj 0
+new 5 FileOut
+direct FileOut:<init>:V:File 5 0
+moveobj 1 5
+virtual Player:copyExport:Z:Out 7 1
+result 4
+virtual FileOut:getFD:Ljava/io/FileDescriptor; 1
+resultobj 5
+virtual Ljava/io/FileDescriptor;:sync:V 5
+virtual Out:close:V 1
+const 1 0
+zero 4 cleanup
+virtual File:renameTo:Z:File 0 3
+result 4
+zero 4 cleanup
+virtual Player:cancelExport:V 7
+const 0 1
+ret 0
+error:
+exception 2
+zero 1 cleanup
+virtual Player:closeSongOutput:V:Out 7 1
+cleanup:
+zero 0 failed
+virtual File:delete:Z 0
+failed:
+const 0 0
+ret 0
+
+# Bounded bundled stereo sample banks (32 MiB), separate from the 8 MiB song limit.
+method Player:readBankStream:String:IS 10 catch
+moveobj 0 9
+tryStart:
+new 1 Output
+direct Output:<init>:V 1
+const 2 8192
+array 2 2 Bytes
+const 3 0
+high 4 512
+again:
+virtual IS:read:I:Bytes 0 2
+result 5
+negative 5 finish
+virtual Output:write:V:Bytes:I:I 1 2 3 5
+virtual Output:size:I 1
+result 5
+lt 5 4 again
+goto failed
+finish:
+virtual IS:close:V 0
+str 2 UTF-8
+virtual Output:toString:String:String 1 2
+resultobj 1
+retobj 1
+error:
+exception 1
+failed:
+zero 0 empty
+virtual Player:closeResource:V:Closeable 8 0
+empty:
+const 1 0
+retobj 1
+
+# Delete only a validated song name inside our own Downloads/Notka collection.
+method Player:deleteSong:Z:String 9 bridge catch
+virtual Player:validSongName:Z:String 7 8
+result 0
+zero 0 failed
+virtual Player:publicSongs:Z 7
+result 0
+zero 0 legacy
+virtual Player:songMap:Json 7
+resultobj 0
+virtual Json:getString:String:String 0 8
+resultobj 0
+static Uri:parse:Uri:String 0
+resultobj 1
+virtual Context:getContentResolver:Resolver 7
+resultobj 0
+const 2 0
+virtual Resolver:delete:I:Uri:String:Strings 0 1 2 2
+result 3
+zero 3 failed
+virtual Player:songJournal:Atomic:Uri 7 1
+resultobj 0
+virtual Atomic:delete:V 0
+const 0 1
+ret 0
+legacy:
+virtual Player:songDir:File 7
+resultobj 0
+zero 0 failed
+new 1 File
+direct File:<init>:V:File:String 1 0 8
+virtual File:delete:Z 1
+result 0
+ret 0
+error:
+exception 0
+failed:
+const 0 0
+ret 0
+
+# Imported audio stays private and is only committed after WebAudio validates it.
+method Player:pickInstrument:Z 5 bridge catch
+virtual Player:cancelInstrumentImport:V 4
+new 0 Intent
+str 1 android.intent.action.OPEN_DOCUMENT
+direct Intent:<init>:V:String 0 1
+str 1 android.intent.category.OPENABLE
+virtual Intent:addCategory:Intent:String 0 1
+str 1 */*
+virtual Intent:setType:Intent:String 0 1
+const 1 4213
+virtual Activity:startActivityForResult:V:Intent:I 4 0 1
+const 0 1
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+method Player:instrumentResult:String 3 bridge
+virtual Activity:getIntent:Intent 2
+resultobj 0
+str 1 instrumentUri
+virtual Intent:getStringExtra:String:String 0 1
+resultobj 0
+retobj 0
+
+method Player:cancelInstrumentImport:V 4 bridge catch
+virtual Player:dropImportPackage:V 3
+str 0 musicbox-import.pending
+virtual Context:getFileStreamPath:File:String 3 0
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+virtual Atomic:delete:V 1
+virtual Activity:getIntent:Intent 3
+resultobj 0
+str 1 instrumentUri
+virtual Intent:removeExtra:V:String 0 1
+done
+error:
+exception 0
+done
+
+method Player:hasImportedInstrument:Z 4 bridge catch
+str 0 musicbox-import.json
+virtual Context:getFileStreamPath:File:String 3 0
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+virtual Player:atomicExists:Z:Atomic 3 1
+result 0
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+method Player:deleteImportedInstrument:Z 4 bridge catch
+str 0 musicbox-import.json
+virtual Context:getFileStreamPath:File:String 3 0
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+virtual Atomic:delete:V 1
+virtual Player:atomicExists:Z:Atomic 3 1
+result 0
+zero 0 success
+const 0 0
+ret 0
+success:
+const 0 1
+ret 0
+error:
+exception 0
+const 0 0
+ret 0
+
+method Player:commitInstrumentImport:Z 5 bridge catch
+str 0 musicbox-import.pending
+virtual Player:readPrivate:String:String 4 0
+resultobj 1
+zero 1 failed
+str 0 musicbox-import.json
+virtual Player:writePrivate:Z:String:String 4 0 1
+result 0
+zero 0 failed
+virtual Player:cancelInstrumentImport:V 4
+const 0 1
+ret 0
+error:
+exception 0
+failed:
+const 0 0
+ret 0
+
+# Never closes its stream: used for both the bounded outer package and ZIP entries.
+method Player:readBoundedBytes:Bytes:IS:I 12 catch
+new 0 Output
+direct Output:<init>:V 0
+const 1 8192
+array 1 1 Bytes
+const 2 0
+again:
+virtual IS:read:I:Bytes 10 1
+result 3
+negative 3 finish
+virtual Output:write:V:Bytes:I:I 0 1 2 3
+virtual Output:size:I 0
+result 3
+lt 3 11 again
+goto failed
+finish:
+virtual Output:toByteArray:Bytes 0
+resultobj 0
+retobj 0
+error:
+exception 0
+failed:
+const 0 0
+retobj 0
+
+method Player:importTemplate:Json 5 catch
+virtual Context:getAssets:Landroid/content/res/AssetManager; 4
+resultobj 0
+str 1 instruments/musicbox-import-template.json
+virtual Landroid/content/res/AssetManager;:open:IS:String 0 1
+resultobj 0
+virtual Player:readBankStream:String:IS 4 0
+resultobj 0
+new 1 Json
+direct Json:<init>:V:String 1 0
+retobj 1
+error:
+exception 0
+const 0 0
+retobj 0
+
+# Read the central ZIP directory: Floe stores FLAC with data descriptors,
+# which cannot be consumed reliably by ZipInputStream.
+method Player:readInstrumentPackage:String 16 bridge catch
+const 0 0
+const 12 0
+str 13 !uri
+tryStart:
+virtual Player:instrumentResult:String 15
+resultobj 1
+zero 1 failed
+static Uri:parse:Uri:String 1
+resultobj 1
+str 13 !access
+virtual Context:getContentResolver:Resolver 15
+resultobj 2
+virtual Resolver:openInputStream:IS:Uri 2 1
+resultobj 0
+str 13 !package-read
+high 2 256
+virtual Player:readBoundedBytes:Bytes:IS:I 15 0 2
+resultobj 1
+virtual IS:close:V 0
+const 0 0
+zero 1 failed
+str 2 SHA-256
+static Digest:getInstance:Digest:String 2
+resultobj 2
+virtual Digest:digest:Bytes:Bytes 2 1
+resultobj 2
+const 3 2
+static B64:encodeToString:String:Bytes:I 2 3
+resultobj 2
+str 3 HustIk4VgiWy/G9Trs8cP0hq4S9lrkP73Zv5FBywJDg=
+virtual String:equals:Z:Object 3 2
+result 2
+str 13 !unsupported
+zero 2 failed
+str 13 !package-save
+virtual Player:importPackageFile:File 15
+resultobj 2
+new 3 Atomic
+direct Atomic:<init>:V:File 3 2
+virtual Player:stageSongWrite:Z:Atomic:Bytes 15 3 1
+result 3
+zero 3 failed
+str 13 !zip
+new 3 ZipFile
+direct ZipFile:<init>:V:File 3 2
+moveobj 12 3
+virtual ZipFile:entries:Enumeration 12
+resultobj 3
+str 13 !template
+virtual Player:importTemplate:Json 15
+resultobj 4
+zero 4 failed
+str 5 files
+virtual Json:getJSONObject:Json:String 4 5
+resultobj 5
+new 6 JsonArray
+direct JsonArray:<init>:V 6
+const 7 0
+again:
+str 13 !zip
+interface Enumeration:hasMoreElements:Z 3
+result 8
+zero 8 finish
+interface Enumeration:nextElement:Object 3
+resultobj 8
+cast 8 ZipEntry
+virtual ZipEntry:getName:String 8
+resultobj 14
+virtual Json:optJSONObject:Json:String 5 14
+resultobj 9
+zero 9 license
+str 13 !sample
+virtual ZipFile:getInputStream:IS:ZipEntry 12 8
+resultobj 0
+high 10 8
+virtual Player:readBoundedBytes:Bytes:IS:I 15 0 10
+resultobj 10
+virtual IS:close:V 0
+const 0 0
+zero 10 failed
+const 11 2
+static B64:encodeToString:String:Bytes:I 10 11
+resultobj 10
+str 11 data
+virtual Json:put:Json:String:Object 9 11 10
+virtual JsonArray:put:JsonArray:Object 6 9
+virtual Json:remove:Object:String 5 14
+goto again
+license:
+str 9 Libraries/FrozenPlain - Music Box Suite Free/License.pdf
+virtual String:equals:Z:Object 9 14
+result 9
+zero 9 again
+str 13 !license
+virtual ZipFile:getInputStream:IS:ZipEntry 12 8
+resultobj 0
+high 10 1
+virtual Player:readBoundedBytes:Bytes:IS:I 15 0 10
+resultobj 10
+virtual IS:close:V 0
+const 0 0
+zero 10 failed
+const 11 2
+static B64:encodeToString:String:Bytes:I 10 11
+resultobj 10
+str 11 licensePdf
+virtual Json:put:Json:String:Object 4 11 10
+const 7 1
+goto again
+finish:
+str 13 !contents
+virtual ZipFile:close:V 12
+const 12 0
+zero 7 failed
+virtual JsonArray:length:I 6
+result 7
+const 8 31
+ne 7 8 failed
+str 5 files
+virtual Json:remove:Object:String 4 5
+str 5 samples
+virtual Json:put:Json:String:Object 4 5 6
+virtual Json:toString:String 4
+resultobj 1
+str 13 !bank-save
+str 2 musicbox-import.pending
+virtual Player:writePrivate:Z:String:String 15 2 1
+result 2
+zero 2 failed
+virtual Player:dropImportPackage:V 15
+retobj 1
+error:
+exception 1
+virtual Object:getClass:Class 1
+resultobj 1
+virtual Class:getSimpleName:String 1
+resultobj 1
+str 2 :
+virtual String:concat:String:String 13 2
+resultobj 13
+virtual String:concat:String:String 13 1
+resultobj 13
+failed:
+virtual Player:closeResource:V:Closeable 15 0
+virtual Player:closeResource:V:Closeable 15 12
+virtual Player:dropImportPackage:V 15
+retobj 13
+
+method Player:importPackageFile:File 3
+str 0 musicbox-package.tmp
+virtual Context:getFileStreamPath:File:String 2 0
+resultobj 0
+retobj 0
+
+method Player:dropImportPackage:V 3 catch
+virtual Player:importPackageFile:File 2
+resultobj 0
+new 1 Atomic
+direct Atomic:<init>:V:File 1 0
+virtual Atomic:delete:V 1
+done
+error:
+exception 0
+done
+
+method Player:importReaderVersion:I 1 bridge
+const 0 2
+ret 0
+
+method Player:instrumentAvailable:Z:String 6 bridge catch
+const 0 0
+tryStart:
+str 1 musicbox-floe
+virtual String:equals:Z:Object 1 5
+result 1
+zero 1 bundled
+virtual Player:hasImportedInstrument:Z 4
+result 1
+zero 1 bundled
+const 0 1
+ret 0
+bundled:
+str 1 ^(piano|bank-mda-grand-1|musicbox-floe)$
+virtual String:matches:Z:String 5 1
+result 1
+zero 1 failed
+str 1 instruments/
+virtual String:concat:String:String 1 5
+resultobj 1
+str 2 .json
+virtual String:concat:String:String 1 2
+resultobj 1
+virtual Context:getAssets:Landroid/content/res/AssetManager; 4
+resultobj 2
+virtual Landroid/content/res/AssetManager;:open:IS:String 2 1
+resultobj 0
+virtual IS:close:V 0
+const 0 1
+ret 0
+error:
+exception 1
+failed:
+virtual Player:closeResource:V:Closeable 4 0
+const 1 0
+ret 1
+
+method Player:importedBytes:String 4 bridge catch
+str 0 musicbox-import.json
+virtual Context:getFileStreamPath:File:String 3 0
+resultobj 0
+virtual File:length:J 0
+resultw 0
+static Long:toString:String:J 0 1
+resultobj 0
+retobj 0
+error:
+exception 0
+str 0 0
+retobj 0
+
+# Android signals return even on WebViews which omit document visibility events.
+method Player:onResume:V 6 catch
+super Activity:onResume:V 5
+static Lstudio/notka/piano/SystemUi;:apply:V:Activity 5
+str 0 sound-musicbox-source-step.json
+virtual Player:readPrivate:String:String 5 0
+resultobj 1
+str 2 1
+virtual String:equals:Z:Object 2 1
+result 1
+zero 1 notify
+str 1 2
+virtual Player:writePrivate:Z:String:String 5 0 1
+notify:
+str 0 16908290
+static Integer:parseInt:I:String 0
+result 0
+virtual Activity:findViewById:View:I 5 0
+resultobj 0
+cast 0 Landroid/view/ViewGroup;
+const 1 0
+virtual Landroid/view/ViewGroup;:getChildAt:View:I 0 1
+resultobj 0
+cast 0 Web
+str 1 if(typeof sourceResume==='function')sourceResume()
+const 2 0
+virtual Web:evaluateJavascript:V:String:Landroid/webkit/ValueCallback; 0 1 2
+done
+error:
+exception 0
+done
+
+# System Back goes through the editor's layer stack. Native select dialogs and
+# the soft keyboard consume Back before this Activity callback is invoked.
+method Player:onBackPressed:V 4 catch
+str 0 16908290
+static Integer:parseInt:I:String 0
+result 0
+virtual Activity:findViewById:View:I 3 0
+resultobj 0
+cast 0 Landroid/view/ViewGroup;
+const 1 0
+virtual Landroid/view/ViewGroup;:getChildAt:View:I 0 1
+resultobj 0
+cast 0 Web
+str 1 if(typeof notkaBack==='function')notkaBack();else NotkaPlayer.leave()
+const 2 0
+virtual Web:evaluateJavascript:V:String:Landroid/webkit/ValueCallback; 0 1 2
+done
+error:
+exception 0
+super Activity:onBackPressed:V 3
+done
+
+# Fixed application asset only; no arbitrary file or script loading.
+method Player:mediaExportScript:String 3 bridge catch
+virtual Context:getAssets:Landroid/content/res/AssetManager; 2
+resultobj 0
+str 1 media-export.js
+virtual Landroid/content/res/AssetManager;:open:IS:String 0 1
+resultobj 0
+virtual Player:readBankStream:String:IS 2 0
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+# Bounded random-access writes into the same temporary export file, for container indexes.
+method Player:writeExport:Z:I:String 10 bridge catch
+const 0 0
+tryStart:
+negative 8 failed
+high 1 4095
+lt 8 1 offsetOk
+goto failed
+offsetOk:
+virtual String:length:I 9
+result 1
+high 2 1
+lt 1 2 bounded
+goto failed
+bounded:
+virtual Player:exportFile:File 7
+resultobj 1
+virtual File:exists:Z 1
+result 2
+zero 2 failed
+const 2 0
+static B64:decode:Bytes:String:I 9 2
+resultobj 2
+new 5 Ljava/io/RandomAccessFile;
+str 4 rw
+direct Ljava/io/RandomAccessFile;:<init>:V:File:String 5 1 4
+moveobj 0 5
+static Integer:valueOf:Integer:I 8
+resultobj 1
+virtual Integer:longValue:J 1
+resultw 3
+virtual Ljava/io/RandomAccessFile;:seek:V:J 0 3 4
+virtual Ljava/io/RandomAccessFile;:write:V:Bytes 0 2
+virtual Ljava/io/RandomAccessFile;:close:V 0
+const 0 1
+ret 0
+error:
+exception 1
+zero 0 failed
+virtual Player:closeResource:V:Closeable 7 0
+failed:
+const 0 0
+ret 0
+
+# APK 0.57: foreground lifetime for offline media export, in the editor's process.
+method Player:backgroundBegin:Z:String 3 bridge
+static Lstudio/notka/piano/ExportRuntime;:begin:Z:Activity:String 1 2
+result 0
+ret 0
+
+method Player:backgroundStatus:String 1 bridge
+static Lstudio/notka/piano/ExportRuntime;:status:String
+resultobj 0
+retobj 0
+
+method Player:backgroundProgress:V:I 2 bridge
+static Lstudio/notka/piano/ExportRuntime;:progress:V:I 1
+done
+
+method Player:backgroundCommit:Z 1 bridge
+static Lstudio/notka/piano/ExportRuntime;:commit:Z
+result 0
+ret 0
+
+method Player:backgroundEnd:V:Z:String 3 bridge
+static Lstudio/notka/piano/ExportRuntime;:end:V:Z:String 1 2
+done
+
+method Player:onDestroy:V 2 catch
+static Lstudio/notka/piano/ExportRuntime;:destroyed:V:Activity 1
+goto parent
+error:
+exception 0
+parent:
+super Activity:onDestroy:V 1
+done

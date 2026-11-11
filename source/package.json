@@ -1,0 +1,12 @@
+{
+  "name": "notka-editor-build",
+  "private": true,
+  "dependencies": {
+    "terser": "5.31.0",
+    "acorn": "8.19.0",
+    "mediabunny": "1.65.2"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

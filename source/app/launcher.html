@@ -1,0 +1,530 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>Нотка · Выбор версии</title><style>
+:root{color-scheme:dark;--bg:#121a15;--panel:#213025;--text:#eef4eb;--muted:#b4c4b6;--accent:#c6f599;--on:#25381e;--border:#405344}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--text);font:15px Roboto,system-ui,sans-serif}main{min-height:100vh;display:grid;place-items:center;padding:16px}.card,.update-card{width:min(100%,385px);background:var(--bg);border:1px solid var(--border);border-radius:18px;padding:20px;display:grid;gap:10px}.top,.meta,.choice{display:flex;align-items:center;justify-content:space-between;gap:8px}.badge{font-weight:750;letter-spacing:.03em}.badge b{display:inline-block;padding:4px 8px;background:var(--accent);color:var(--on);border-radius:7px;margin-right:6px}h1{font-size:26px;letter-spacing:-.04em;margin:3px 0}h2{font-size:19px;margin:0}.button{width:100%;min-height:44px;padding:9px 12px;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:10px;font:inherit;touch-action:manipulation}.top .button,.meta .button{width:auto;font-size:13px}.play{background:var(--accent);color:var(--on);font-weight:750}.button:disabled{opacity:.55}p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.choice{text-align:left;margin-top:5px}.choice small{color:var(--muted)}#versions{max-height:38vh;overflow:auto}#updateBox{position:fixed;inset:0;display:grid;place-items:center;background:#0009;padding:16px}.update-card{max-height:100%;overflow:auto}.line{height:1px;background:var(--border)}
+.card,.card>*{min-width:0}.button{line-height:1.35}.action-title,.edition-label{display:block;overflow-wrap:break-word;text-wrap:balance}.edition-label{margin-top:3px;font-weight:750}.action-title{font-weight:500}.choice b{min-width:0;overflow-wrap:anywhere}.choice small{flex-shrink:0}#catalogStatus:empty,#launchStatus:empty,#updateState:empty{display:none}.version-footer{display:grid;gap:8px;border-top:1px solid var(--border);padding-top:12px;margin-top:4px}.version-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px}.version-item p{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.version-item .button{width:auto;max-width:112px;padding:8px 10px;font-size:13px}#apkBundleHint{font-size:12px}#updateState{overflow-wrap:anywhere}
+#themeSettings,#themeColorSettings{display:grid;gap:10px;padding:5px 0 10px}#themeSettings label,.themePair{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#themeSettings select,#hexColor{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:7px}#hexColor{width:8ch;box-sizing:content-box}.themePair button{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;min-width:0;padding:6px}.themePair [aria-pressed=true]{box-shadow:inset 0 0 0 2px var(--text)}.chip{width:16px;height:16px;border-radius:50%;border:1px solid var(--text);flex:none}
+#colorPad{height:112px;position:relative;touch-action:none;border-radius:9px;background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),var(--hue);border:1px solid var(--border);cursor:crosshair}#colorPoint{position:absolute;width:13px;height:13px;border-radius:50%;border:2px solid white;box-shadow:0 0 0 1px black;transform:translate(-50%,-50%);pointer-events:none}#themeSettings input[type=range]{width:100%;margin:0;accent-color:var(--accent);height:25px}#themeSettings #hue{appearance:none;-webkit-appearance:none;height:16px;border-radius:15px;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}#hue::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:18px;height:23px;border-radius:8px;border:2px solid white;background:#0006;box-shadow:0 0 0 1px #0008}
+#themePreview{height:56px;position:relative;overflow:hidden;border:1px solid var(--border);border-radius:8px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),var(--line) calc(12.5% - 1px),var(--line) 12.5%),repeating-linear-gradient(0deg,var(--cell) 0,var(--cell) 13px,var(--black) 13px,var(--black) 26px)}#themePreview i{position:absolute;height:10px;background:var(--accent);border-radius:3px;box-shadow:inset 0 0 0 1px #0004}#themePreview i:nth-child(1){left:12.5%;bottom:3px;width:24%}#themePreview i:nth-child(2){left:37.5%;bottom:16px;width:12%}#themePreview i:nth-child(3){left:50%;bottom:29px;width:36%}#themePreview:after{content:"";position:absolute;top:0;bottom:0;left:58%;width:2px;background:var(--cursor)}
+.theme-choice{display:flex;align-items:center;gap:8px}.theme-choice select{flex:1;min-width:0}.theme-choice #addTheme{width:42px;font-size:24px;padding:0}#themeName{min-width:0;width:60%;padding:7px;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:6px}#themePreview[data-note-depth="true"] i{background:linear-gradient(to bottom,#ffffff66,transparent 45%,#00000033),var(--accent);box-shadow:inset 0 1px 0 #ffffff88,inset 0 -1px 0 #0007,0 1px 2px #0005}
+#panelHome{display:grid;gap:10px}#filePanel{display:grid;gap:10px}#fileGroups details{border-top:1px solid var(--border);padding:9px 0}#fileGroups summary{font-weight:650;padding:6px 0;cursor:pointer}#fileGroups p{margin:5px 0}#fileStatus{white-space:pre-line;overflow-wrap:anywhere}#fileStatus:empty{display:none}.file-search{display:flex;gap:6px;margin:10px 0}.file-search input{width:100%;min-width:0;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font:inherit}.file-search .button{width:44px;flex:none}.file-row{display:flex;gap:6px;align-items:center;padding:8px 0}.file-row label{display:flex;align-items:center;gap:8px;min-width:0;flex:1;min-height:44px}.file-row label>span{min-width:0;overflow-wrap:anywhere}.file-row input{width:20px;height:20px;flex:none;accent-color:var(--accent)}.file-row small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.file-row .file-trash{width:44px;flex:none;display:grid;place-items:center;padding:0;color:#ef6666}.file-select{font-size:12px;min-height:36px;margin:5px 0}.file-danger{color:#ef6666}#fileConfirmNames{max-height:35vh;overflow:auto;padding-left:20px;overflow-wrap:anywhere}.update-card{overscroll-behavior:contain}#deleteFiles{margin:0 0 8px}
+</style><aside id="compat" style="background:#19231c;color:#fff;padding:16px;font:16px sans-serif">Для запуска обнови Android System WebView (или Chrome, если он используется как WebView) и снова открой «Нотку».</aside><main><section class="card"><div class="top"><span class="badge"><b>♫</b> Нотка</span><button id="updates" class="button">Настройки</button></div><h1>Выбор версии</h1>
+<button id="last" class="button play"><span class="action-title">Запустить последнюю загруженную версию:</span><span class="edition-label" id="localVersion"></span></button><button id="others" class="button" aria-expanded="false">Другие версии ▾</button><div id="versions" hidden><div id="choices"></div></div>
+<p id="launchStatus" role="status"></p><button class="button" id="cancelFetch" hidden>Отменить загрузку</button><footer class="version-footer" aria-label="Версии и обновления"><div class="version-item"><p id="editorVersions">Редактор — (—)</p><button id="latest" class="button play" aria-label="Обновить редактор" hidden>Обновить</button></div><p id="catalogStatus" role="status"></p><div class="version-item"><p id="apkVersions">APK 0.63 (—)</p><button class="button play" id="downloadUpdate" aria-label="Обновить APK" hidden>Обновить</button></div><div class="version-item"><p id="panelVersions">Панель 0.55 (—)</p><button class="button play" id="downloadPanel" aria-label="Обновить панель" hidden>Обновить</button></div><p id="apkBundleHint" hidden>Обновление APK также обновит редактор и панель.</p><p id="updateState" role="status"></p></footer></section></main>
+<section id="updateBox" role="dialog" aria-modal="true" aria-labelledby="updateTitle" hidden><div class="update-card"><div class="meta"><h2 id="updateTitle">Настройки панели</h2><button class="button" id="closeUpdate" aria-label="Закрыть">✕</button></div><div id="panelHome"><button class="button" id="openFiles">Скачанные файлы</button><button class="button" id="openThemes">Темы</button><button class="button" id="releasePage">Страница выпусков ↗</button></div><div id="themePanel" hidden><div id="themeSettings"><div class="theme-choice"><label for="appearance">Тема</label><select id="appearance"></select><button class="button" type="button" id="addTheme" aria-label="Добавить свою тему">+</button></div><label id="themeNameRow" hidden>Название <input id="themeName" maxlength="40" autocomplete="off"></label><div id="themePreview" role="img" aria-label="Предпросмотр нотной сетки"><i></i><i></i><i></i></div>
+<div id="themeColorSettings"><div class="themePair"><button type="button" class="button" id="pickBase" aria-pressed="true"><i class="chip" id="baseChip"></i>Основной</button><button type="button" class="button" id="pickAccent" aria-pressed="false"><i class="chip" id="accentChip"></i>Второстепенный</button></div>
+<div id="colorPad" tabindex="0" role="group" aria-label="Палитра. По горизонтали насыщенность, по вертикали яркость. Можно использовать стрелки."><i id="colorPoint"></i></div>
+<label for="hue">Оттенок <output id="hueValue"></output></label><input type="range" id="hue" min="0" max="360" step="1">
+<label>HEX <input id="hexColor" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Код выбранного цвета"></label>
+<label for="brightness">Яркость темы <output id="brightnessValue"></output></label><input type="range" id="brightness" min="50" max="150" step="1">
+<label for="contrast">Контраст сетки <output id="contrastValue"></output></label><input type="range" id="contrast" min="50" max="180" step="1">
+</div><label>Объёмные ноты <input type="checkbox" id="noteDepth"></label><button class="button" type="button" id="resetTheme">Сбросить тему</button><button class="button" type="button" id="deleteTheme" hidden>Удалить тему…</button><div id="themeDeleteConfirm" hidden><p id="themeDeleteName"></p><div class="themePair"><button class="button" type="button" id="confirmThemeDelete">Удалить</button><button class="button" type="button" id="cancelThemeDelete">Отмена</button></div></div></div></div><div id="filePanel" hidden><div id="fileBrowser"><p id="fileTotal"></p><div class="file-search"><input id="fileQuery" type="search" placeholder="Найти файл…" aria-label="Поиск скачанных файлов"><button class="button" id="reloadFiles" aria-label="Обновить список файлов">↻</button></div><button class="button file-danger" id="deleteFiles" hidden></button><div id="fileGroups"></div></div><div id="fileConfirm" hidden><p id="fileConfirmText"></p><ul id="fileConfirmNames"></ul><div class="themePair"><button class="button file-danger" id="confirmFileDelete">Удалить</button><button class="button" id="cancelFileDelete">Отмена</button></div></div><p id="fileStatus" role="status"></p></div></div></section><script>
+"use strict";
+const byId=id=>document.getElementById(id);
+/* PACKED_EDITIONS */
+const updateBox=byId('updateBox'),updateState=byId('updateState'),downloadButton=byId('downloadUpdate');
+let downloadId=null,release=null,apkChecking=false;
+const currentVersion=63,currentApk='0.63',currentPanel={code:55,version:'0.55'},panelButton=byId('downloadPanel');
+function apkAction(install=false){
+ downloadButton.textContent=panelButton.textContent=install?'Установить':'Обновить';
+ downloadButton.setAttribute('aria-label',install?'Установить APK':'Обновить APK');
+ panelButton.setAttribute('aria-label',install?'Установить панель':'Обновить панель');
+}
+function renderUpdateHint(){byId('apkBundleHint').hidden=downloadButton.hidden||(byId('latest').hidden&&panelButton.hidden)}
+function renderApkVersions(incoming,actionable=true){
+ byId('apkVersions').textContent='APK '+currentApk+' ('+(incoming?.version||'—')+')';
+ byId('panelVersions').textContent='Панель '+currentPanel.version+' ('+(incoming?.panel?.version||'—')+')';
+ downloadButton.hidden=!actionable||!incoming||incoming.code<=currentVersion;
+ panelButton.hidden=downloadButton.hidden||!incoming.panel||incoming.panel.code<=currentPanel.code;
+ renderUpdateHint();
+}
+function launchInstaller(){
+ if(!NotkaUpdates.install(downloadId))throw Error('Не удалось открыть установщик. Можно скачать APK на странице выпусков.');
+ updateState.textContent='Подтверди обновление в Android. Если пришлось разрешить установку, вернись и нажми «Установить» в строке APK.';
+}
+function parseRelease(raw){
+ const envelope=JSON.parse(raw);
+ if(typeof envelope.record!=='string'||typeof envelope.signature!=='string'||!NotkaUpdates.valid(envelope.record,envelope.signature))throw Error('Не удалось проверить подпись выпуска.');
+ const data=JSON.parse(envelope.record);
+ if(data.app!=='studio.notka.piano'||!Number.isInteger(data.code)||data.code<1||data.code>2147483647||typeof data.version!=='string'||!/^\d+(\.\d+){1,3}$/.test(data.version)||typeof data.sha256!=='string'||!/^[-+a-zA-Z0-9/]{43}=$/.test(data.sha256))throw Error('Некорректные данные выпуска.');
+ if(data.panel&&(!Number.isSafeInteger(data.panel.code)||data.panel.code<1||typeof data.panel.version!=='string'||!/^\d+(\.\d+){1,3}$/.test(data.panel.version)))throw Error('Некорректная версия панели.');
+ return data;
+}
+async function waitDownload(id,timeout){
+ const end=Date.now()+timeout;
+ while(true){
+  const status=NotkaUpdates.status(id);
+  if(status===8)return;
+  if(status===16)throw Error('Не удалось скачать файл. Проверь подключение к интернету.');
+  if(Date.now()>end)throw Error('Сервер долго не отвечает. Попробуй ещё раз.');
+  await new Promise(resolve=>setTimeout(resolve,450));
+ }
+}
+function requestFile(code){
+ const id=NotkaUpdates.begin(code);
+ if(!id||!/^\d+$/.test(id))throw Error('Android не смог начать загрузку.');
+ return id;
+}
+byId('updates').onclick=()=>{
+ updateBox.hidden=false;byId('closeUpdate').focus();
+};
+byId('closeUpdate').onclick=()=>panelBack();
+async function checkApkAtStartup(){
+ if(apkChecking)return;apkChecking=true;
+ let channelId=null;
+ try{
+  channelId=requestFile(0);await waitDownload(channelId,30000);
+  const raw=NotkaUpdates.channel(channelId);
+  if(!raw||raw.trim()[0]!=='{')throw Error('Сервер не вернул сведения о версии.');
+  const incoming=parseRelease(raw);
+  remember('notka.apkChannel',raw);release=incoming;renderApkVersions(incoming);
+  updateState.textContent='';apkAction();
+ }catch(e){updateState.textContent='Не удалось проверить обновления APK и панели.'}
+ finally{if(channelId!==null)NotkaUpdates.discard(channelId)}
+}
+downloadButton.onclick=async()=>{
+ if(!release||release.code<=currentVersion||downloadButton.disabled)return;
+ downloadButton.disabled=panelButton.disabled=true;
+ try{
+  if(!downloadButton.dataset.installer){
+   updateState.textContent='Скачиваем APK '+release.version+'…';
+   downloadId=requestFile(release.code);await waitDownload(downloadId,300000);
+   if(NotkaUpdates.hash(downloadId)!==release.sha256)throw Error('Файл не прошёл проверку целостности. Повтори загрузку.');
+   // Keep the provider URI alive until the Android installer finishes or the user checks again.
+   downloadButton.dataset.installer='1';apkAction(true);
+   updateState.textContent='Обновление скачано и проверено.';return;
+  }
+  launchInstaller();
+ }catch(e){
+  updateState.textContent=e.message;
+  if(!downloadButton.dataset.installer&&downloadId!==null){NotkaUpdates.discard(downloadId);downloadId=null}
+ }
+ finally{downloadButton.disabled=panelButton.disabled=false}
+};
+panelButton.onclick=()=>downloadButton.onclick();
+byId('releasePage').onclick=()=>{if(!NotkaUpdates.openPage())updateState.textContent='Не удалось открыть браузер.'};
+
+const phase=byId('launchStatus'),rows=byId('choices'),list=byId('versions');
+const editionPrefix='notka.edition.';
+let task=null;
+function readLocal(key){try{return localStorage.getItem(key)}catch{return null}}
+function remember(key,value){try{localStorage.setItem(key,value);return true}catch{return false}}
+function verified(envelope,kind){
+ if(!envelope||typeof envelope.record!=='string'||typeof envelope.signature!=='string'||!NotkaUpdates.valid(envelope.record,envelope.signature))throw Error('Не удалось проверить подпись выпуска.');
+ const value=JSON.parse(envelope.record);
+ if(value.kind!==kind)throw Error('Выпуск несовместим с этой панелью.');
+ return value;
+}
+function validInfo(entry){return entry&&Number.isSafeInteger(entry.code)&&entry.code>0&&entry.code<=2147483647&&typeof entry.version==='string'&&/^\d+(\.\d+){1,3}$/.test(entry.version)&&/^[0-9a-f]{64}$/.test(entry.sha256)}
+function unpackCatalog(envelope){
+ const c=verified(envelope,'notka.catalog.1');
+ if(!Array.isArray(c.editions)||c.editions.length>1000||!c.editions.every(validInfo)||new Set(c.editions.map(v=>v.code)).size!==c.editions.length||!c.editions.some(v=>v.code===c.latest))throw Error('Получен неверный список версий.');
+ return c;
+}
+function unpackEdition(envelope,entry){
+ const e=verified(envelope,'notka.editor.1');
+ if(!validInfo(e)||e.code!==entry.code||e.version!==entry.version||e.sha256!==entry.sha256||typeof e.body!=='string'||!e.body.length||e.body.length>190000||!/^[A-Za-z0-9+/]+={0,2}$/.test(e.body))throw Error('Файл редактора не соответствует выбранной версии.');
+ return e;
+}
+const themeDefaults={dark:{base:'#101614',accent:'#baef8a'},light:{base:'#f4f3eb',accent:'#3c7243'}};
+const hexColor=value=>typeof value==='string'&&/^#[a-f\d]{6}$/i.test(value);
+const levels={brightness:100,contrast:100};
+let appearance={...levels,mode:'dark',...themeDefaults.dark};
+function cleanTheme(saved){
+  if(saved&&Object.prototype.hasOwnProperty.call(themeDefaults,saved.mode)&&hexColor(saved.base)&&hexColor(saved.accent))
+   return {mode:saved.mode,base:saved.base,accent:saved.accent,brightness:level(saved.brightness,150),contrast:level(saved.contrast,180),depth:saved.depth===true};
+ return null;
+}
+function readTheme(key){try{return cleanTheme(JSON.parse(readLocal(key)))}catch{return null}}
+appearance=readTheme('notka.theme')||appearance;
+let selectedTheme=appearance.mode;
+let themeItems=['dark','light'].map(id=>({id,name:id==='dark'?'Тёмная':'Светлая',settings:
+ id===appearance.mode?{...appearance}:readTheme('notka.theme.'+id)||{mode:id,...themeDefaults[id],...levels,depth:false}}));
+try{
+ const saved=JSON.parse(readLocal('notka.themes'));
+ if(saved&&Array.isArray(saved.items)){
+  const seen=new Set(),items=[];
+  for(const item of saved.items){
+   const settings=cleanTheme(item?.settings);
+   if(!settings||typeof item.id!=='string'||! /^(dark|light|custom-[1-9]\d*)$/.test(item.id)||seen.has(item.id)||
+     typeof item.name!=='string'||!item.name.trim()||item.name.length>40)continue;
+   seen.add(item.id);items.push({id:item.id,name:item.name,settings});
+  }
+  if(seen.has('dark')&&seen.has('light')){
+   themeItems=items;selectedTheme=seen.has(saved.active)?saved.active:'dark';
+   appearance={...themeItems.find(item=>item.id===selectedTheme).settings};
+  }
+ }
+}catch{}
+function customTheme(){return selectedTheme.startsWith('custom-')}
+function lockBuiltInColors(){
+ if(customTheme())return;
+ appearance={mode:selectedTheme,...themeDefaults[selectedTheme],...levels,depth:appearance.depth===true};
+}
+for(const item of themeItems)if(item.id==='dark'||item.id==='light')
+ item.settings={mode:item.id,...themeDefaults[item.id],...levels,depth:item.settings.depth===true};
+appearance={...themeItems.find(item=>item.id===selectedTheme).settings};
+let pendingThemeDeletion=null;
+function renderThemeList(){
+ pendingThemeDeletion=null;byId('themeDeleteConfirm').hidden=true;
+ byId('themeColorSettings').hidden=byId('resetTheme').hidden=byId('deleteTheme').hidden=!customTheme();
+ const select=byId('appearance');select.replaceChildren();
+ for(const item of themeItems){
+  const option=document.createElement('option');option.value=item.id;
+  option.textContent=item.id==='dark'?'Тёмная':item.id==='light'?'Светлая':item.name;select.append(option);
+ }
+ select.value=selectedTheme;byId('themeNameRow').hidden=!selectedTheme.startsWith('custom-');
+ byId('themeName').value=themeItems.find(item=>item.id===selectedTheme).name;
+}
+renderThemeList();
+function rgb(hex){return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16))}
+function mix(base,ink,weight){
+ const b=rgb(ink);return '#'+rgb(base).map((n,i)=>Math.round(n+(b[i]-n)*weight).toString(16).padStart(2,'0')).join('');
+}
+function ink(hex){
+ const [r,g,b]=rgb(hex).map(v=>{const s=v/255;return s<=.04045?s/12.92:((s+.055)/1.055)**2.4});
+ return .2126*r+.7152*g+.0722*b>.179?'#121212':'#ffffff';
+}
+function level(value,max){return Number.isInteger(value)?Math.max(50,Math.min(max,value)):100}
+function toHSV(hex,previousHue=0){
+ const [r,g,b]=rgb(hex).map(n=>n/255),v=Math.max(r,g,b),delta=v-Math.min(r,g,b);
+ if(!delta)return {h:previousHue,s:0,v};
+ const sector=v===r?(g-b)/delta:v===g?2+(b-r)/delta:4+(r-g)/delta;
+ return {h:((sector*60)%360+360)%360,s:delta/v,v};
+}
+function fromHSV({h,s,v}){
+ const k=h/60,c=v*s,x=c*(1-Math.abs(k%2-1));
+ const parts=[[c,x,0],[x,c,0],[0,c,x],[0,x,c],[x,0,c],[c,0,x]][Math.floor(k)%6];
+ return '#'+parts.map(n=>Math.round((n+v-c)*255).toString(16).padStart(2,'0')).join('');
+}
+let themeDirty=false;
+let editing='base',hsv=toHSV(appearance.base);
+const themePad=byId('colorPad'),point=byId('colorPoint');
+function renderPicker(){
+ themePad.style.setProperty('--hue',fromHSV({h:hsv.h,s:1,v:1}));
+ point.style.left=hsv.s*100+'%';point.style.top=(1-hsv.v)*100+'%';
+ byId('hue').value=Math.round(hsv.h);byId('hueValue').textContent=Math.round(hsv.h)+'°';
+ byId('hexColor').value=appearance[editing];
+ for(const [key,id] of [['base','pickBase'],['accent','pickAccent']]){
+  byId(id).setAttribute('aria-pressed',String(key===editing));
+  byId(key+'Chip').style.backgroundColor=appearance[key];
+ }
+}
+function applyAppearance(commit=true){
+ lockBuiltInColors();
+ if(!commit)themeDirty=true;
+ const {brightness,contrast,mode}=appearance;
+ const lighting=hex=>mix(hex,brightness>=100?'#ffffff':'#000000',(brightness>=100 ? .009 : .016)*Math.abs(brightness-100));
+ const base=lighting(appearance.base),accent=lighting(appearance.accent),text=ink(base);
+ const colors={depth:appearance.depth===true,scheme:mode,bg:base,accent,on:ink(accent),text,muted:mix(base,text,.72),cursor:mix(accent,text,.35)};
+ for(const [key,ratio] of Object.entries({panel:.07,border:.24,cell:.13,black:.07,key:.20,raised:.035,line:.36}))
+  colors[key]=mix(base,text,ratio*(key==='panel'?1:contrast/100));
+ const style=document.documentElement?.style;
+ if(style){style.colorScheme=mode;for(const [key,v] of Object.entries(colors))if(hexColor(v))style.setProperty('--'+key,v)}
+ byId('appearance').value=selectedTheme;byId('noteDepth').checked=appearance.depth===true;
+ byId('themePreview').setAttribute('data-note-depth',String(appearance.depth===true));
+ for(const key of Object.keys(levels)){byId(key).value=appearance[key];byId(key+'Value').textContent=appearance[key]+'%'}
+ renderPicker();
+ if(commit)NotkaUpdates.setThemeColors?.(JSON.stringify(colors));
+}
+function saveAppearance(){
+ lockBuiltInColors();themeDirty=false;
+ themeItems.find(item=>item.id===selectedTheme).settings={...appearance};
+ remember('notka.themes',JSON.stringify({active:selectedTheme,items:themeItems}));
+ remember('notka.theme',JSON.stringify(appearance));applyAppearance();
+}
+function resetTheme(mode){if(!customTheme())return;appearance={mode,...themeDefaults[mode],...levels};hsv=toHSV(appearance[editing]);saveAppearance()}
+byId('appearance').onchange=e=>{
+ const id=e.target.value;if(!themeItems.some(item=>item.id===id))return;
+ saveAppearance();selectedTheme=id;
+ appearance={...themeItems.find(item=>item.id===selectedTheme).settings};
+ hsv=toHSV(appearance[editing]);renderThemeList();saveAppearance();
+};
+byId('addTheme').onclick=()=>{
+ saveAppearance();
+ let number=1;while(themeItems.some(item=>item.id==='custom-'+number))number++;
+ selectedTheme='custom-'+number;
+ themeItems.push({id:selectedTheme,name:'Моя тема '+number,settings:{...appearance}});
+ renderThemeList();saveAppearance();byId('themeName').focus?.();byId('themeName').select?.();
+};
+byId('themeName').onchange=e=>{
+ const item=themeItems.find(item=>item.id===selectedTheme);
+ if(!selectedTheme.startsWith('custom-'))return;
+ const name=e.target.value.trim().slice(0,40);if(name)item.name=name;
+ renderThemeList();saveAppearance();
+};
+byId('deleteTheme').onclick=()=>{
+ if(!customTheme())return;
+ pendingThemeDeletion=selectedTheme;
+ byId('themeDeleteName').textContent='Удалить «'+themeItems.find(item=>item.id===selectedTheme).name+'»?';
+ byId('themeDeleteConfirm').hidden=false;
+};
+byId('cancelThemeDelete').onclick=()=>{pendingThemeDeletion=null;byId('themeDeleteConfirm').hidden=true};
+byId('confirmThemeDelete').onclick=()=>{
+ if(!customTheme()||pendingThemeDeletion!==selectedTheme)return;
+ const next=appearance.mode;
+ themeItems=themeItems.filter(item=>item.id!==selectedTheme);selectedTheme=next;
+ appearance={...themeItems.find(item=>item.id===selectedTheme).settings};
+ palettePointer=null;hsv=toHSV(appearance[editing]);renderThemeList();saveAppearance();
+};
+byId('noteDepth').onchange=e=>{appearance.depth=e.target.checked;saveAppearance()};
+byId('resetTheme').onclick=()=>resetTheme(appearance.mode);
+function chooseColor(key){if(!customTheme())return;editing=key;hsv=toHSV(appearance[key],hsv.h);renderPicker()}
+byId('pickBase').onclick=()=>chooseColor('base');
+byId('pickAccent').onclick=()=>chooseColor('accent');
+byId('hexColor').onchange=e=>{
+ if(!customTheme())return;
+ const color='#'+e.target.value.trim().replace(/^#/,'').toLowerCase();
+ if(!hexColor(color)){renderPicker();return}
+ appearance[editing]=color;hsv=toHSV(color,hsv.h);saveAppearance();
+};
+function pickerInput(){if(!customTheme())return;appearance[editing]=fromHSV(hsv);applyAppearance(false)}
+const unit=n=>Math.max(0,Math.min(1,n));
+function padAt(e){
+ const r=themePad.getBoundingClientRect();
+ if(!r.width||!r.height)return;
+ hsv.s=unit((e.clientX-r.left)/r.width);hsv.v=1-unit((e.clientY-r.top)/r.height);pickerInput();
+}
+let palettePointer=null;
+themePad.onpointerdown=e=>{
+ if(!customTheme()||palettePointer!==null||e.button!==0)return;
+ palettePointer=e.pointerId;themePad.setPointerCapture(e.pointerId);padAt(e);
+};
+themePad.onpointermove=e=>{if(e.pointerId===palettePointer)padAt(e)};
+function endPalette(e){
+ if(e.pointerId!==palettePointer)return;
+ if(e.type==='pointerup')padAt(e);
+ palettePointer=null;saveAppearance();
+}
+themePad.onpointerup=themePad.onpointercancel=themePad.onlostpointercapture=endPalette;
+themePad.onkeydown=e=>{
+ const delta={ArrowLeft:[-.01,0],ArrowRight:[.01,0],ArrowDown:[0,-.01],ArrowUp:[0,.01]}[e.key];
+ if(!delta)return;e.preventDefault();hsv.s=unit(hsv.s+delta[0]);hsv.v=unit(hsv.v+delta[1]);pickerInput();saveAppearance();
+};
+byId('hue').oninput=e=>{if(!customTheme())return;hsv.h=Number(e.target.value);pickerInput()};
+byId('hue').onchange=saveAppearance;
+for(const key of Object.keys(levels)){
+ byId(key).oninput=e=>{if(!customTheme())return;appearance[key]=Number(e.target.value);applyAppearance(false)};
+ byId(key).onchange=saveAppearance;
+}
+document.addEventListener?.('visibilitychange',()=>{if(document.hidden){palettePointer=null;if(themeDirty)saveAppearance()}});
+if(typeof window!=='undefined')window.addEventListener('pagehide',()=>{if(themeDirty)saveAppearance()});
+applyAppearance();
+const initialCatalog=JSON.parse(shippedCatalog.record);
+let catalog=initialCatalog;
+try{const stored=readLocal('notka.catalog');if(stored)catalog=unpackCatalog(JSON.parse(stored))}catch{}
+const available=new Map();
+function merge(c){
+ for(const e of c.editions){
+  const previous=available.get(e.code);
+  available.set(e.code,Object.assign({},previous,e));
+ }
+}
+function editionLabel(e){return e.name ? e.version+' - '+e.name : e.version}
+merge(initialCatalog);
+const localCodes=new Set(Object.keys(builtin).map(Number));
+try{
+ for(let i=0;i<localStorage.length;i++){
+  const k=localStorage.key(i);if(!k.startsWith(editionPrefix))continue;
+  try{
+   const envelope=JSON.parse(readLocal(k)),meta=JSON.parse(envelope.record);
+   const e=unpackEdition(envelope,available.get(meta.code)||meta);
+   if(k!==editionPrefix+e.code)continue;
+   localCodes.add(e.code);
+   if(!available.has(e.code))available.set(e.code,{code:e.code,version:e.version,sha256:e.sha256,name:e.name});
+  }catch{}
+
+ }
+}catch{}
+merge(catalog);
+let lastCode=Number(readLocal('notka.last'));
+function onDevice(code){return localCodes.has(code)}
+function newestLocal(){return available.get(Math.max(...localCodes))}
+let confirmed=null,checking=null,lastCheck=0;
+function pendingEdition(){return confirmed&&confirmed.code>newestLocal().code?confirmed:null}
+function renderPanel(){
+ byId('localVersion').textContent=editionLabel(newestLocal());
+ const update=pendingEdition();
+ byId('latest').hidden=!update;renderUpdateHint();
+ byId('editorVersions').textContent='Редактор '+newestLocal().version+' ('+(confirmed||available.get(catalog.latest))?.version+')';
+ for(const id of ['last','updates'])byId(id).disabled=!!task;
+ byId('latest').disabled=!!task||!update;
+ byId('cancelFetch').hidden=!task;
+ rows.replaceChildren();
+ for(const e of [...available.values()].sort((a,b)=>b.code-a.code)){
+  const btn=document.createElement('button');btn.className='button choice';btn.disabled=!!task;
+  const label=document.createElement('b'),state=document.createElement('small');
+  label.textContent=editionLabel(e);state.textContent=onDevice(e.code)?'На телефоне':'Скачать';
+  btn.append(label,state);btn.onclick=()=>perform(t=>openEdition(e,t));rows.append(btn);
+ }
+}
+function ensureActive(t){if(task!==t&&checking!==t)throw Error('Загрузка отменена.')}
+async function fetchSigned(code,t){
+ ensureActive(t);const id=NotkaUpdates.editionDownload(code);
+ if(!id||!/^\d+$/.test(id))throw Error('Android не начал загрузку.');
+ t.download=id;
+ try{
+  const until=Date.now()+30000;
+  while(Date.now()<until){
+   ensureActive(t);
+   const state=NotkaUpdates.status(id);
+   if(state===8){const data=NotkaUpdates.editionText(id);if(!data||data.trim()[0]!=='{')throw Error('Сервер не вернул файл выпуска.');return JSON.parse(data)}
+   if(state===16)throw Error('Не удалось скачать выпуск.');
+   await new Promise(resolve=>setTimeout(resolve,350));
+  }
+  throw Error('Сервер не ответил вовремя.');
+ }finally{if(t.download===id){t.download=null;NotkaUpdates.discard(id)}}
+}
+async function checkCatalog(){
+ if(checking)return;
+ const t={download:null};checking=t;confirmed=null;lastCheck=Date.now();
+ const status=byId('catalogStatus');status.textContent='';renderPanel();
+ try{
+  const raw=await fetchSigned(0,t),incoming=unpackCatalog(raw);
+  catalog=incoming;merge(incoming);remember('notka.catalog',JSON.stringify(raw));
+  confirmed=available.get(incoming.latest);
+  status.textContent='';
+ }catch{status.textContent='Не удалось проверить обновления. Загруженные версии доступны.'}
+ finally{checking=null;renderPanel()}
+}
+async function openEdition(entry,t,restore=false){
+ ensureActive(t);let edition,stored=readLocal(editionPrefix+entry.code);
+ if(stored){try{edition=unpackEdition(JSON.parse(stored),entry)}catch{}}
+ if(!edition&&builtin[entry.code]){edition=unpackEdition(builtin[entry.code],entry)}
+ if(!edition){
+  phase.textContent='Скачиваем редактор '+editionLabel(entry)+'…';
+  const raw=await fetchSigned(entry.code,t);ensureActive(t);edition=unpackEdition(raw,entry);
+  if(!remember(editionPrefix+entry.code,JSON.stringify(raw)))throw Error('Не удалось сохранить выпуск. Проверь свободное место на телефоне.');
+  localCodes.add(entry.code);
+  if(confirmed&&!pendingEdition())byId('catalogStatus').textContent='';
+ }
+ if(!(restore?NotkaUpdates.resumeEditor(edition.body):NotkaUpdates.openEditor(edition.body)))throw Error('Не удалось открыть эту версию. Выбери другую.');
+ lastCode=entry.code;const saved=remember('notka.last',String(entry.code));
+ phase.textContent=saved?'':'Версия открыта. Не удалось запомнить выбор.';
+}
+async function perform(action){
+ if(task)return;
+ const t={download:null};task=t;renderPanel();
+ try{await action(t)}
+ catch(error){if(task===t)phase.textContent=error.message+' Можно открыть версию с пометкой «На телефоне».'}
+ finally{if(task===t){task=null;renderPanel()}}
+}
+document.addEventListener?.('visibilitychange',()=>{if(!document.hidden){renderPanel();if(Date.now()-lastCheck>60000&&!task)checkCatalog()}});
+if(typeof window!=='undefined')window.addEventListener('focus',renderPanel);
+byId('latest').onclick=()=>{const next=pendingEdition();if(next)return perform(t=>openEdition(next,t))};
+byId('last').onclick=()=>perform(t=>openEdition(newestLocal(),t));
+byId('others').onclick=()=>{list.hidden=!list.hidden;byId('others').setAttribute('aria-expanded',String(!list.hidden));byId('others').textContent=list.hidden?'Другие версии ▾':'Другие версии ▴'};
+byId('cancelFetch').onclick=()=>{
+ if(!task)return;const t=task;task=null;
+ if(t.download!==null){NotkaUpdates.discard(t.download);t.download=null}
+ phase.textContent='Загрузка отменена.';renderPanel();
+};
+// Managed downloads. IDs from the native inventory never become filesystem paths.
+const fileKinds=[['editors','Версии редактора'],['apk','APK'],['panel','Панель'],['sounds','Инструменты'],['tracks','Сохранённые треки'],['exports','Аудио, видео и экспорт']];
+let fileItems=[],fileSelection=new Set(),filePending=[],fileDeleting=false;
+const fileSize=n=>n<1024?n+' Б':n<1048576?(n/1024).toFixed(1)+' КБ':(n/1048576).toFixed(1)+' МБ';
+const fileIcon='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg>';
+function storageMessage(text){byId('fileStatus').textContent=text}
+function storageLocked(){return !!task||downloadButton.disabled||fileDeleting}
+function localFileItems(){
+ const items=[];
+ for(const [code,envelope] of Object.entries(builtin)){const meta=available.get(Number(code));items.push({id:'builtin:'+code,name:'Редактор '+(meta?editionLabel(meta):code),kind:'editors',bytes:JSON.stringify(envelope).length,removable:false,note:'В APK'})}
+ for(let i=0;i<localStorage.length;i++){
+  const key=localStorage.key(i);if(!/^notka\.edition\.[1-9]\d*$/.test(key))continue;
+  const raw=readLocal(key);if(raw===null)continue;const code=Number(key.slice(editionPrefix.length)),meta=available.get(code);
+  items.push({id:'editor:'+code,name:'Редактор '+(meta?editionLabel(meta):'№ '+code)+(builtin[code]?' · копия':''),kind:'editors',bytes:raw.length*2,removable:true,stamp:raw,code});
+ }
+ items.push({id:'panel',name:'Панель '+currentPanel.version,kind:'panel',bytes:0,removable:false,note:'Входит в APK '+currentApk});return items;
+}
+function loadFileItems(){
+ let native={items:[],errors:[]};
+ try{if(typeof NotkaUpdates.storageList==='function')native=JSON.parse(NotkaUpdates.storageList());else native.errors=['Для списка файлов обнови APK.']}catch{native.errors=['Не удалось прочитать файлы приложения.']}
+ fileItems=[...localFileItems(),...(Array.isArray(native.items)?native.items:[])];fileSelection=new Set([...fileSelection].filter(id=>fileItems.some(f=>f.id===id&&f.removable)));
+ renderFiles();return (native.errors||[]).join(' ');
+}
+function openFiles(){
+ if(storageLocked()){storageMessage('Дождись завершения загрузки.');return}
+ byId('panelHome').hidden=true;byId('filePanel').hidden=false;byId('updateTitle').textContent='Скачанные файлы';byId('closeUpdate').textContent='‹';byId('closeUpdate').setAttribute('aria-label','Назад');
+ fileSelection.clear();filePending=[];byId('fileConfirm').hidden=true;byId('fileBrowser').hidden=false;byId('fileQuery').value='';storageMessage(loadFileItems());
+}
+function closeFiles(){byId('filePanel').hidden=true;byId('panelHome').hidden=false;byId('updateTitle').textContent='Настройки панели';byId('closeUpdate').textContent='✕';byId('closeUpdate').setAttribute('aria-label','Закрыть');byId('openFiles').focus()}
+function selectionLabel(){const selected=fileItems.filter(f=>fileSelection.has(f.id)&&f.removable);byId('deleteFiles').hidden=!selected.length;byId('deleteFiles').textContent='Удалить выбранные ('+selected.length+') · ≈ '+fileSize(selected.reduce((n,f)=>n+f.bytes,0))}
+function renderFiles(){
+ const groups=byId('fileGroups'),opened=new Set([...groups.children].filter(e=>e.open).map(e=>e.dataset.kind));groups.replaceChildren();
+ const query=byId('fileQuery').value.trim().toLocaleLowerCase('ru'),visible=fileItems.filter(f=>f.name.toLocaleLowerCase('ru').includes(query));
+ byId('fileTotal').textContent='Можно удалить: ≈ '+fileSize(fileItems.filter(f=>f.removable).reduce((n,f)=>n+f.bytes,0));
+ for(const [kind,title] of fileKinds){
+  const items=visible.filter(f=>f.kind===kind).sort((a,b)=>kind==='editors'?(b.code||Number(b.id.split(':')[1]))-(a.code||Number(a.id.split(':')[1])):a.name.localeCompare(b.name,'ru'));
+  if(query&&!items.length)continue;
+  const group=document.createElement('details');group.dataset.kind=kind;group.open=!!query||opened.has(kind)||kind==='editors';
+  const summary=document.createElement('summary');summary.textContent=title+' · '+items.length;group.append(summary);
+  if(kind==='panel'){const p=document.createElement('p');p.textContent='Панель обновляется вместе с APK.';group.append(p)}
+  if(kind==='apk'){const p=document.createElement('p');p.textContent='Загрузки через «Нотку». Удаление установщика не удаляет приложение.';group.append(p)}
+  const removable=items.filter(f=>f.removable);
+  if(removable.length>1){const select=document.createElement('button');select.className='button file-select';select.textContent=removable.every(f=>fileSelection.has(f.id))?'Снять выделение':'Выбрать все';select.onclick=()=>{const clear=removable.every(f=>fileSelection.has(f.id));for(const f of removable)clear?fileSelection.delete(f.id):fileSelection.add(f.id);renderFiles()};group.append(select)}
+  if(!items.length){const p=document.createElement('p');p.textContent='Нет файлов';group.append(p)}
+  for(const f of items){
+   const row=document.createElement('div');row.className='file-row';
+   const label=document.createElement('label'),text=document.createElement('span'),name=document.createElement('span'),size=document.createElement('small');name.textContent=f.name;size.textContent=(f.bytes?'≈ '+fileSize(f.bytes):'')+(f.note?(f.bytes?' · ':'')+f.note:'');text.append(name,size);
+   if(f.removable){const check=document.createElement('input');check.type='checkbox';check.checked=fileSelection.has(f.id);check.setAttribute('aria-label','Выбрать '+f.name);check.onchange=()=>{check.checked?fileSelection.add(f.id):fileSelection.delete(f.id);selectionLabel()};label.append(check)}
+   label.append(text);row.append(label);
+   if(f.removable){const remove=document.createElement('button');remove.className='button file-trash';remove.innerHTML=fileIcon;remove.setAttribute('aria-label','Удалить '+f.name);remove.onclick=()=>askFileDelete([f.id]);row.append(remove)}
+   group.append(row);
+  }
+  groups.append(group);
+ }
+ if(!visible.length){const p=document.createElement('p');p.textContent='Ничего не найдено';groups.append(p)}selectionLabel();
+}
+function askFileDelete(ids){
+ if(storageLocked())return;
+ filePending=fileItems.filter(f=>ids.includes(f.id)&&f.removable);if(!filePending.length)return;
+ byId('fileConfirm').hidden=false;byId('fileBrowser').hidden=true;byId('fileConfirmNames').replaceChildren();
+ for(const f of filePending){const li=document.createElement('li');li.textContent=f.name;byId('fileConfirmNames').append(li)}
+ byId('fileConfirmText').textContent='Удалить выбранные файлы с телефона ('+filePending.length+')?'+(filePending.some(f=>f.kind==='tracks'||f.kind==='exports')?' Восстановить удалённые файлы из этого списка нельзя.':'')+(filePending.some(f=>f.kind==='sounds')?' Треки останутся, но для их звучания инструмент потребуется загрузить или импортировать снова.':'');
+ byId('cancelFileDelete').focus();
+}
+function cancelFileDelete(){if(fileDeleting)return;filePending=[];byId('fileConfirm').hidden=true;byId('fileBrowser').hidden=false}
+async function deleteFileItems(){
+ if(fileDeleting||!filePending.length)return;fileDeleting=true;byId('confirmFileDelete').disabled=byId('cancelFileDelete').disabled=true;
+ const pending=filePending.slice(),errors=[];let removed=0;
+ try{for(const f of pending){
+  try{
+   if(f.id.startsWith('editor:')){
+    const key=editionPrefix+f.code;if(readLocal(key)!==f.stamp)throw Error('Версия изменилась. Обнови список.');
+    localStorage.removeItem(key);if(readLocal(key)!==null)throw Error('Не удалось удалить версию.');
+    if(!builtin[f.code])localCodes.delete(f.code);
+    if(lastCode===f.code&&!localCodes.has(f.code)){lastCode=newestLocal().code;remember('notka.last',String(lastCode))}
+   }else{
+    const message=NotkaUpdates.storageDelete(JSON.stringify({id:f.id,stamp:f.stamp}));if(message!=='')throw Error(message||'Не удалось удалить файл.');
+    if(f.id==='download:'+downloadId){downloadId=null;delete downloadButton.dataset.installer;apkAction()}
+   }
+   fileSelection.delete(f.id);removed++;
+  }catch(e){errors.push(f.name+': '+e.message)}
+  await new Promise(resolve=>setTimeout(resolve,0));
+ }
+ }finally{
+  fileDeleting=false;byId('confirmFileDelete').disabled=byId('cancelFileDelete').disabled=false;cancelFileDelete();renderPanel();const scanError=loadFileItems();storageMessage('Удалено: '+removed+'.'+(errors.length?'\n'+errors.join('\n'):'')+(scanError?'\n'+scanError:''));
+ }
+}
+byId('openFiles').onclick=openFiles;byId('fileQuery').oninput=renderFiles;byId('reloadFiles').onclick=()=>{if(!storageLocked())storageMessage(loadFileItems())};byId('deleteFiles').onclick=()=>askFileDelete([...fileSelection]);byId('cancelFileDelete').onclick=cancelFileDelete;byId('confirmFileDelete').onclick=deleteFileItems;
+byId('openThemes').onclick=()=>{
+ byId('panelHome').hidden=true;byId('themePanel').hidden=false;byId('updateTitle').textContent='Темы';byId('closeUpdate').textContent='‹';byId('closeUpdate').setAttribute('aria-label','Назад');byId('appearance').focus();
+};
+function closeThemes(){
+ if(themeDirty)saveAppearance();byId('themePanel').hidden=true;byId('panelHome').hidden=false;byId('updateTitle').textContent='Настройки панели';byId('closeUpdate').textContent='✕';byId('closeUpdate').setAttribute('aria-label','Закрыть');byId('openThemes').focus();
+}
+function panelBack(){
+ document.activeElement?.blur?.();if(fileDeleting)return;
+ if(!updateBox.hidden){if(!byId('filePanel').hidden){if(!byId('fileConfirm').hidden)cancelFileDelete();else closeFiles()}else if(!byId('themeDeleteConfirm').hidden)byId('cancelThemeDelete').onclick();else if(!byId('themePanel').hidden)closeThemes();else{if(themeDirty)saveAppearance();updateBox.hidden=true;byId('updates').focus()}return}
+ if(!list.hidden){byId('others').onclick();return}NotkaUpdates.closePanel?.();
+}
+let panelOutside=false;updateBox.onpointerdown=e=>{panelOutside=e.target===updateBox};updateBox.onpointercancel=()=>{panelOutside=false};updateBox.onclick=e=>{if(panelOutside&&e.target===updateBox)panelBack();panelOutside=false};
+document.addEventListener?.('keydown',e=>{if(e.key==='Escape'){e.preventDefault();panelBack()}});
+
+renderPanel();
+byId('compat').hidden=true;
+checkCatalog();
+try{const raw=readLocal('notka.apkChannel');if(raw){release=parseRelease(raw);renderApkVersions(release,false)}}catch{}
+checkApkAtStartup();
+</script></html>

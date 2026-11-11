@@ -1,0 +1,321 @@
+{
+  "repository": "Vang1549/Notka",
+  "releases": [
+    {
+      "tag": "apk-63",
+      "title": "Нотка 0.63 · Открытые обновления",
+      "latest": true,
+      "notes": "Обновления доступны всем пользователям через GitHub. Встроены редактор 0.71 и панель 0.55. Установите APK поверх существующей Нотки; ключ подписи сохранён.",
+      "assets": [
+        {
+          "name": "Notka-63.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/apk-63/Notka-63.apk",
+          "bytes": 6438009,
+          "sha256": "ab9f8f8dc12ef99a9c89353f26d8de16a455bcaf0d9d58181c4a839f7655f9c0"
+        }
+      ]
+    },
+    {
+      "tag": "archive",
+      "title": "Архив публичных выпусков Нотки",
+      "latest": false,
+      "notes": "Предыдущие публичные APK и файлы инструментов. Для обычной установки используйте последний выпуск. Личная сборка 0.48 с внешней шкатулкой не распространяется.",
+      "assets": [
+        {
+          "name": "Notka-3.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-3.apk",
+          "bytes": 13580,
+          "sha256": "dbc2422198474d5f4fe8f73e9e766dc168735817ff1b2ceb2e576306e1d528a6"
+        },
+        {
+          "name": "Notka-4.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-4.apk",
+          "bytes": 15203,
+          "sha256": "827e0fb842a9ff63d38c3685f4b0473a2c6c6c7e988bdeb4cef030987fedda7c"
+        },
+        {
+          "name": "Notka-5.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-5.apk",
+          "bytes": 35336,
+          "sha256": "6bfe3fec0ccab9775b17ff8cccebada4c0885873d6d278447934986e89d6ad5b"
+        },
+        {
+          "name": "Notka-11.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-11.apk",
+          "bytes": 55950,
+          "sha256": "55b1a00919a86da4f4a299296463f951139e3306e78c086a18a947966d4aa58f"
+        },
+        {
+          "name": "Notka-12.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-12.apk",
+          "bytes": 142561,
+          "sha256": "7e70c20e66ce26885a00d09faa8d8da6de952b02653061d40c4f136343ff2da9"
+        },
+        {
+          "name": "Notka-18.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-18.apk",
+          "bytes": 270204,
+          "sha256": "d7526250ce924c4934fd48b73734b8aa59bdcf0c8fcd0ed140c3d66885b8641a"
+        },
+        {
+          "name": "Notka-20.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-20.apk",
+          "bytes": 270022,
+          "sha256": "5bd320f1c9f7603a471ddc0c0390ef951a7733c8bfeb3831812cc4b76b7cf2f5"
+        },
+        {
+          "name": "Notka-21.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-21.apk",
+          "bytes": 268768,
+          "sha256": "095be445f7d051dbb4e56c6a4be3b7502eb687c2f2f1b883f89cc6e407c2aae2"
+        },
+        {
+          "name": "Notka-25.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-25.apk",
+          "bytes": 379325,
+          "sha256": "13224a5e6ef88d5a39125a6c59cd0eacc0dabee866e3e87d8c81ae9773375ff4"
+        },
+        {
+          "name": "Notka-27.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-27.apk",
+          "bytes": 439348,
+          "sha256": "0ecf9cde7c556e8fa62797829a192ae5b540b4d00c42d7c1e1f14f2cda22653a"
+        },
+        {
+          "name": "Notka-28.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-28.apk",
+          "bytes": 441450,
+          "sha256": "1deea63c8627767ac12b9099f0cb01a4c08b35f75314019046e631a22aa2b998"
+        },
+        {
+          "name": "Notka-29.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-29.apk",
+          "bytes": 472727,
+          "sha256": "05af047397bc1f80405d8610205bcda02660b260a1f183dc108663ddfb7a7fef"
+        },
+        {
+          "name": "Notka-30.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-30.apk",
+          "bytes": 503730,
+          "sha256": "4f9ccde8b5c1689a57d47849a223bc561ff7e6e7550d037e8c87bc26e371cf11"
+        },
+        {
+          "name": "Notka-31.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-31.apk",
+          "bytes": 534726,
+          "sha256": "2ffe928286f04258cae7d32fa0389ef0a6667d025cdef2d674194b06b721ac76"
+        },
+        {
+          "name": "Notka-32.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-32.apk",
+          "bytes": 7529921,
+          "sha256": "155bc58fff32eec8c6497269e9fb045a42e2055a6152df7ef47e96b66076bcb2"
+        },
+        {
+          "name": "Notka-33.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-33.apk",
+          "bytes": 7569913,
+          "sha256": "39b967292ac0d3a23dab6ec50a9336250c1e703bdc68fb8414f2c5581d91f98c"
+        },
+        {
+          "name": "Notka-34.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-34.apk",
+          "bytes": 4113610,
+          "sha256": "11e0bc20c3fab2e41df773e81e470e8163e26d93a976ffe9af10fbd552033bc5"
+        },
+        {
+          "name": "Notka-35.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-35.apk",
+          "bytes": 4161431,
+          "sha256": "fd8e4f64cfbfc33c7d9b1c55ea21567fcdfac109817076e5d6377d669a50542e"
+        },
+        {
+          "name": "Notka-36.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-36.apk",
+          "bytes": 4209091,
+          "sha256": "7d9a373a4c60b90bc9da86e205a190c32788f929afe782aa15b33c8d056f408a"
+        },
+        {
+          "name": "Notka-37.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-37.apk",
+          "bytes": 4209155,
+          "sha256": "9177e34f3190d7ede0c7170e60a07dcae482b6abe3f279fc49f845d85fc4d802"
+        },
+        {
+          "name": "Notka-38.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-38.apk",
+          "bytes": 4209149,
+          "sha256": "44540d4bf5adbbea630737d28aa9fe3531653c2a11c6f66c706224001ac92d55"
+        },
+        {
+          "name": "Notka-39.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-39.apk",
+          "bytes": 4257337,
+          "sha256": "ba6785e28d576e14cf32b53745911651958c22bb11e8f69b424a586ccad8558e"
+        },
+        {
+          "name": "Notka-40.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-40.apk",
+          "bytes": 4305885,
+          "sha256": "744dc3745a6221c35c84d60a8dde16c8c33c467e83b0a37cf77cb7492d6bb578"
+        },
+        {
+          "name": "Notka-41.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-41.apk",
+          "bytes": 4354821,
+          "sha256": "e44902632d6bf5a66b419529fbccc9e9c907b5ab97acf3ff1dcc0b82bea4660d"
+        },
+        {
+          "name": "Notka-42.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-42.apk",
+          "bytes": 4405659,
+          "sha256": "880c002e55520e372e25562c8a4742d4563238d8e8788c964faa2bffc7666996"
+        },
+        {
+          "name": "Notka-43.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-43.apk",
+          "bytes": 4456705,
+          "sha256": "008f10fcca182d573208810263857d24786b8af6ecd4b20c6f1d5a8ffdc7e6f1"
+        },
+        {
+          "name": "Notka-44.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-44.apk",
+          "bytes": 4514966,
+          "sha256": "9b5d698fac7d549bbc3c72cac640cc8a3dc8c45ac9dbb000dc96754fd5cc18cb"
+        },
+        {
+          "name": "Notka-45.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-45.apk",
+          "bytes": 4574392,
+          "sha256": "e61e17044b11172e5f9a202235c65e16a6fa5061427dc0fdc48f98ba262eac4f"
+        },
+        {
+          "name": "Notka-46.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-46.apk",
+          "bytes": 4635035,
+          "sha256": "9f2d538ff9e3231db2f7c6d3b75311ded3c94ad1f73b643cc0a736637e80544c"
+        },
+        {
+          "name": "Notka-47.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-47.apk",
+          "bytes": 4696832,
+          "sha256": "d01ef9f4d7b027c98ab34ccd2cc4045b1660fe1da0c9a22e71bbccb112818ea4"
+        },
+        {
+          "name": "Notka-50.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-50.apk",
+          "bytes": 7540494,
+          "sha256": "805a2e2655ee9b0489fbe5490d452cde4ffa272c8720ee89a19750496cb260ba"
+        },
+        {
+          "name": "Notka-51.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-51.apk",
+          "bytes": 7607102,
+          "sha256": "94a57a3304827100076b8371c6eaf1247fbf7ae5f2fa691836e9444ae2c7b9db"
+        },
+        {
+          "name": "Notka-52.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-52.apk",
+          "bytes": 8208729,
+          "sha256": "c26f04d87e2c41eb940326840ce9f6325e77b7cafc60002dfc2835ff31652cfc"
+        },
+        {
+          "name": "Notka-53.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-53.apk",
+          "bytes": 8413878,
+          "sha256": "74d2c2a894f06d2a0c70038f436898ca96e1b178ca71141e0923cd02005dc9ef"
+        },
+        {
+          "name": "Notka-54.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-54.apk",
+          "bytes": 8482502,
+          "sha256": "7285dadfa047e5541188a7bf88b6a5e6c508c89d84ca74ed75aca1f78fadf149"
+        },
+        {
+          "name": "Notka-55.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-55.apk",
+          "bytes": 8626394,
+          "sha256": "425faf31b9b4ceb724a4ba47582b3b7d380c3362bf5da44693757ae0a50955b2"
+        },
+        {
+          "name": "Notka-56.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-56.apk",
+          "bytes": 8773484,
+          "sha256": "4b2a334f58a33b1912055d2d2ed7be96940f183a061e8a5e14404e2eb86f0e96"
+        },
+        {
+          "name": "Notka-57.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-57.apk",
+          "bytes": 8850300,
+          "sha256": "f76f86eec7090e48b3b8d87a3d72839a9169b42906a1761950e595d04601305f"
+        },
+        {
+          "name": "Notka-58.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-58.apk",
+          "bytes": 8850898,
+          "sha256": "4222880da4623401a6c1dc0cc3fa4874321f5f76d44b5edf21740a62d13e5970"
+        },
+        {
+          "name": "Notka-59.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-59.apk",
+          "bytes": 8853136,
+          "sha256": "eaf19dd6adbb1e291ab7a1556dd1743bf7de1692fc196b02d27881d045682d1f"
+        },
+        {
+          "name": "Notka-60.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-60.apk",
+          "bytes": 6383996,
+          "sha256": "baeca9d4ebdc6b899a26e0419897c55a5f84e6156997f0c62ca34e39406475b9"
+        },
+        {
+          "name": "Notka-61.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-61.apk",
+          "bytes": 6384214,
+          "sha256": "697371bcac0e7d61fe50e4465681da1f6c3c6da821eb69d8c148fe5513258137"
+        },
+        {
+          "name": "Notka-62.apk",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-62.apk",
+          "bytes": 6436993,
+          "sha256": "563b8cb11901fac99f475bb02bfeb49c9592751e52b909e3a95a614362cd4e39"
+        },
+        {
+          "name": "Notka-bass.zip",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-bass.zip",
+          "bytes": 711123,
+          "sha256": "c0edbe2a456593646734b2685a3eeb4db6c16e5e18e089bd49f2401ca7745327"
+        },
+        {
+          "name": "Notka-flute.zip",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-flute.zip",
+          "bytes": 1221575,
+          "sha256": "76987ed6b45f5660709bdf732f58ce754d773dc1763929f73352dff87ce5cf73"
+        },
+        {
+          "name": "Notka-grand-piano.zip",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-grand-piano.zip",
+          "bytes": 2337419,
+          "sha256": "1e2e77c617e2fa07adeaae85c4574783c90d556aba34733dbdd5ae5855382ef9"
+        },
+        {
+          "name": "Notka-musicbox.zip",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-musicbox.zip",
+          "bytes": 241342,
+          "sha256": "39982fd06f57d819e395c1b8b120d4bed6ddf40b91b7b6ca11ee3ed0d999be69"
+        },
+        {
+          "name": "Notka-piano.zip",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-piano.zip",
+          "bytes": 3100914,
+          "sha256": "fa52c1f5cc1897899e108bcd9cceae631ac093ecfc69c93b40d5ca4c91cf950b"
+        },
+        {
+          "name": "Notka-violin.zip",
+          "url": "https://github.com/Vang1549/Notka/releases/download/archive/Notka-violin.zip",
+          "bytes": 1387743,
+          "sha256": "c0655171ba11df66a5d02bead8d70e0883406d6e014381266e9c9eae647300b7"
+        }
+      ]
+    }
+  ]
+}
