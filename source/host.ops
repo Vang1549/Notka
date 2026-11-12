@@ -375,6 +375,8 @@ result 0
 ret 0
 
 method Main:startEditor:Z:String:Z 10 catch
+static Lstudio/notka/piano/EditorStore;:prepare:String:Context:String 7 8
+resultobj 8
 str 0 android.os.Build$VERSION
 static Class:forName:Class:String 0
 resultobj 0
@@ -400,7 +402,7 @@ str 1 colors
 virtual Intent:getStringExtra:String:String 3 1
 resultobj 3
 virtual Intent:putExtra:Intent:String:String 0 1 3
-str 1 edition
+str 1 editionToken
 virtual Intent:putExtra:Intent:String:String 0 1 8
 str 1 restore
 virtual Intent:putExtra:Intent:String:Z 0 1 9
@@ -443,7 +445,7 @@ goto finish
 chosen:
 virtual Activity:getIntent:Intent 7
 resultobj 0
-str 1 edition
+str 1 editionToken
 virtual Intent:getStringExtra:String:String 0 1
 resultobj 3
 zero 3 finish
@@ -463,18 +465,7 @@ virtual Settings:setBlockNetworkLoads:V:Z 1 2
 virtual Settings:setJavaScriptEnabled:V:Z 1 2
 str 1 NotkaPlayer
 virtual Web:addJavascriptInterface:V:Object:String 0 7 1
-const 2 0
-static B64:decode:Bytes:String:I 3 2
-resultobj 2
-str 1 UTF-8
-new 6 String
-direct String:<init>:V:Bytes:String 6 2 1
-moveobj 2 6
-str 1 https://appassets.androidplatform.net/notka/
-str 3 text/html
-const 4 0
-moveobj 5 1
-virtual Web:loadDataWithBaseURL:V:String:String:String:String:String 0 1 2 3 4 5
+static Lstudio/notka/piano/EditorStore;:load:V:Activity:Web:String 7 0 3
 virtual Activity:setContentView:V:View 7 0
 static Lstudio/notka/piano/SystemUi;:apply:V:Activity 7
 done
@@ -2363,12 +2354,7 @@ done
 
 # Fixed application asset only; no arbitrary file or script loading.
 method Player:mediaExportScript:String 3 bridge catch
-virtual Context:getAssets:Landroid/content/res/AssetManager; 2
-resultobj 0
-str 1 media-export.js
-virtual Landroid/content/res/AssetManager;:open:IS:String 0 1
-resultobj 0
-virtual Player:readBankStream:String:IS 2 0
+static Lstudio/notka/piano/EditorStore;:media:String:Activity 2
 resultobj 0
 retobj 0
 error:
@@ -2445,6 +2431,7 @@ static Lstudio/notka/piano/ExportRuntime;:end:V:Z:String 1 2
 done
 
 method Player:onDestroy:V 2 catch
+static Lstudio/notka/piano/EditorStore;:release:V:Activity 1
 static Lstudio/notka/piano/ExportRuntime;:destroyed:V:Activity 1
 goto parent
 error:
@@ -2452,3 +2439,57 @@ exception 0
 parent:
 super Activity:onDestroy:V 1
 done
+
+# Native bundle install consumes the DownloadManager stream; no archive crosses JS or Intent.
+method Main:bundleInstall:String:String:I:String 7 bridge catch
+virtual Main:stream:IS:String 3 4
+resultobj 0
+static Lstudio/notka/piano/EditorStore;:install:String:Context:IS:I:String 3 0 5 6
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+method Main:bundleList:String 2 bridge
+static Lstudio/notka/piano/EditorStore;:inventory:String:Context 1
+resultobj 0
+retobj 0
+
+method Main:bundleDownload:String:I 6 bridge catch
+zero 5 catalog
+str 0 @ORIGIN@/bundles/
+static String:valueOf:String:I 5
+resultobj 1
+virtual String:concat:String:String 0 1
+resultobj 0
+str 1 .zip
+virtual String:concat:String:String 0 1
+resultobj 0
+goto queue
+catalog:
+str 0 @ORIGIN@/bundles/catalog.json
+queue:
+const 1 0
+virtual Main:queue:String:String:I 4 0 1
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0
+
+method Main:bundleDelete:String:String 3 bridge
+static Lstudio/notka/piano/EditorStore;:delete:String:Context:String 1 2
+resultobj 0
+retobj 0
+
+method Player:editorScript:String:String 3 bridge catch
+static Lstudio/notka/piano/EditorStore;:script:String:Activity:String 1 2
+resultobj 0
+retobj 0
+error:
+exception 0
+const 0 0
+retobj 0

@@ -11,7 +11,7 @@
 #panelHome{display:grid;gap:10px}#filePanel{display:grid;gap:10px}#fileGroups details{border-top:1px solid var(--border);padding:9px 0}#fileGroups summary{font-weight:650;padding:6px 0;cursor:pointer}#fileGroups p{margin:5px 0}#fileStatus{white-space:pre-line;overflow-wrap:anywhere}#fileStatus:empty{display:none}.file-search{display:flex;gap:6px;margin:10px 0}.file-search input{width:100%;min-width:0;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font:inherit}.file-search .button{width:44px;flex:none}.file-row{display:flex;gap:6px;align-items:center;padding:8px 0}.file-row label{display:flex;align-items:center;gap:8px;min-width:0;flex:1;min-height:44px}.file-row label>span{min-width:0;overflow-wrap:anywhere}.file-row input{width:20px;height:20px;flex:none;accent-color:var(--accent)}.file-row small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.file-row .file-trash{width:44px;flex:none;display:grid;place-items:center;padding:0;color:#ef6666}.file-select{font-size:12px;min-height:36px;margin:5px 0}.file-danger{color:#ef6666}#fileConfirmNames{max-height:35vh;overflow:auto;padding-left:20px;overflow-wrap:anywhere}.update-card{overscroll-behavior:contain}#deleteFiles{margin:0 0 8px}
 </style><aside id="compat" style="background:#19231c;color:#fff;padding:16px;font:16px sans-serif">Для запуска обнови Android System WebView (или Chrome, если он используется как WebView) и снова открой «Нотку».</aside><main><section class="card"><div class="top"><span class="badge"><b>♫</b> Нотка</span><button id="updates" class="button">Настройки</button></div><h1>Выбор версии</h1>
 <button id="last" class="button play"><span class="action-title">Запустить последнюю загруженную версию:</span><span class="edition-label" id="localVersion"></span></button><button id="others" class="button" aria-expanded="false">Другие версии ▾</button><div id="versions" hidden><div id="choices"></div></div>
-<p id="launchStatus" role="status"></p><button class="button" id="cancelFetch" hidden>Отменить загрузку</button><footer class="version-footer" aria-label="Версии и обновления"><div class="version-item"><p id="editorVersions">Редактор — (—)</p><button id="latest" class="button play" aria-label="Обновить редактор" hidden>Обновить</button></div><p id="catalogStatus" role="status"></p><div class="version-item"><p id="apkVersions">APK 0.63 (—)</p><button class="button play" id="downloadUpdate" aria-label="Обновить APK" hidden>Обновить</button></div><div class="version-item"><p id="panelVersions">Панель 0.55 (—)</p><button class="button play" id="downloadPanel" aria-label="Обновить панель" hidden>Обновить</button></div><p id="apkBundleHint" hidden>Обновление APK также обновит редактор и панель.</p><p id="updateState" role="status"></p></footer></section></main>
+<p id="launchStatus" role="status"></p><button class="button" id="cancelFetch" hidden>Отменить загрузку</button><footer class="version-footer" aria-label="Версии и обновления"><div class="version-item"><p id="editorVersions">Редактор — (—)</p><button id="latest" class="button play" aria-label="Обновить редактор" hidden>Обновить</button></div><p id="catalogStatus" role="status"></p><div class="version-item"><p id="apkVersions">APK 0.64 (—)</p><button class="button play" id="downloadUpdate" aria-label="Обновить APK" hidden>Обновить</button></div><div class="version-item"><p id="panelVersions">Панель 0.56 (—)</p><button class="button play" id="downloadPanel" aria-label="Обновить панель" hidden>Обновить</button></div><p id="apkBundleHint" hidden>Обновление APK также обновит редактор и панель.</p><p id="updateState" role="status"></p></footer></section></main>
 <section id="updateBox" role="dialog" aria-modal="true" aria-labelledby="updateTitle" hidden><div class="update-card"><div class="meta"><h2 id="updateTitle">Настройки панели</h2><button class="button" id="closeUpdate" aria-label="Закрыть">✕</button></div><div id="panelHome"><button class="button" id="openFiles">Скачанные файлы</button><button class="button" id="openThemes">Темы</button><button class="button" id="releasePage">Страница выпусков ↗</button></div><div id="themePanel" hidden><div id="themeSettings"><div class="theme-choice"><label for="appearance">Тема</label><select id="appearance"></select><button class="button" type="button" id="addTheme" aria-label="Добавить свою тему">+</button></div><label id="themeNameRow" hidden>Название <input id="themeName" maxlength="40" autocomplete="off"></label><div id="themePreview" role="img" aria-label="Предпросмотр нотной сетки"><i></i><i></i><i></i></div>
 <div id="themeColorSettings"><div class="themePair"><button type="button" class="button" id="pickBase" aria-pressed="true"><i class="chip" id="baseChip"></i>Основной</button><button type="button" class="button" id="pickAccent" aria-pressed="false"><i class="chip" id="accentChip"></i>Второстепенный</button></div>
 <div id="colorPad" tabindex="0" role="group" aria-label="Палитра. По горизонтали насыщенность, по вертикали яркость. Можно использовать стрелки."><i id="colorPoint"></i></div>
@@ -25,7 +25,7 @@ const byId=id=>document.getElementById(id);
 /* PACKED_EDITIONS */
 const updateBox=byId('updateBox'),updateState=byId('updateState'),downloadButton=byId('downloadUpdate');
 let downloadId=null,release=null,apkChecking=false;
-const currentVersion=63,currentApk='0.63',currentPanel={code:55,version:'0.55'},panelButton=byId('downloadPanel');
+const currentVersion=64,currentApk='0.64',currentPanel={code:56,version:'0.56'},panelButton=byId('downloadPanel');
 function apkAction(install=false){
  downloadButton.textContent=panelButton.textContent=install?'Установить':'Обновить';
  downloadButton.setAttribute('aria-label',install?'Установить APK':'Обновить APK');
@@ -116,7 +116,7 @@ function verified(envelope,kind){
  if(value.kind!==kind)throw Error('Выпуск несовместим с этой панелью.');
  return value;
 }
-function validInfo(entry){return entry&&Number.isSafeInteger(entry.code)&&entry.code>0&&entry.code<=2147483647&&typeof entry.version==='string'&&/^\d+(\.\d+){1,3}$/.test(entry.version)&&/^[0-9a-f]{64}$/.test(entry.sha256)}
+function validInfo(entry){return entry&&(!entry.format||entry.format===2&&entry.minApk<=currentVersion)&&Number.isSafeInteger(entry.code)&&entry.code>0&&entry.code<=2147483647&&typeof entry.version==='string'&&/^\d+(\.\d+){1,3}$/.test(entry.version)&&/^[0-9a-f]{64}$/.test(entry.sha256)}
 function unpackCatalog(envelope){
  const c=verified(envelope,'notka.catalog.1');
  if(!Array.isArray(c.editions)||c.editions.length>1000||!c.editions.every(validInfo)||new Set(c.editions.map(v=>v.code)).size!==c.editions.length||!c.editions.some(v=>v.code===c.latest))throw Error('Получен неверный список версий.');
@@ -338,6 +338,11 @@ try{
  }
 }catch{}
 merge(catalog);
+const nativeBundles=new Map();
+if(typeof NotkaUpdates.bundleList==='function')try{
+ for(const entry of JSON.parse(NotkaUpdates.bundleList()))if(validInfo(entry)&&entry.format===2&&entry.token===entry.sha256){nativeBundles.set(entry.code,entry);available.set(entry.code,entry);localCodes.add(entry.code)}
+}catch{}
+catalog={...catalog,latest:Math.max(catalog.latest,...localCodes)};
 let lastCode=Number(readLocal('notka.last'));
 function onDevice(code){return localCodes.has(code)}
 function newestLocal(){return available.get(Math.max(...localCodes))}
@@ -361,7 +366,7 @@ function renderPanel(){
 }
 function ensureActive(t){if(task!==t&&checking!==t)throw Error('Загрузка отменена.')}
 async function fetchSigned(code,t){
- ensureActive(t);const id=NotkaUpdates.editionDownload(code);
+ ensureActive(t);const id=code===0&&typeof NotkaUpdates.bundleDownload==='function'?NotkaUpdates.bundleDownload(0):NotkaUpdates.editionDownload(code);
  if(!id||!/^\d+$/.test(id))throw Error('Android не начал загрузку.');
  t.download=id;
  try{
@@ -388,7 +393,32 @@ async function checkCatalog(){
  }catch{status.textContent='Не удалось проверить обновления. Загруженные версии доступны.'}
  finally{checking=null;renderPanel()}
 }
+async function openBundle(entry,t,restore){
+ ensureActive(t);let installed=nativeBundles.get(entry.code);
+ if(!installed||installed.sha256!==entry.sha256){
+  phase.textContent='Скачиваем редактор '+editionLabel(entry)+'…';
+  const id=NotkaUpdates.bundleDownload(entry.code);if(!id||!/^\d+$/.test(id))throw Error('Android не начал загрузку.');
+  t.download=id;
+  try{
+   const until=Date.now()+120000;
+   while(true){
+    ensureActive(t);const state=NotkaUpdates.status(id);
+    if(state===8)break;if(state===16)throw Error('Не удалось скачать выпуск.');
+    if(Date.now()>until)throw Error('Сервер не ответил вовремя.');
+    await new Promise(resolve=>setTimeout(resolve,350));
+   }
+   ensureActive(t);
+   const token=NotkaUpdates.bundleInstall(id,entry.code,entry.sha256);
+   if(token!==entry.sha256)throw Error('Не удалось проверить или сохранить пакет редактора.');
+   installed={...entry,token};nativeBundles.set(entry.code,installed);localCodes.add(entry.code);
+  }finally{if(t.download===id){t.download=null;NotkaUpdates.discard(id)}}
+ }
+ ensureActive(t);
+ if(!(restore?NotkaUpdates.resumeEditor(installed.token):NotkaUpdates.openEditor(installed.token)))throw Error('Не удалось открыть эту версию. Выбери другую.');
+ lastCode=entry.code;remember('notka.last',String(entry.code));phase.textContent='';
+}
 async function openEdition(entry,t,restore=false){
+ if(entry.format===2)return openBundle(entry,t,restore);
  ensureActive(t);let edition,stored=readLocal(editionPrefix+entry.code);
  if(stored){try{edition=unpackEdition(JSON.parse(stored),entry)}catch{}}
  if(!edition&&builtin[entry.code]){edition=unpackEdition(builtin[entry.code],entry)}
@@ -428,7 +458,7 @@ const fileIcon='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stro
 function storageMessage(text){byId('fileStatus').textContent=text}
 function storageLocked(){return !!task||downloadButton.disabled||fileDeleting}
 function localFileItems(){
- const items=[];
+ const items=[...nativeBundles.values()].map(e=>({id:'bundle:'+e.token,name:'Редактор '+editionLabel(e),kind:'editors',bytes:e.bytes||0,removable:!e.builtin,note:e.builtin?'В APK':'',code:e.code,token:e.token}));
  for(const [code,envelope] of Object.entries(builtin)){const meta=available.get(Number(code));items.push({id:'builtin:'+code,name:'Редактор '+(meta?editionLabel(meta):code),kind:'editors',bytes:JSON.stringify(envelope).length,removable:false,note:'В APK'})}
  for(let i=0;i<localStorage.length;i++){
   const key=localStorage.key(i);if(!/^notka\.edition\.[1-9]\d*$/.test(key))continue;
@@ -438,6 +468,7 @@ function localFileItems(){
  items.push({id:'panel',name:'Панель '+currentPanel.version,kind:'panel',bytes:0,removable:false,note:'Входит в APK '+currentApk});return items;
 }
 function loadFileItems(){
+ if(typeof NotkaUpdates.bundleList==='function')try{for(const entry of JSON.parse(NotkaUpdates.bundleList()))if(nativeBundles.has(entry.code))nativeBundles.set(entry.code,entry)}catch{}
  let native={items:[],errors:[]};
  try{if(typeof NotkaUpdates.storageList==='function')native=JSON.parse(NotkaUpdates.storageList());else native.errors=['Для списка файлов обнови APK.']}catch{native.errors=['Не удалось прочитать файлы приложения.']}
  fileItems=[...localFileItems(),...(Array.isArray(native.items)?native.items:[])];fileSelection=new Set([...fileSelection].filter(id=>fileItems.some(f=>f.id===id&&f.removable)));
@@ -490,7 +521,11 @@ async function deleteFileItems(){
  const pending=filePending.slice(),errors=[];let removed=0;
  try{for(const f of pending){
   try{
-   if(f.id.startsWith('editor:')){
+   if(f.id.startsWith('bundle:')){
+    const message=NotkaUpdates.bundleDelete(f.token);if(message!=='')throw Error(message||'Не удалось удалить версию.');
+    nativeBundles.delete(f.code);localCodes.delete(f.code);
+    if(lastCode===f.code){lastCode=newestLocal().code;remember('notka.last',String(lastCode))}
+   }else if(f.id.startsWith('editor:')){
     const key=editionPrefix+f.code;if(readLocal(key)!==f.stamp)throw Error('Версия изменилась. Обнови список.');
     localStorage.removeItem(key);if(readLocal(key)!==null)throw Error('Не удалось удалить версию.');
     if(!builtin[f.code])localCodes.delete(f.code);

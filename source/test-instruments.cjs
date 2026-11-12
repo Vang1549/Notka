@@ -29,7 +29,7 @@ function boot(native=true,extras={},runtime={}){
  }
  const els={},doc={hidden:false,documentElement:new El(),createElement:()=>{const el=new El();Object.defineProperty(el,"id",{get(){return this._id},set(v){this._id=v;els[v]=this}});return el},createDocumentFragment:()=>Object.assign(new El(),{fragment:true}),getElementById:id=>els[id]??=new El(),addEventListener(k,f){this[k]=f}};
  const host={writeDraft(raw){draft=raw;return true},readDraft(){return ''},restoreRequested:()=>false};
- if(native)host.instrumentData=id=>{reads.push(id);return fs.readFileSync((['musicbox-floe','bank-mda-grand-1'].includes(id)?'private-48/':'app/instruments/')+id+'.json','utf8')};
+ if(native)host.instrumentData=id=>{reads.push(id);return fs.readFileSync((id==='musicbox-floe'?'private-48/':'app/instruments/')+id+'.json','utf8')};
  Object.assign(host,extras);
  const ctx=vm.createContext({document:doc,window:new El(),AudioContext:Audio,NotkaPlayer:host,atob:x=>Buffer.from(x,'base64').toString('binary'),btoa:x=>Buffer.from(x,'binary').toString('base64'),Uint8Array,setTimeout,clearTimeout,requestAnimationFrame:()=>1,cancelAnimationFrame(){},setInterval:f=>{interval=f;return 1},clearInterval:()=>interval=null,...runtime});
  vm.runInContext(script,ctx);const run=s=>vm.runInContext(s,ctx);

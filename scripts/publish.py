@@ -1,5 +1,5 @@
 """Publish hash-pinned public APKs/assets; never accept unverified replacement assets."""
-import argparse,base64,hashlib,json,os,re,subprocess,tempfile,urllib.request
+import argparse,base64,hashlib,json,os,re,subprocess,tempfile,urllib.request,zipfile,io
 from pathlib import Path
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
@@ -17,6 +17,22 @@ def verified_catalogs(root):
   if record.get('kind')=='notka.editor.1':
    raw=base64.b64decode(record['body'],validate=True)
    if hashlib.sha256(raw).hexdigest()!=record['sha256']:raise ValueError('Editor hash mismatch')
+ bundle_catalog=root/'dist/bundles/catalog.json'
+ if bundle_catalog.exists():
+  envelope=json.loads(bundle_catalog.read_text());public.verify(base64.b64decode(envelope['signature']),envelope['record'].encode(),padding.PKCS1v15(),hashes.SHA256())
+  catalog=json.loads(envelope['record'])
+  for entry in catalog['editions']:
+   if entry.get('format')!=2:continue
+   blob=(bundle_catalog.parent/f"{entry['code']}.zip").read_bytes()
+   if hashlib.sha256(blob).hexdigest()!=entry['sha256']:raise ValueError('Bundle archive hash mismatch')
+   with zipfile.ZipFile(io.BytesIO(blob)) as archive:
+    env=json.loads(archive.read('manifest.json'));public.verify(base64.b64decode(env['signature']),env['record'].encode(),padding.PKCS1v15(),hashes.SHA256())
+    info=json.loads(env['record'])
+    if info['code']!=entry['code'] or info['version']!=entry['version'] or info['kind']!='notka.bundle.1':raise ValueError('Bundle identity mismatch')
+    if set(archive.namelist())!=set(info['files'])|{'manifest.json'}:raise ValueError('Bundle file set differs')
+    for name,spec in info['files'].items():
+     data=archive.read(name)
+     if len(data)!=spec['bytes'] or hashlib.sha256(data).hexdigest()!=spec['sha256']:raise ValueError('Bundle file checksum mismatch')
  return json.loads(json.loads((root/'dist/channel.json').read_text())['record'])
 
 def publish(root,verify_only=False):
@@ -35,6 +51,17 @@ def publish(root,verify_only=False):
     if not dest.exists():
      if os.environ.get('NOTKA_ASSET_DIR'):
       dest.write_bytes((Path(os.environ['NOTKA_ASSET_DIR'])/name).read_bytes())
+     elif 'delta' in asset:
+      from apk_delta import apply
+      delta=asset['delta'];src=(root/delta['path']).resolve()
+      if not src.is_relative_to(root.resolve()):raise ValueError('Delta escapes repository')
+      patch=src.read_bytes()
+      if hashlib.sha256(patch).hexdigest()!=delta['sha256']:raise ValueError('Delta checksum mismatch')
+      url=delta['base']
+      if not url.startswith('https://github.com/Vang1549/Notka/releases/download/'):raise ValueError('Unexpected delta base')
+      with urllib.request.urlopen(url,timeout=180) as response:base=response.read(32*1024*1024+1)
+      if len(base)>32*1024*1024:raise ValueError('Delta base too large')
+      dest.write_bytes(apply(base,patch))
      elif 'path' in asset:
       src=(root/asset['path']).resolve()
       if not src.is_relative_to(root.resolve()):raise ValueError('Path escapes repository')

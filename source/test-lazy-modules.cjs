@@ -1,0 +1,14 @@
+const fs=require('fs'),path=require('path'),assert=require('assert/strict');
+const dir='.native-build/editor';
+const html=fs.readFileSync(dir+'/index.html','utf8').replace('<script src="runtime.js"></script>',()=>'<script>'+fs.readFileSync(dir+'/runtime.js','utf8')+'</script>');
+const fixture='.native-build/lazy-test.html';fs.writeFileSync(fixture,html);process.env.NOTKA_EDITOR_HTML=fixture;
+const {boot}=require('./test-instruments.cjs');
+const loads=[];
+const t=boot(false,{editorScript:name=>{loads.push(name);return fs.readFileSync(path.join(dir,name),'utf8')}});
+t.doc.body={append:el=>t.run(el.textContent)};
+assert.equal(t.run('typeof window.NotkaSceneRenderer'),'undefined');assert.deepEqual(loads,[]);
+t.run('addNote(0,60);addNote(960,64)');const before=t.run('encodeTrack()');
+t.run("showPrefs(true,byId('prefs'))");assert.equal(t.run('typeof window.NotkaSceneRenderer'),'function');assert.deepEqual(loads,['scene-renderer.js']);
+t.run("closePrefs();showPrefs(true,byId('prefs'));drawScenePreview()");assert.deepEqual(loads,['scene-renderer.js']);assert.equal(t.run('encodeTrack()'),before);
+assert.equal(t.run('typeof window.NotkaMediaExport'),'undefined');
+console.log('PASS packed runtime: no eager visualizer/media module; first preview loads signed renderer once, repeated previews preserve notes and settings.');

@@ -48,6 +48,9 @@ for m in ui_links:assert m in flags and flags[m]&9==9,m
 file_links=[m for m in host if m[0]=='Lstudio/notka/piano/StorageFiles;']
 assert len(file_links)==2
 for m in file_links:assert m in flags and flags[m]&9==9,m
+editor_links=[m for m in host if m[0]=='Lstudio/notka/piano/EditorStore;']
+assert len(editor_links)==8
+for m in editor_links:assert m in flags and flags[m]&9==9,m
 for name,proto in [('onBind','(Landroid/content/Intent;)Landroid/os/IBinder;'),('onStartCommand','(Landroid/content/Intent;II)I'),('onDestroy','()V'),('onTaskRemoved','(Landroid/content/Intent;)V'),('onTimeout','(II)V')]:
  assert flags[('Lstudio/notka/piano/ExportService;',name,proto)]&1
 print('PASS all six bridge calls resolve to public static methods in classes2.dex; service lifecycle signatures valid.')

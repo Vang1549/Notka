@@ -32,7 +32,7 @@ def manifest():
  def end(name):
   nonlocal body
   body+=node(0x103,pack('II',nil,idx(name)))
- start('manifest',[('package','studio.notka.piano'),('versionCode',(16,63)),('versionName','0.63')])
+ start('manifest',[('package','studio.notka.piano'),('versionCode',(16,64)),('versionName','0.64')])
  start('uses-sdk',[('minSdkVersion',(16,21)),('targetSdkVersion',(16,32))]);end('uses-sdk')
  for permission in ['android.permission.INTERNET','android.permission.REQUEST_INSTALL_PACKAGES','android.permission.FOREGROUND_SERVICE','android.permission.FOREGROUND_SERVICE_DATA_SYNC','android.permission.FOREGROUND_SERVICE_MEDIA_PROCESSING','android.permission.WAKE_LOCK','android.permission.POST_NOTIFICATIONS']:
   start('uses-permission',[('name',permission)]);end('uses-permission')
@@ -60,6 +60,8 @@ def manifest():
  res=pack('HHI',0x180,8,8+4*len(ids))+b''.join(map(u32,ids.values()))
  return pack('HHI',3,8,8+len(sp+res+body))+sp+res+body
 subprocess.run(['node','build-media.cjs'],check=True)
+subprocess.run(['node','build-editor.cjs'],check=True)
+subprocess.run(['python','bundle_channel.py','../dist','72','0.72','Модульный редактор'],check=True)
 subprocess.run(['python','build-native.py'],check=True)
 subprocess.run(['python','build-icon.py'],check=True)
 icon_symbol=Path('.native-build/icon/R.txt').read_text().strip().split()
@@ -119,6 +121,7 @@ with zipfile.ZipFile(iofile,'w',zipfile.ZIP_DEFLATED) as z:
   for name in resources.namelist():
    if name=='resources.arsc' or name.startswith('res/'):
     z.writestr(name,resources.read(name),compress_type=zipfile.ZIP_STORED if name=='resources.arsc' else zipfile.ZIP_DEFLATED)
+ for filename,asset in [('editor-signing.der','signing.der'),('editor-builtin.zip','.native-build/editor-builtin.zip'),('editor-builtin.json','.native-build/editor-builtin.json')]:z.writestr('assets/'+filename,Path(asset).read_bytes())
  z.writestr('classes2.dex',Path('.native-build/classes.dex').read_bytes())
  z.writestr('assets/MEDIABUNNY-LICENSE.txt',Path('node_modules/mediabunny/LICENSE').read_bytes())
  z.writestr('assets/media-export.js',Path('app/media-export.bundle.js').read_bytes())
@@ -137,4 +140,4 @@ with zipfile.ZipFile(iofile) as src, zipfile.ZipFile(ordered,'w',zipfile.ZIP_DEF
    count=(-(dst.fp.tell()+30+len(entry.filename.encode('utf-8'))+4))%4
    entry.extra=pack('HH',0xd935,count)+b'\0'*count
   dst.writestr(entry,src.read(entry))
-Path('Notka-0.63.apk').write_bytes(sign(ordered.getvalue()))
+Path('Notka-0.64.apk').write_bytes(sign(ordered.getvalue()))

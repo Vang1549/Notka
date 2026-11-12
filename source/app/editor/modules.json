@@ -1,0 +1,12 @@
+[
+  "instruments.js",
+  "audio.js",
+  "library.js",
+  "grid.js",
+  "visualizer.js",
+  "transport.js",
+  "storage.js",
+  "lifecycle.js",
+  "export.js",
+  "startup.js"
+]

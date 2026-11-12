@@ -1,7 +1,7 @@
 const {boot}=require('./test-instruments.cjs'),{installedSounds}=require('./test-sound-host.cjs');
 const fs=require('fs'),assert=require('assert/strict');
 const original=JSON.parse(fs.readFileSync('app/presets/Memory.notka','utf8'));
-const legacyShape=raw=>{const data=JSON.parse(raw);delete data.instruments;delete data.instrumentSources;data.version=2;data.lanes.forEach(l=>delete l.instrumentId);return data};
+const legacyShape=raw=>{const data=JSON.parse(raw);delete data.scene;delete data.instruments;delete data.instrumentSources;data.version=2;data.lanes.forEach(l=>delete l.instrumentId);return data};
 const find=t=>t.els.songList.children.find(b=>b.textContent==='Memory · Предустановленный');
 function menu(t){t.els.prefs.onclick();t.els.loadTrack.onclick()}
 (async()=>{

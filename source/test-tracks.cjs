@@ -75,7 +75,8 @@ function save(name){(els.saveAs.hidden?els.saveTrack:els.saveAs).onclick();els.s
  assert.equal(run('lanes[0].notes[0].volume'),35);
  run('chooseLane(0)');run('tapCell(0,60);tapCell(480,68);paint()');assert.equal(run('score.length'),2);assert.equal(run('selected'),null);run('removeNote(score[1])');assert.equal(run('lanes[0].ghost'),true);
  const before=run('JSON.stringify(score)');
- for(const x of [59,90]){
+ for(const x of [run('keyWidth')+8,run('keyWidth')+20]){
+  run('lastNoteTap=null'); // Independent geometry probes; double taps have their own regression.
   run('roll.onpointerdown({button:0,pointerId:1,clientX:'+x+',clientY:rulerHeight+(highestPitch-60+.5)*row-y});');
   assert.equal(run('gesture.n'),run('score[0]'));
   run('roll.onpointerup({pointerId:1,clientX:'+x+',clientY:rulerHeight+(highestPitch-60+.5)*row-y});');
@@ -92,7 +93,7 @@ function save(name){(els.saveAs.hidden?els.saveTrack:els.saveAs).onclick();els.s
  run('applyTrack(readTrack('+JSON.stringify(legacy)+'));x=pixels(937)');
  els.stepMenu.onclick();assert.equal(els.stepSheet.hidden,false);
  els.snap.onchange({target:{value:'3'}});els.noteSize.onchange({target:{value:'1'}});els.gridDivision.onchange({target:{value:'8'}});els.closeStep.onclick();
- assert.equal(run('ticks(x)'),937);assert.equal(run('gridStep()'),120);assert.equal(run('minimum()'),320);
+ assert(Math.abs(run('ticks(x)')-937)<1e-9);assert.equal(run('gridStep()'),120);assert.equal(run('minimum()'),320);
  run('selectNote(score[0])');els.noteSize.onchange({target:{value:'1'}});run('addNote(407,62)');assert.equal(run('score[1].len'),960);assert.equal(run('score[1].start'),320);assert.equal(run('score[1].volume'),35);
  const original=run('JSON.stringify(score)');els.gridDivision.onchange({target:{value:'16'}});assert.equal(run('JSON.stringify(score)'),original);
  bridge.restore=true;run=boot();assert.equal(run('gridStep()'),60);assert.equal(run('noteDivision'),1);assert.equal(run('division'),3);

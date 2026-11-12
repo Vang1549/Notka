@@ -3,7 +3,7 @@ from cryptography import x509
 from cryptography.hazmat.primitives import serialization,hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from pathlib import Path
-b=Path('Notka-0.63.apk').read_bytes()
+b=Path('Notka-0.64.apk').read_bytes()
 get=lambda data,i:struct.unpack_from('<I',data,i)[0]
 e=b.rindex(b'PK\x05\x06');cd=get(b,e+16);assert b[cd-16:cd]==b'APK Sig Block 42'
 size=struct.unpack_from('<Q',b,cd-24)[0];start=cd-size-8
@@ -17,6 +17,7 @@ assert get(b,start+16)==0x7109871a
 layer,=parts(b[start+20:cd-24]);signer,=parts(layer);signed,sigs,public=parts(signer)
 digs,certs,attrs=parts(signed);cert,=parts(certs);key=x509.load_der_x509_certificate(cert).public_key()
 assert key.public_bytes(serialization.Encoding.DER,serialization.PublicFormat.SubjectPublicKeyInfo)==public
+assert cert==Path('signing.der').read_bytes(), 'APK signing certificate changed'
 sig,=parts(sigs);s,=parts(sig[4:]);key.verify(s,signed,padding.PKCS1v15(),hashes.SHA256())
 dig,=parts(digs);stored,=parts(dig[4:]);assert get(dig,0)==get(sig,0)==0x103
 sha=lambda data:hashlib.sha256(data).digest()
@@ -42,7 +43,7 @@ with zipfile.ZipFile(io.BytesIO(b)) as z:
   if tag==0x103:assert stack.pop()==pool[get(xml,p+20)]
   p+=length
  assert ('uses-sdk',{'minSdkVersion':21,'targetSdkVersion':32}) in events
- assert ('manifest',{'package':'studio.notka.piano','versionCode':63,'versionName':'0.63'}) in events
+ assert ('manifest',{'package':'studio.notka.piano','versionCode':64,'versionName':'0.64'}) in events
  assert not stack
  app=next(v for kind,v in events if kind=='application');assert app['icon']==0x7f010000
  resource=z.getinfo('resources.arsc');assert resource.compress_type==zipfile.ZIP_STORED

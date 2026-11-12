@@ -1,5 +1,5 @@
 const fs=require('fs'),crypto=require('crypto');
-const dir='/workspace/sites/notka-updates/dist/soundbank/';
+const dir=(process.env.NOTKA_DIST||'../dist')+'/soundbank/';
 const key=new crypto.X509Certificate(fs.readFileSync('signing.der')).publicKey;
 function installedSounds(){
  const store=new Map(fs.readdirSync(dir).filter(f=>f.endsWith('.json')).map(f=>[f.slice(0,-5),fs.readFileSync(dir+f,'utf8')]));

@@ -1,3 +1,4 @@
+if(!require('fs').existsSync('private-48/musicbox-floe.json')){console.log('SKIP private Music Box fixture is not distributed; public-bank playback is tested separately.');process.exit(0)}
 const {boot,settle}=require('./test-instruments.cjs'),{installedSounds}=require('./test-sound-host.cjs'),assert=require('assert/strict'),fs=require('fs'),crypto=require('crypto');
 (async()=>{
  const host=installedSounds();host.soundDelete("musicbox-floe");host.soundDelete("bank-mda-grand-1");const t=boot(true,host),run=t.run;await settle();

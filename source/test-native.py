@@ -49,7 +49,7 @@ assert '(mid|zip|wav|m4a|weba|webm|mp4|ogg)' in ops
 for mime in ['audio/wav','audio/mp4','audio/webm','audio/ogg','video/mp4','video/webm']:
  assert mime in ops
 assert 'method Player:mediaExportScript:String 3 bridge catch' in ops
-assert 'str 1 media-export.js' in ops
+assert 'EditorStore;:media:String:Activity' in ops
 assert 'virtual View:setKeepScreenOn:V:Z 0 1' in ops
 assert b'mediaExportScript\0' in blob
 print('PASS fixed media asset bridge, media suffix/MIME allowlist and foreground keep-screen-on.')
@@ -60,11 +60,7 @@ for instruction in ['negative 8 failed','high 1 4095','high 2 1','virtual File:e
  assert instruction in writer
 assert b'writeExport\0' in blob
 player=ops.split('method Player:onCreate:',1)[1].split('method ',1)[0]
-assert 'https://appassets.androidplatform.net/notka/' in player
-assert 'virtual Web:loadDataWithBaseURL:V:String:String:String:String:String 0 1 2 3 4 5' in player
-# invoke-virtual/range: six argument words starting at v0 (format 3rc).
-import struct
-words=struct.unpack('<'+'H'*(len(blob)//2),blob[:len(blob)//2*2])
-assert any(words[i]==0x0674 and words[i+2]==0 for i in range(len(words)-2))
+assert 'EditorStore;:load:V:Activity:Web:String 7 0 3' in player
+assert 'https://appassets.androidplatform.net/notka/' in Path('native/studio/notka/piano/EditorStore.java').read_text()
 assert 'virtual Settings:setBlockNetworkLoads:V:Z' in player
-print('PASS bounded random-access media bridge, HTTPS local origin and six-register invoke/range.')
+print('PASS bounded random-access media bridge, HTTPS local origin and file-based editor loading.')

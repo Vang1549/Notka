@@ -1,3 +1,4 @@
+if(!require('fs').existsSync('private-48/musicbox-floe.json')){console.log('SKIP private Music Box fixture is not distributed; public-bank playback is tested separately.');process.exit(0)}
 const {boot,settle}=require('./test-instruments.cjs'),{installedSounds}=require('./test-sound-host.cjs'),assert=require('assert/strict'),fs=require('fs');
 const id='lib-floe-musicbox-1',bank=fs.readFileSync('private-48/musicbox-floe.json','utf8'),pause=ms=>new Promise(r=>setTimeout(r,ms));
 function setup(){

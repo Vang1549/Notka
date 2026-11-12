@@ -3,9 +3,9 @@ function setup(){
  const t=boot(),run=t.run;
  run('let testTime=1000;Date.now=()=>testTime;x=y=0;col=40;row=34;score.length=0;rowIndexes.delete(score);score.push({start:0,len:960,pitch:115,volume:37});paint()');
  const y=run('rulerHeight+(highestPitch-115+.5)*row');
- const pointer=(type,x=80,py=y,id=1)=>run(`roll.onpointer${type}({pointerId:${id},button:0,clientX:${x},clientY:${py}})`);
+ const pointer=(type,x=52,py=y,id=1)=>run(`roll.onpointer${type}({pointerId:${id},button:0,clientX:${x},clientY:${py}})`);
  const tick=n=>run(`testTime+=${n}`);
- const tap=(x=80)=>{pointer('down',x);tick(40);pointer('up',x)};
+ const tap=(x=52)=>{pointer('down',x);tick(40);pointer('up',x)};
  return {...t,pointer,tick,tap,y};
 }
 let t=setup();t.tap();assert.equal(t.run('score.length'),1);t.tick(80);t.tap();
