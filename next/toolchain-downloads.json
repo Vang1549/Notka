@@ -1,0 +1,57 @@
+[
+  {
+    "package": "platforms;android-35",
+    "file": "platform-35_r02.zip",
+    "url": "https://dl.google.com/android/repository/platform-35_r02.zip",
+    "size": 64273788,
+    "sha1": "0bb560a90a7a2cbd0dd8348224d518b638fe7949",
+    "sha256": "0988cacad01b38a18a47bac14a0695f246bc76c1b06c0eeb8eb0dc825ab0c8e0"
+  },
+  {
+    "package": "ndk;27.2.12479018",
+    "file": "android-ndk-r27c-linux.zip",
+    "url": "https://dl.google.com/android/repository/android-ndk-r27c-linux.zip",
+    "size": 663987688,
+    "sha1": "090e8083a715fdb1a3e402d0763c388abb03fb4e",
+    "sha256": "59c2f6dc96743b5daf5d1626684640b20a6bd2b1d85b13156b90333741bad5cc"
+  },
+  {
+    "package": "build-tools;35.0.0",
+    "file": "build-tools_r35_linux.zip",
+    "url": "https://dl.google.com/android/repository/build-tools_r35_linux.zip",
+    "size": 61958799,
+    "sha1": "2cfaa0bbb2336e9ec18ed3ecea84fa2e2af607bc",
+    "sha256": "bd3a4966912eb8b30ed0d00b0cda6b6543b949d5ffe00bea54c04c81e1561d88"
+  },
+  {
+    "package": "cmdline-tools;19.0",
+    "file": "commandlinetools-linux-13114758_latest.zip",
+    "url": "https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip",
+    "size": 164760899,
+    "sha1": "5fdcc763663eefb86a5b8879697aa6088b041e70",
+    "sha256": "7ec965280a073311c339e571cd5de778b9975026cfcbe79f2b1cdcb1e15317ee"
+  },
+  {
+    "package": "cmake;3.22.1",
+    "file": "cmake-3.22.1-linux.zip",
+    "url": "https://dl.google.com/android/repository/cmake-3.22.1-linux.zip",
+    "size": 22308647,
+    "sha1": "fd0a48b4a758310df8c7aa51f59840ed48fe7ed8",
+    "sha256": "9196644852a978012caf7a4067ba1898debf6cc204c3341562771e31080d6869"
+  },
+  {
+    "package": "platform-tools",
+    "file": "platform-tools_r37.0.3-linux.zip",
+    "url": "https://dl.google.com/android/repository/platform-tools_r37.0.3-linux.zip",
+    "size": 9571024,
+    "sha1": "e1579b288a7ae4e9bc28dedec6a154d78b3c04ed",
+    "sha256": "214548146cadb2ca3508143d8a1d4be4c59de5bb837253e3ede89ed74cf450d1"
+  },
+  {
+    "package": "gradle",
+    "file": "gradle-8.9-bin.zip",
+    "url": "https://services.gradle.org/distributions/gradle-8.9-bin.zip",
+    "size": 136114148,
+    "sha256": "d725d707bfabd4dfdc958c624003b3c80accc03f7037b5122c4b1d0ef15cecab"
+  }
+]

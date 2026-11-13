@@ -1,0 +1,11 @@
+* text=auto eol=lf
+# Preserve the exact bytes recorded by provenance and signature checks.
+app/src/main/assets/** -text whitespace=cr-at-eol
+*.apk binary
+*.jar binary
+*.der binary
+*.png binary
+*.jpg binary
+*.wav binary
+*.mp3 binary
+*.zip binary

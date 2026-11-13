@@ -1,0 +1,38 @@
+{
+  "banks/piano.json": {
+    "source": "source/app/instruments/piano.json",
+    "sha256": "2460261dc1d3341386e9fa3c5d0d3c9518938eb4e5ad873317af7a08628b626b"
+  },
+  "banks/bank-mda-grand-1.json": {
+    "source": "source/app/instruments/bank-mda-grand-1.json",
+    "sha256": "8bf39843acf0bb3bd1057709bf53441391cea16969967cc0cff0d0b3745958fd"
+  },
+  "musicbox-import-template.json": {
+    "source": "source/app/instruments/musicbox-import-template.json",
+    "sha256": "d3331d857f4e01c84d5f88c8fac85236671ba8cd2f4f0cefb502200f8794f8d9"
+  },
+  "catalog.json": {
+    "source": "dist/soundbank/catalog.json",
+    "sha256": "4ee758aae781089ccc096c09fe42a95d220a0d05abd62fc6da65f744e4d271a4"
+  },
+  "trust/legacy-current.der": {
+    "source": "source/signing.der",
+    "sha256": "a68026e80ca5d32cb3951f2c3a51e2a222c602eea27950588b947a340a7930ef"
+  },
+  "trust/legacy-original.der": {
+    "source": "source/signing-legacy.der",
+    "sha256": "0c8f198c971bce07ae6a5d3a666ad16453717b726fb5c8ae0c1accd543c3cba1"
+  },
+  "licenses/VSCO.txt": {
+    "source": "source/sample-source/LICENSE",
+    "sha256": "4d2eef679d5faf924534bcc132646322e9a852ce50ae5616694e0b95f7b8275d"
+  },
+  "licenses/MDA.txt": {
+    "source": "source/sample-source/mda/LICENSE",
+    "sha256": "aa3952cbdc4d3dcfbd2e7b34aa2da5ba53224e1fd9c33b987466014207399cb0"
+  },
+  "licenses/GeneralUser.txt": {
+    "source": "source/sample-source/generaluser/LICENSE.txt",
+    "sha256": "7b32efefdf95ce38a043799f0659853ddc00fbaa14d8c50f0aca16b9b8b405be"
+  }
+}

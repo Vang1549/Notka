@@ -1,0 +1,16 @@
+[
+  {
+    "package": "emulator",
+    "file": "emulator-windows_x64-16863232.zip",
+    "url": "https://dl.google.com/android/repository/emulator-windows_x64-16863232.zip",
+    "size": 456614209,
+    "sha1": "f7bc48d1899941702fa20686dd532ca7eeba229d"
+  },
+  {
+    "package": "system-images;android-35;default;x86_64",
+    "file": "x86_64-35_r02.zip",
+    "url": "https://dl.google.com/android/repository/sys-img/android/x86_64-35_r02.zip",
+    "size": 782404023,
+    "sha1": "2d857d170c0d1b827149565da34b3383e5306f7f"
+  }
+]

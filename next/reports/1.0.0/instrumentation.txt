@@ -1,0 +1,5 @@
+studio.notka.next.NativeIntegrationTest:......
+
+Time: 10.783
+
+OK (6 tests)

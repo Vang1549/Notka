@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "code": 1,
+  "package": "studio.notka.next",
+  "apk": {
+    "name": "Notka2-1.apk",
+    "path": "dist/Notka2-1.apk",
+    "bytes": 11598021,
+    "sha256": "392692a5bb16912c16277320ac890f7cd0048bed9eacaa74ef7f3fb7ef55ff27"
+  },
+  "core": {
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "scenarios": [
+      "fullSettingsAndUnknownBankSurvive",
+      "intervalIndexMatchesBruteForce",
+      "wavBoundsAndDecode",
+      "invalidImportNeverReplacesCurrentSong",
+      "undoGestureAndIndependentRack",
+      "midiIsReadableAndKeepsLeadingSilence",
+      "legacyFilesAndRoundTrip"
+    ]
+  },
+  "instrumentation": {
+    "tests": 6,
+    "network": true,
+    "result": "OK",
+    "android_api": 35,
+    "abi": "x86_64"
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 5
+  },
+  "legacy_apk_sha256": "8c26ffbc8a4e7233aabd572bdd9cfa76c156c496f1be3aec28c82f2f51782bbc",
+  "native_certificate_sha256": "4e4df4a1b680c9f4dbe8c05fb8e06ce912c579d41bdfd44e85ce817a881ee14c"
+}
