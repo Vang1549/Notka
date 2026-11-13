@@ -16,5 +16,7 @@ if args.panel_code is not None:data['panel']=dict(code=args.panel_code,version=a
 record=json.dumps(data,separators=(',',':'))
 key=load_signing_key()
 sig=key.sign(record.encode(),padding.PKCS1v15(),hashes.SHA256())
-shutil.copyfile(apk,args.dist/f'Notka-{args.code}.apk')
+target=args.dist/f'Notka-{args.code}.apk'
+if target.exists() and target.read_bytes()!=apk.read_bytes():raise ValueError('Published APK is immutable; use a new release number')
+shutil.copyfile(apk,target)
 (args.dist/'channel.json').write_text(json.dumps(dict(record=record,signature=b64(sig))))

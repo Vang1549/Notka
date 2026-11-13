@@ -74,7 +74,7 @@ async function checkSoundCatalog(){
   const result=await fetchSound(catalogKey,catalogJob,20000),entries=parseSoundCatalog(result.raw);
   if(!catalogHost.soundWrite(catalogKey,result.raw))throw Error('Не удалось сохранить каталог. Проверь свободное место.');
   mergeSoundCatalog(entries);
- }catch(e){if(!bankJob)soundMessage('Каталог недоступен. Загруженные инструменты работают без интернета.')}
+ }catch(e){catalogStarted=false;if(!bankJob&&!byId('instrumentSheet').hidden)soundMessage('Каталог недоступен. Загруженные инструменты работают без интернета.')}
  finally{catalogJob=null;if(!byId('instrumentSheet').hidden)renderInstruments()}
 }
 function checkBank(data,def){
@@ -214,7 +214,7 @@ function closeInstrument(){
 function openLaneInstrument(){
  if(running||isBackground(lanes[activeLane]))return;
  finishGesture();clearSelection();paintSoon();renderInstruments();
- byId('instrumentSheet').hidden=false;reconcileRack();showInstrumentView('library');byId('closeInstrument').focus?.();
+ byId('instrumentSheet').hidden=false;reconcileRack();showInstrumentView('library');byId('closeInstrument').focus?.();checkSoundCatalog();
 };
 byId('closeInstrument').onclick=closeInstrument;
 byId('cancelInstrumentDelete').onclick=cancelInstrumentDelete;

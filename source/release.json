@@ -1,8 +1,11 @@
 {
-  "apk_code": 69,
-  "apk_version": "0.69",
-  "editor_code": 82,
-  "editor_version": "0.82",
-  "editor_name": "Библиотека звуков",
-  "update_origin": "https://notka-piano-updates.zentas.chatgpt.site"
+  "apk_code": 70,
+  "apk_version": "0.70",
+  "editor_code": 83,
+  "editor_version": "0.83",
+  "editor_name": "Обновления и стабильность",
+  "update_origin": "https://raw.githubusercontent.com/Vang1549/Notka/updates/dist",
+  "panel_code": 61,
+  "panel_version": "0.61",
+  "editor_min_apk": 70
 }

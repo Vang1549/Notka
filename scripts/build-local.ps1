@@ -1,6 +1,8 @@
 param([string]$ToolsRoot = 'D:\Tools\Notka', [switch]$SkipTests)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot
+py -3.12 (Join-Path $projectRoot 'source/release_config.py')
+if ($LASTEXITCODE -ne 0) { throw 'Cannot synchronize release versions' }
 py -3.12 (Join-Path $PSScriptRoot 'prepare-local-deps.py') $ToolsRoot
 if ($LASTEXITCODE -ne 0) { throw 'Cannot prepare locked Node dependencies' }
 $linuxProject = (wsl -d Ubuntu -- wslpath -u $projectRoot.Replace('\','/')).Trim()

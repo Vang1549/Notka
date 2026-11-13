@@ -1,2 +1,6 @@
 # Independent MIDI parser used by test-export-files.py.
 mido==1.3.3
+# Real PCM and MP3 validation for the delivered sound library.
+numpy==2.5.4
+scipy==1.18.1
+imageio-ffmpeg==0.8.1

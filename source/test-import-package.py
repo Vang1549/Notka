@@ -28,7 +28,7 @@ assert 'musicbox-import.pending' in source and 'musicbox-import.json' in source
 reader=source.split('method Player:readInstrumentPackage:')[1].split('method Player:importPackageFile:')[0]
 assert 'ZipInput:' not in reader and 'ZipFile:entries:Enumeration' in reader and 'ZipFile:getInputStream:IS:ZipEntry' in reader
 assert 'dropImportPackage' in reader and '!access' in reader and '!bank-save' in reader
-check_native();dex=mkdex('https://notka-piano-updates.zentas.chatgpt.site')
+check_native();dex=mkdex(json.loads(Path('release.json').read_text())['update_origin'])
 for name in ['pickInstrument','readInstrumentPackage','commitInstrumentImport','instrumentAvailable','hasImportedInstrument','deleteImportedInstrument','onResume']:
  assert (name+'\0').encode() in dex
 channel=json.loads(json.loads(Path('../dist/channel.json').read_text())['record'])

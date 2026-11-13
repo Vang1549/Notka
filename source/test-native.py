@@ -63,4 +63,5 @@ player=ops.split('method Player:onCreate:',1)[1].split('method ',1)[0]
 assert 'EditorStore;:load:V:Activity:Web:String 7 0 3' in player
 assert 'https://appassets.androidplatform.net/notka/' in Path('native/studio/notka/piano/EditorStore.java').read_text()
 assert 'virtual Settings:setBlockNetworkLoads:V:Z' in player
+assert 'virtual Settings:setDomStorageEnabled:V:Z 1 2' in player
 print('PASS bounded random-access media bridge, HTTPS local origin and file-based editor loading.')

@@ -1,9 +1,13 @@
 """Validate delivered banks and decode every audition with the real MP3 decoder."""
-import base64,hashlib,io,json,subprocess
+import base64,hashlib,io,json,subprocess,os,shutil
 from signing_identity import verify_envelope
 from pathlib import Path
 import numpy as np
 from scipy.io import wavfile
+ffmpeg=os.environ.get('NOTKA_FFMPEG') or shutil.which('ffmpeg')
+if not ffmpeg:
+ import imageio_ffmpeg
+ ffmpeg=imageio_ffmpeg.get_ffmpeg_exe()
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -27,7 +31,7 @@ for entry in catalog['instruments']:
  assert tuple(signature) not in seen;seen.add(tuple(signature));banks+=1;total+=len(raw)
  meta=entry['preview'];blob=(root/(meta['asset']+'.json')).read_bytes();assert len(blob)==meta['bytes']<262144;assert base64.b64encode(hashlib.sha256(blob).digest()).decode()==meta['sha256']
  preview=verify(blob);assert preview['id']==meta['asset'] and preview['format']=='notka.preview.1'
- pcm=subprocess.run(['ffmpeg','-v','error','-i','pipe:0','-f','f32le','-ac','1','-ar','32000','pipe:1'],input=base64.b64decode(preview['data']),capture_output=True,check=True).stdout
+ pcm=subprocess.run([ffmpeg,'-v','error','-i','pipe:0','-f','f32le','-ac','1','-ar','32000','pipe:1'],input=base64.b64decode(preview['data']),capture_output=True,check=True).stdout
  y=np.frombuffer(pcm,dtype='<f4');assert 2.8<len(y)/32000<3.3 and np.isfinite(y).all();assert .001<np.sqrt(np.mean(y*y))<.5;assert np.max(abs(y))<.99;previews+=1
 assert banks==previews==30
 print('PASS 30 unique signed 7-root banks, valid pitch/loops/no clipping, 30 audible decoded MP3 previews;',total,'bank bytes')

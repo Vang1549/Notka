@@ -41,7 +41,6 @@ def publish(root,verify_only=False):
  channel=verified_catalogs(root)
  manifest=json.loads((root/'publication.json').read_text())
  if manifest['repository']!=REPO:raise ValueError('Wrong repository')
- if verify_only:return
  with tempfile.TemporaryDirectory(prefix='notka-release-') as td:
   cache=Path(td)
   # Fetch/check every artifact before creating any release.
@@ -76,6 +75,9 @@ def publish(root,verify_only=False):
     if dest.stat().st_size!=asset['bytes'] or hashlib.sha256(dest.read_bytes()).hexdigest()!=asset['sha256']:raise ValueError('Artifact hash mismatch: '+name)
     if name==f"Notka-{channel['code']}.apk":
      if base64.b64encode(hashlib.sha256(dest.read_bytes()).digest()).decode()!=channel['sha256']:raise ValueError('Channel hash mismatch')
+  if verify_only:
+   print('Verified signed catalogs, bundles and all publication asset sizes/hashes.')
+   return
   for release in manifest['releases']:
    tag=release['tag'];existing=subprocess.run(['gh','release','view',tag,'--repo',REPO,'--json','assets,isDraft'],capture_output=True,text=True)
    if existing.returncode:
@@ -96,6 +98,19 @@ def publish(root,verify_only=False):
     else:gh('release','upload',tag,str(cache/name))
    gh('release','edit',tag,'--draft=false','--latest='+str(release.get('latest',False)).lower())
    print('Published',tag,flush=True)
+  # Activate the complete snapshot only after every immutable release asset exists.
+  # main may contain a candidate; installed clients read only the updates branch.
+  if manifest.get('update_branch'):
+   if manifest['update_branch']!='updates':raise ValueError('Unexpected update branch')
+   commit=os.environ.get('NOTKA_RELEASE_COMMIT') or subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
+   if not re.fullmatch('[0-9a-f]{40}',commit):raise ValueError('Invalid release commit')
+   endpoint=f'repos/{REPO}/git'
+   refs=json.loads(subprocess.check_output(['gh','api',endpoint+'/matching-refs/heads/updates'],text=True))
+   exists=any(ref['ref']=='refs/heads/updates' for ref in refs)
+   args=['gh','api','--method','PATCH' if exists else 'POST',endpoint+('/refs/heads/updates' if exists else '/refs'),'-f','sha='+commit]
+   args+=['-F','force=false'] if exists else ['-f','ref=refs/heads/updates']
+   subprocess.run(args,check=True,stdout=subprocess.DEVNULL)
+   print('Activated GitHub updates snapshot '+commit,flush=True)
 if __name__=='__main__':
  parser=argparse.ArgumentParser();parser.add_argument('--verify-only',action='store_true');args=parser.parse_args()
  publish(Path(__file__).resolve().parent.parent,args.verify_only)

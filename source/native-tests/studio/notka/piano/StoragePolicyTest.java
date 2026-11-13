@@ -7,6 +7,8 @@ public final class StoragePolicyTest {
   check("tracks".equals(StoragePolicy.publicKind("Memory(v0.68).notka")));
   check("exports".equals(StoragePolicy.publicKind("Мой трек.mp4")));
   for(String n:new String[]{"../song.notka","/song.notka",".hidden.notka","a\\b.wav","test\n.wav","theme.json","song.notka.bak","music-export.part","app.apk"})check(StoragePolicy.publicKind(n)==null);
+  check(StoragePolicy.externalUrl("https://www.frozenplain.com/product/music-box-suite-free/"));
+  for(String url:new String[]{"javascript:alert(1)","file:///private","intent://test","https://appassets.androidplatform.net/notka/x/","https://user@example.com/","https:///missing"})check(!StoragePolicy.externalUrl(url));
   check(StoragePolicy.sound("musicbox-import.json"));check(StoragePolicy.sound("sound-bank-violin-1.json"));
   for(String n:new String[]{"sound-scene-presets.json","track-draft.json","sound-musicbox-source-step.json","sound-bank-a.json.bak","../musicbox-import.json"})check(!StoragePolicy.sound(n));
   check(StoragePolicy.apkUrl("https://notka-piano-updates.zentas.chatgpt.site/Notka-59.apk"));

@@ -353,7 +353,7 @@ byId('confirmLane').onclick=()=>{
 const diagnostics=(()=>{
  let enabled=false,overlay=false,frame=0,last=0,epoch=0,frames=0,slow=0,maxFrame=0,renderFrames=0,renderMs=0,renderMax=0,lastPersist=0;
  const now=()=>typeof performance!=='undefined'&&performance.now?performance.now():Date.now();
- const report={format:'notka.diagnostics.1',editor:'0.81',startedAt:null,updatedAt:null,samples:[],errors:[],operations:{},summary:{frames:0,slowFrames:0,maxFrameMs:0}};
+ const report={format:'notka.diagnostics.1',editor:'0.83',startedAt:null,updatedAt:null,samples:[],errors:[],operations:{},summary:{frames:0,slowFrames:0,maxFrameMs:0}};
  const host=typeof NotkaPlayer!=='undefined'?NotkaPlayer:null;
  const round=n=>Math.round(n*100)/100;
  function operation(name,ms){if(!enabled)return;const o=report.operations[name]||(report.operations[name]={count:0,totalMs:0,maxMs:0});o.count++;o.totalMs=round(o.totalMs+ms);o.maxMs=round(Math.max(o.maxMs,ms))}
@@ -613,7 +613,7 @@ async function checkSoundCatalog(){
   const result=await fetchSound(catalogKey,catalogJob,20000),entries=parseSoundCatalog(result.raw);
   if(!catalogHost.soundWrite(catalogKey,result.raw))throw Error('Не удалось сохранить каталог. Проверь свободное место.');
   mergeSoundCatalog(entries);
- }catch(e){if(!bankJob)soundMessage('Каталог недоступен. Загруженные инструменты работают без интернета.')}
+ }catch(e){catalogStarted=false;if(!bankJob&&!byId('instrumentSheet').hidden)soundMessage('Каталог недоступен. Загруженные инструменты работают без интернета.')}
  finally{catalogJob=null;if(!byId('instrumentSheet').hidden)renderInstruments()}
 }
 function checkBank(data,def){
@@ -753,7 +753,7 @@ function closeInstrument(){
 function openLaneInstrument(){
  if(running||isBackground(lanes[activeLane]))return;
  finishGesture();clearSelection();paintSoon();renderInstruments();
- byId('instrumentSheet').hidden=false;reconcileRack();showInstrumentView('library');byId('closeInstrument').focus?.();
+ byId('instrumentSheet').hidden=false;reconcileRack();showInstrumentView('library');byId('closeInstrument').focus?.();checkSoundCatalog();
 };
 byId('closeInstrument').onclick=closeInstrument;
 byId('cancelInstrumentDelete').onclick=cancelInstrumentDelete;
@@ -2252,7 +2252,7 @@ window.addEventListener('resize',resize);
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(resize).observe(roll);
 const exportHost=trackHost&&['beginExport','appendExport','finishExport','cancelExport'].every(k=>typeof trackHost[k]==='function')?trackHost:null;
 let exportJob=null;
-const editorVersion='0.82';
+const editorVersion='0.83';
 const exportBase=name=>name.trim().replace(/\.notka$/i,'').replace(/(?:\(v\d+(?:\.\d+)+\))+$/i,'').trim();
 const exportRate=32000,exportLimit=256*1024*1024;
 const exportText=s=>new Uint8Array(Array.from(unescape(encodeURIComponent(s)),c=>c.charCodeAt(0)));
@@ -2380,7 +2380,7 @@ async function exportMusic(withAudio){
    await zipFile(job,'Original.notka',write=>write(exportText(original)));
    const map=track.lanes.map((lane,i)=>({file:'Tracks/'+String(i+1).padStart(2,'0')+' - '+lane.name.replace(/[\/\\:*?"<>|\u0000-\u001f\u007f]/g,'-')+'.wav',name:lane.name,instrument:laneInstrument(lane,track.instruments).name,instrumentId:lane.instrumentId,source:lane.instrument,settings:laneInstrument(lane,track.instruments).settings,originallyMuted:lane.muted}));
    await zipFile(job,'Tracks.json',write=>write(exportText(JSON.stringify({bpm:track.bpm,sampleRate:exportRate,tracks:map},null,2))));
-   let readme='НОТКА — '+name+'\n\nTrack.mid — ноты всех экспортированных дорожек, темп и типы инструментов.\nMix.wav — общий звук. Tracks/ — отдельные дорожки с одинаковым началом и длительностью.\nTracks.json — соответствие файлов названиям дорожек. Original.notka — исходный проект со всеми дорожками.\n\nFL Studio: File > Import > MIDI file; включи Create one channel per track, отключи Realign events, чтобы сохранить начальную паузу. MIDI передаёт ноты, темп, панораму, громкость и транспонирование; огибающая, фильтр, реверс, обрезка и точная высота сэмплера сохраняются в Original.notka / Tracks.json и звуке WAV, но не в MIDI. Для нашего звучания перенеси WAV из Tracks в Playlist, все с нулевой позиции. Не включай одновременно MIDI-инструменты и WAV, иначе звук удвоится. WAV — готовое аудио, отдельные ноты в нём не редактируются.\n\nEmbers: открой Track.mid. Разделение на MIDI-дорожки сохранено; цвета настраиваются в Embers. Сам MIDI не содержит нашего звука. Mix.wav можно использовать как звуковую дорожку при монтаже видео; автоматический импорт WAV или банка инструментов в Embers не предусмотрен этим экспортом.\n\nWAV: PCM 16 bit, stereo, 32000 Hz, инструменты Нотки. Звук отрендерен отдельно; мастер-обработка и пересчёт могут немного отличаться от живого воспроизведения.\nИсточники звуков: VSCO 2 CE (CC0), MDA Piano / Paul Kellett (MIT), Music box / Joseph SARDIN (CC0). Сведения и лицензии: https://notka-piano-updates.zentas.chatgpt.site/instrument-credits.txt\n';
+   let readme='НОТКА — '+name+'\n\nTrack.mid — ноты всех экспортированных дорожек, темп и типы инструментов.\nMix.wav — общий звук. Tracks/ — отдельные дорожки с одинаковым началом и длительностью.\nTracks.json — соответствие файлов названиям дорожек. Original.notka — исходный проект со всеми дорожками.\n\nFL Studio: File > Import > MIDI file; включи Create one channel per track, отключи Realign events, чтобы сохранить начальную паузу. MIDI передаёт ноты, темп, панораму, громкость и транспонирование; огибающая, фильтр, реверс, обрезка и точная высота сэмплера сохраняются в Original.notka / Tracks.json и звуке WAV, но не в MIDI. Для нашего звучания перенеси WAV из Tracks в Playlist, все с нулевой позиции. Не включай одновременно MIDI-инструменты и WAV, иначе звук удвоится. WAV — готовое аудио, отдельные ноты в нём не редактируются.\n\nEmbers: открой Track.mid. Разделение на MIDI-дорожки сохранено; цвета настраиваются в Embers. Сам MIDI не содержит нашего звука. Mix.wav можно использовать как звуковую дорожку при монтаже видео; автоматический импорт WAV или банка инструментов в Embers не предусмотрен этим экспортом.\n\nWAV: PCM 16 bit, stereo, 32000 Hz, инструменты Нотки. Звук отрендерен отдельно; мастер-обработка и пересчёт могут немного отличаться от живого воспроизведения.\nИсточники звуков: VSCO 2 CE (CC0), MDA Piano / Paul Kellett (MIT), Music box / Joseph SARDIN (CC0). Сведения и лицензии: https://github.com/Vang1549/Notka/blob/main/dist/instrument-credits.txt\n';
    const sources=instrumentReferences(track.lanes);if(sources.length)readme+='\nВнешние инструменты:\n'+sources.map(s=>s.name+' — '+s.url).join('\n');
    await zipFile(job,'Readme.txt',write=>write(exportText(readme)));
    await zipFile(job,'Mix.wav',write=>renderWave(job,track,frames,write,'Общий звук'));

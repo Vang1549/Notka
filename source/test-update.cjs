@@ -1,14 +1,15 @@
 const assert=require('node:assert/strict'),fs=require('fs'),vm=require('vm'),crypto=require('crypto');
 const html=fs.readFileSync('app/launcher.html','utf8'),code=html.slice(html.indexOf('const updateBox='),html.indexOf('const phase='));
 const sign=data=>{const record=JSON.stringify(data);return {record,signature:crypto.sign('SHA256',Buffer.from(record),require('./signature-trust.cjs').privateKey()).toString('base64')}};
-const signed=sign({app:'studio.notka.piano',code:68,version:'0.68',panel:{code:60,version:'0.60'},sha256:crypto.createHash('sha256').update(fs.readFileSync('Notka-0.68.apk')).digest('base64')});
+const release=JSON.parse(fs.readFileSync('release.json','utf8')),nextCode=release.apk_code+1,nextVersion='0.'+nextCode,nextPanelCode=release.panel_code+1,nextPanelVersion='0.'+nextPanelCode;
+const signed=sign({app:'studio.notka.piano',code:release.apk_code,version:release.apk_version,panel:{code:release.panel_code,version:release.panel_version},sha256:crypto.createHash('sha256').update(fs.readFileSync('Notka-'+release.apk_version+'.apk')).digest('base64')});
 const key=new crypto.X509Certificate(fs.readFileSync('signing.der')).publicKey;
-const apk=fs.readFileSync('Notka-0.68.apk');
+const apk=fs.readFileSync('Notka-'+release.apk_version+'.apk');
 const valid=(r,s)=>require('./signature-trust.cjs').verify(r,s);
 assert(valid(signed.record,signed.signature));
 const hash=crypto.createHash('sha256').update(apk).digest('base64');
 assert.equal(JSON.parse(signed.record).sha256,hash);
-const record=JSON.stringify({...JSON.parse(signed.record),code:69,version:'0.69',panel:{code:61,version:'0.61'}});
+const record=JSON.stringify({...JSON.parse(signed.record),code:nextCode,version:nextVersion,panel:{code:nextPanelCode,version:nextPanelVersion}});
 const future={record,signature:crypto.sign('SHA256',Buffer.from(record),require('./signature-trust.cjs').privateKey()).toString('base64')};
 function boot(manifest,initialStatus=8){
  const els={},requests=[],discarded=[],waits=[];
@@ -22,22 +23,22 @@ function boot(manifest,initialStatus=8){
  return {els,state,requests,discarded,waits,done,run};
 }
 (async()=>{
- let t=boot(signed);await t.done;assert.equal(t.els.updateState.textContent,'');assert(t.els.downloadUpdate.hidden);assert(t.els.downloadPanel.hidden);assert(t.els.apkBundleHint.hidden);assert.equal(t.els.apkVersions.textContent,'APK 0.68 (0.68)');assert.equal(t.els.panelVersions.textContent,'Панель 0.60 (0.60)');
+ let t=boot(signed);await t.done;assert.equal(t.els.updateState.textContent,'');assert(t.els.downloadUpdate.hidden);assert(t.els.downloadPanel.hidden);assert(t.els.apkBundleHint.hidden);assert.equal(t.els.apkVersions.textContent,`APK ${release.apk_version} (${release.apk_version})`);assert.equal(t.els.panelVersions.textContent,`Панель ${release.panel_version} (${release.panel_version})`);
  t=boot(signed,16);await t.done;assert.match(t.els.updateState.textContent,/Не удалось проверить/);assert(t.els.downloadUpdate.hidden);
  t.state.status=8;t.state.manifest=future;await t.run('checkApkAtStartup()');assert(!t.els.downloadUpdate.hidden);assert.deepEqual(t.requests,[0,0]);
  t=boot({...future,signature:signed.signature});await t.done;assert.match(t.els.updateState.textContent,/Не удалось проверить/);assert(t.els.downloadUpdate.hidden);
  t=boot(future,1);const {els,state,requests}=t;
  els.updates.onclick();els.closeUpdate.onclick();els.updates.onclick();assert.deepEqual(requests,[0]);assert(els.downloadUpdate.hidden);
  await t.run('checkApkAtStartup()');assert.deepEqual(requests,[0]);
- state.status=8;t.waits.shift()();await t.done;assert.deepEqual(t.discarded,['1']);assert(!els.downloadUpdate.hidden);assert(!els.downloadPanel.hidden);assert(!els.apkBundleHint.hidden);assert.equal(els.panelVersions.textContent,'Панель 0.60 (0.61)');
- els.closeUpdate.onclick();els.updates.onclick();assert.equal(els.apkVersions.textContent,'APK 0.68 (0.69)');assert.deepEqual(requests,[0]);
+ state.status=8;t.waits.shift()();await t.done;assert.deepEqual(t.discarded,['1']);assert(!els.downloadUpdate.hidden);assert(!els.downloadPanel.hidden);assert(!els.apkBundleHint.hidden);assert.equal(els.panelVersions.textContent,`Панель ${release.panel_version} (${nextPanelVersion})`);
+ els.closeUpdate.onclick();els.updates.onclick();assert.equal(els.apkVersions.textContent,`APK ${release.apk_version} (${nextVersion})`);assert.deepEqual(requests,[0]);
  state.digest='bad';await els.downloadUpdate.onclick();assert.match(els.updateState.textContent,/целостности/);assert.deepEqual(t.discarded,['1','2']);
  state.digest=hash;await els.downloadUpdate.onclick();assert.equal(state.installed,0);
  assert.equal(els.downloadUpdate.textContent,'Установить');assert.equal(els.downloadPanel.textContent,'Установить');
- await t.run('checkApkAtStartup()');assert.deepEqual(requests,[0,69,69]);assert.equal(els.downloadUpdate.textContent,'Установить');
+ await t.run('checkApkAtStartup()');assert.deepEqual(requests,[0,nextCode,nextCode]);assert.equal(els.downloadUpdate.textContent,'Установить');
  await els.downloadPanel.onclick();assert.equal(state.installed,1);
- await els.downloadUpdate.onclick();assert.equal(state.installed,2);assert.deepEqual(requests,[0,69,69]);
- const samePanelRecord=JSON.stringify({...JSON.parse(future.record),panel:{code:60,version:'0.60'}}),samePanel={record:samePanelRecord,signature:crypto.sign('SHA256',Buffer.from(samePanelRecord),require('./signature-trust.cjs').privateKey()).toString('base64')};
+ await els.downloadUpdate.onclick();assert.equal(state.installed,2);assert.deepEqual(requests,[0,nextCode,nextCode]);
+ const samePanelRecord=JSON.stringify({...JSON.parse(future.record),panel:{code:release.panel_code,version:release.panel_version}}),samePanel={record:samePanelRecord,signature:crypto.sign('SHA256',Buffer.from(samePanelRecord),require('./signature-trust.cjs').privateKey()).toString('base64')};
  t=boot(samePanel);await t.done;assert(!t.els.downloadUpdate.hidden);assert(t.els.downloadPanel.hidden);assert(t.els.apkBundleHint.hidden);
  t.els.latest.hidden=false;await t.els.downloadUpdate.onclick();
  // The editor check may complete after APK discovery; refresh with the same signed channel.
@@ -47,7 +48,7 @@ function boot(manifest,initialStatus=8){
  const checking=t.run('checkApkAtStartup()'),downloading=t.els.downloadUpdate.onclick();
  t.state.manifest=signed;t.state.status=8;
  for(const wake of t.waits.splice(0))wake();await checking;await downloading;
- assert.equal(t.els.downloadUpdate.textContent,'Установить');assert.equal(t.els.apkVersions.textContent,'APK 0.68 (0.69)');
+ assert.equal(t.els.downloadUpdate.textContent,'Установить');assert.equal(t.els.apkVersions.textContent,`APK ${release.apk_version} (${nextVersion})`);
  // Native resume, visibility and online share throttled checks for BOTH channels.
  let now=100000,catalogChecks=0,apkChecks=0,renders=0;
  const doc={hidden:false},events={};

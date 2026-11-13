@@ -4,6 +4,8 @@ from cryptography.hazmat.primitives import serialization,hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from pathlib import Path
 release=json.loads(Path('release.json').read_text())
+from release_config import sync
+sync(check=True)
 b=Path('Notka-'+release['apk_version']+'.apk').read_bytes()
 get=lambda data,i:struct.unpack_from('<I',data,i)[0]
 e=b.rindex(b'PK\x05\x06');cd=get(b,e+16);assert b[cd-16:cd]==b'APK Sig Block 42'
@@ -30,6 +32,9 @@ with zipfile.ZipFile(io.BytesIO(b)) as z:
  assert z.read('assets/editor-signing-legacy.der')==Path('signing-legacy.der').read_bytes()
  assert z.read('assets/editor-signing.der')!=z.read('assets/editor-signing-legacy.der')
  builtin=z.read('assets/editor-builtin.zip');builtin_info=json.loads(z.read('assets/editor-builtin.json'))
+ launcher=z.read('assets/index.html').decode()
+ assert f"currentVersion={release['apk_code']},currentApk='{release['apk_version']}'" in launcher
+ assert builtin_info['minApk']==release['editor_min_apk']<=release['apk_code']
  assert hashlib.sha256(builtin).hexdigest()==builtin_info['sha256'] and builtin_info['code']==release['editor_code']
  with zipfile.ZipFile(io.BytesIO(builtin)) as editor:
   envelope=json.loads(editor.read('manifest.json'))

@@ -32,11 +32,11 @@ try:run([sys.executable,'build.py'])
 finally:
     if (source/'.native-tools').exists():shutil.copytree(source/'.native-tools',tools/'android',dirs_exist_ok=True)
 run([sys.executable,'verify.py'])
-run([sys.executable,'publish_release.py','../dist',str(release['apk_code']),release['apk_version'],'--panel-code','60','--panel-version','0.60'])
+run([sys.executable,'publish_release.py','../dist',str(release['apk_code']),release['apk_version'],'--panel-code',str(release['panel_code']),'--panel-version',release['panel_version']])
 if '--skip-tests' not in sys.argv:
     for name in ['test-signing.py','test-native.py','test-background-service.py','test-update-origin.py','test-bundles.py']:
         run([sys.executable,name])
-    for name in ['test-launcher.cjs','test-update.cjs','test-catalog.cjs','test-bundle-panel.cjs','test-lazy-modules.cjs','test-library-preview.cjs']:
+    for name in ['test-launcher.cjs','test-update.cjs','test-catalog.cjs','test-bundle-panel.cjs','test-release-panel.cjs','test-lazy-modules.cjs','test-library-preview.cjs']:
         run(['node',name])
     run([sys.executable,'scripts/publish.py','--verify-only'],stage)
 output=project/'outputs'/('local-'+release['apk_version']);output.mkdir(parents=True,exist_ok=True)

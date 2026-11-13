@@ -2,6 +2,8 @@ package studio.notka.piano;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Base64;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -86,7 +88,7 @@ public final class EditorStore {
         JSONObject envelope=new JSONObject(text(raw));String record=envelope.getString("record");
         if(!trustedSignature(record,envelope.getString("signature"),key))throw new IOException("Editor signature mismatch");
         JSONObject info=new JSONObject(record);
-        if(!"notka.bundle.1".equals(info.getString("kind"))||info.getInt("code")<1||info.getInt("minApk")>69||!info.getString("version").matches("[0-9]+(\\.[0-9]+){1,3}"))throw new IOException("Unsupported editor bundle");
+        if(!"notka.bundle.1".equals(info.getString("kind"))||info.getInt("code")<1||info.getInt("minApk")>70||!info.getString("version").matches("[0-9]+(\\.[0-9]+){1,3}"))throw new IOException("Unsupported editor bundle");
         JSONObject files=info.getJSONObject("files");
         if(files.length()<2||files.length()>64||!files.has("index.html")||!files.has("runtime.js"))throw new IOException("Incomplete editor");
         int total=0;Iterator<String> names=files.keys();
@@ -197,7 +199,10 @@ public final class EditorStore {
                     return new WebResourceResponse(mime,"UTF-8",new FileInputStream(new File(dir,name)));
                 }catch(Exception e){return new WebResourceResponse("text/plain","UTF-8",new ByteArrayInputStream(new byte[0]));}
             }
-            @Override public boolean shouldOverrideUrlLoading(WebView view,String url){return true;}
+            @Override public boolean shouldOverrideUrlLoading(WebView view,String url){
+                if(StoragePolicy.externalUrl(url))try{c.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(url)));}catch(Exception ignored){}
+                return true;
+            }
         });
         web.loadDataWithBaseURL(base,text(read(new FileInputStream(new File(dir,"index.html")),FILE_LIMIT)),"text/html","UTF-8",base+"index.html");
     }

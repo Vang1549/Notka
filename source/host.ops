@@ -95,9 +95,14 @@ done
 # kind=0 gets only the channel. A validated positive release number chooses its versioned APK.
 method Main:begin:String:I 8 bridge catch
 zero 7 channel
-str 0 @ORIGIN@/Notka-
+str 0 https://github.com/Vang1549/Notka/releases/download/apk-
 static String:valueOf:String:I 7
 resultobj 1
+virtual String:concat:String:String 0 1
+resultobj 0
+str 2 /Notka-
+virtual String:concat:String:String 0 2
+resultobj 0
 virtual String:concat:String:String 0 1
 resultobj 0
 str 1 .apk
@@ -329,7 +334,7 @@ const 0 0
 ret 0
 
 method Main:openPage:Z 5 bridge catch
-str 0 @ORIGIN@
+str 0 https://github.com/Vang1549/Notka/releases
 static Uri:parse:Uri:String 0
 resultobj 0
 str 2 android.intent.action.VIEW
@@ -452,6 +457,7 @@ virtual Settings:setAllowContentAccess:V:Z 1 2
 const 2 1
 virtual Settings:setBlockNetworkLoads:V:Z 1 2
 virtual Settings:setJavaScriptEnabled:V:Z 1 2
+virtual Settings:setDomStorageEnabled:V:Z 1 2
 str 1 NotkaPlayer
 virtual Web:addJavascriptInterface:V:Object:String 0 7 1
 static Lstudio/notka/piano/EditorStore;:load:V:Activity:Web:String 7 0 3

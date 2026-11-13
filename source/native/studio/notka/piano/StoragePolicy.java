@@ -18,6 +18,12 @@ public final class StoragePolicy {
     public static boolean apkUrl(String url) {
         return url != null && url.matches("https://(?:notka-piano-updates\\.zentas\\.chatgpt\\.site/Notka-[1-9][0-9]{0,9}|github\\.com/Vang1549/Notka/releases/download/apk-([1-9][0-9]{0,9})/Notka-\\1)\\.apk");
     }
+    public static boolean externalUrl(String url) {
+        // Keep the editor local; ordinary author links open only in a separate browser.
+        if(url==null)return false;
+        try{java.net.URI u=new java.net.URI(url);return "https".equals(u.getScheme())&&u.getHost()!=null&&u.getUserInfo()==null&&!"appassets.androidplatform.net".equals(u.getHost());}
+        catch(Exception e){return false;}
+    }
     public static boolean child(File dir, File file) throws IOException {
         // Do not follow symlinks, even when they point into another managed category.
         return file.getAbsoluteFile().equals(file.getCanonicalFile()) && dir.getCanonicalFile().equals(file.getCanonicalFile().getParentFile());

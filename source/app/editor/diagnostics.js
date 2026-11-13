@@ -2,7 +2,7 @@
 const diagnostics=(()=>{
  let enabled=false,overlay=false,frame=0,last=0,epoch=0,frames=0,slow=0,maxFrame=0,renderFrames=0,renderMs=0,renderMax=0,lastPersist=0;
  const now=()=>typeof performance!=='undefined'&&performance.now?performance.now():Date.now();
- const report={format:'notka.diagnostics.1',editor:'0.81',startedAt:null,updatedAt:null,samples:[],errors:[],operations:{},summary:{frames:0,slowFrames:0,maxFrameMs:0}};
+ const report={format:'notka.diagnostics.1',editor:'0.83',startedAt:null,updatedAt:null,samples:[],errors:[],operations:{},summary:{frames:0,slowFrames:0,maxFrameMs:0}};
  const host=typeof NotkaPlayer!=='undefined'?NotkaPlayer:null;
  const round=n=>Math.round(n*100)/100;
  function operation(name,ms){if(!enabled)return;const o=report.operations[name]||(report.operations[name]={count:0,totalMs:0,maxMs:0});o.count++;o.totalMs=round(o.totalMs+ms);o.maxMs=round(Math.max(o.maxMs,ms))}

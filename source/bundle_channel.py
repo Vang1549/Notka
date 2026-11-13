@@ -7,9 +7,10 @@ from editor_channel import sign
 
 def build(dist,code,version,name):
     key=load_signing_key()
+    minimum=json.loads(Path('release.json').read_text())['editor_min_apk']
     folder=Path('.native-build/editor')
     files={p.name:p.read_bytes() for p in sorted(folder.iterdir()) if p.is_file()}
-    info=dict(kind='notka.bundle.1',code=code,version=version,name=name,minApk=69,
+    info=dict(kind='notka.bundle.1',code=code,version=version,name=name,minApk=minimum,
               files={n:dict(bytes=len(b),sha256=hashlib.sha256(b).hexdigest()) for n,b in files.items()})
     raw=json.dumps(sign(info,key),separators=(',',':')).encode()
     buffer=io.BytesIO()
@@ -18,7 +19,7 @@ def build(dist,code,version,name):
             item=zipfile.ZipInfo(filename,(2026,1,1,0,0,0));item.compress_type=zipfile.ZIP_DEFLATED;item.external_attr=0o100644<<16
             z.writestr(item,data,compresslevel=9)
     blob=buffer.getvalue();digest=hashlib.sha256(blob).hexdigest()
-    entry=dict(code=code,version=version,name=name,sha256=digest,format=2,minApk=69)
+    entry=dict(code=code,version=version,name=name,sha256=digest,format=2,minApk=minimum)
     out=dist/'bundles';out.mkdir(exist_ok=True)
     target=out/f'{code}.zip'
     if target.exists() and target.read_bytes()!=blob:raise ValueError('Published bundle is immutable')

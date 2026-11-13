@@ -26,7 +26,7 @@ public final class Diagnostics {
         final Thread.UncaughtExceptionHandler previous=Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler(){public void uncaughtException(Thread thread,Throwable error){
             try{if(new JSONObject(config(app)).optBoolean("enabled")){
-                JSONObject q=new JSONObject(report(app));q.put("format","notka.diagnostics.1").put("device",device(app)).put("panel","0.60");
+                JSONObject q=new JSONObject(report(app));q.put("format","notka.diagnostics.1").put("device",device(app)).put("panel","0.61");
                 StringWriter stack=new StringWriter();error.printStackTrace(new PrintWriter(stack));String text=stack.toString();
                 q.put("nativeCrash",new JSONObject().put("at",System.currentTimeMillis()).put("thread",thread.getName()).put("type",error.getClass().getName()).put("stack",text.substring(0,Math.min(3000,text.length()))));
                 write(app,"report",q.toString());
@@ -51,7 +51,7 @@ public final class Diagnostics {
     public static boolean store(Context c,String raw){
         try{if(raw==null||raw.length()>LIMIT||!new JSONObject(config(c)).optBoolean("enabled"))return false;
             JSONObject q=new JSONObject(raw);if(!"notka.diagnostics.1".equals(q.optString("format")))return false;
-            q.put("device",device(c)).put("panel","0.60");return write(c,"report",q.toString());
+            q.put("device",device(c)).put("panel","0.61");return write(c,"report",q.toString());
         }catch(Exception e){return false;}
     }
     public static String report(Context c){

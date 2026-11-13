@@ -49,7 +49,12 @@ function native(store=new Map()){
  c.store.set('pending-bank','12345');c.status=16;boot(true,c.api);await settle();assert(c.removed.includes('12345'));
  // New catalogue entries need no source/editor changes. Metadata and pitch labels come from signed data.
  const newer=JSON.parse(JSON.parse(manifest).record);newer.version++;newer.instruments.push({...entry,id:'lib-future-1',asset:'bank-future-1',name:'Будущий',short:'Бд'});
- const dyn=native();dyn.files.catalog=signed(newer);const dynamic=boot(true,dyn.api);await settle();await dynamic.run('checkSoundCatalog()');assert.equal(dynamic.run("instrumentById('lib-future-1').short"),'Бд');
+ const dyn=native();dyn.files.catalog=signed(newer);const dynamic=boot(true,dyn.api);await settle();dynamic.run('openLaneInstrument()');await settle();assert(dyn.requests.includes('catalog'));assert.equal(dynamic.run("instrumentById('lib-future-1').short"),'Бд');
+ // A failed check can be retried through the same visible library action.
+ const retry=native();retry.status=16;retry.files.catalog=signed(newer);const retrying=boot(true,retry.api);await settle();
+ retrying.run('openLaneInstrument()');await settle();assert.equal(retrying.run('catalogStarted'),false);
+ retry.status=8;retrying.run('openLaneInstrument()');await settle();assert.equal(retry.requests.filter(x=>x==='catalog').length,2);
+ assert.equal(retrying.run("instrumentById('lib-future-1').short"),'Бд');
  // Unsafe path/duplicate/tampered metadata cannot be used; missing remote references remain in imported music.
  const invalid={...newer,instruments:[{...entry,asset:'../signing'}]};assert.throws(()=>dynamic.run('parseSoundCatalog('+JSON.stringify(signed(invalid))+')'));
  const missing=JSON.parse(track);missing.version=2;delete missing.instruments;missing.lanes[0].instrument='lib-unavailable-1';const imported=dynamic.run('readTrack('+JSON.stringify(JSON.stringify(missing))+')');assert.equal(imported.lanes[0].instrument,'lib-unavailable-1');

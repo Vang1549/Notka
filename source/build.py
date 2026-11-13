@@ -5,7 +5,8 @@ from cryptography.hazmat.primitives import hashes,serialization
 from cryptography.x509 import CertificateBuilder,Name,NameAttribute,random_serial_number
 from cryptography.x509.oid import NameOID
 from signing_identity import load_signing_key
-release=json.loads(Path('release.json').read_text())
+from release_config import sync
+release=sync()
 signing_key=load_signing_key()
 def pack(fmt,*args):return struct.pack('<'+fmt,*args)
 def u32(n):return pack('I',n)
