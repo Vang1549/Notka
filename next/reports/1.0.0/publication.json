@@ -1,0 +1,11 @@
+{
+  "release": "https://github.com/Vang1549/Notka/releases/tag/native-1",
+  "apk": "https://github.com/Vang1549/Notka/releases/download/native-1/Notka2-1.apk",
+  "bytes": 11598021,
+  "sha256": "392692a5bb16912c16277320ac890f7cd0048bed9eacaa74ef7f3fb7ef55ff27",
+  "native_channel_commit": "e429c9c4615bde92bbab9128a1ac93d90c5110bb",
+  "legacy_channel_unchanged": "dcc9d441abee7048888fbdcc3dd9983c72f2086a",
+  "published_apk_matches_local": true,
+  "signatures_verified": true,
+  "release_app_update_check": "Установлена актуальная версия"
+}
