@@ -15,6 +15,6 @@ t.els.snap.onchange({target:{value:'0'}});assert.equal(lines(),17);assert.match(
 t.els.noteSize.onchange({target:{value:'2'}});assert.equal(width(),33);assert.equal(lines(),17);
 r('selectNote(score[0])');t.els.stepMenu.onclick();assert.equal(width(),33);
 t.els.noteSize.onchange({target:{value:'0'}});assert.equal(width(),15.5);assert.equal(r('JSON.stringify(score)'),original);
-r('notkaBack()');assert(t.els.stepSheet.hidden);assert.equal(JSON.parse(t.draft).viewDivision,0);assert.equal(JSON.parse(t.draft).division,0);
+r('notkaBack()');assert(t.els.stepSheet.hidden);assert.equal(JSON.parse((t.run('flushDraft(true)'),t.draft)).viewDivision,0);assert.equal(JSON.parse((t.run('flushDraft(true)'),t.draft)).division,0);
 t.els.stepMenu.onclick();assert.equal(lines(),17);
 console.log('PASS preview subdivisions 1–16 and triplets, auto/free grid, note length/template, unchanged notes and viewport time, Back persistence/reopen.');

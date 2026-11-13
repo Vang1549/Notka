@@ -1,0 +1,24 @@
+Editor source modules assembled; media exporter remains demand-loaded.
+Bundle 0.82: 551,263 bytes -> 154,521 bytes; 6 files
+Native export service compiled for Android 5+; classes2.dex ready.
+Launcher icon compiled at five Android display densities.
+OK: Android launcher manifest, DEX checksums, APK RSA signature, current/legacy trust assets and built-in editor signed by the new key
+PASS current and legacy signatures, tamper/unrelated-key rejection, key/certificate matching and no automatic key replacement.
+PASS native regression: three invalid cleanup paths rejected; initialized stream paths and host assembly accepted.
+PASS landscape bridge and default orientation restoration assembled.
+PASS native Back dispatch with legacy fallback assembled.
+PASS fixed media asset bridge, media suffix/MIME allowlist and foreground keep-screen-on.
+PASS bounded random-access media bridge, HTTPS local origin and file-based editor loading.
+PASS background lifetime, startup cancellation, monotonic progress, watchdog/deadline, finalization failure and concurrent cancel/commit exclusivity.
+PASS storage path, symlink, extension, preset exclusion and APK origin boundaries.
+PASS all six bridge calls resolve to public static methods in classes2.dex; service lifecycle signatures valid.
+PASS APK, editor, bundles, sounds and release-page URLs use the original host.
+PASS native current/legacy signature trust and tamper/foreign-key rejection.
+PASS native bundle: >190k runtime, compact token, signature/hash/missing/traversal/size/truncation rejection (9), atomic fallback, corrupted-cache repair.
+PASS native file transport assembled; legacy editors also launch via file token.
+PASS local launch during catalog check, offline, current, remote update, invalid signatures, retry, compact versions and older manual selection.
+PASS automatic APK check, signature and hash verification, explicit install and retry without backup.
+PASS signed dynamic catalogue, download/install/retry, offline restart, corrupted data, cancel/recovery, protected in-use instruments, delete/redownload, future metadata, and note/ghost instrument labels.
+PASS bundle panel: offline launch, download/integrity failures retain previous edition, successful token launch, no package in localStorage.
+PASS packed runtime: no eager visualizer/media module; first preview loads signed renderer once, repeated previews preserve notes and settings.
+PASS 30 new sounds, preview-only downloads, unchanged track/rack, stop/toggle/switch, decode races, close/background, tamper rejection, bounded offline cache, full install and hold/delete protection.

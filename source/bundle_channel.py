@@ -1,3 +1,4 @@
+from signing_identity import load_signing_key,verify_envelope
 """Build an immutable, signed, compressed editor package for APK 64+."""
 import argparse,base64,hashlib,io,json,zipfile
 from pathlib import Path
@@ -5,10 +6,10 @@ from cryptography.hazmat.primitives import serialization
 from editor_channel import sign
 
 def build(dist,code,version,name):
-    key=serialization.load_pem_private_key(Path('signing.pem').read_bytes(),None)
+    key=load_signing_key()
     folder=Path('.native-build/editor')
     files={p.name:p.read_bytes() for p in sorted(folder.iterdir()) if p.is_file()}
-    info=dict(kind='notka.bundle.1',code=code,version=version,name=name,minApk=64,
+    info=dict(kind='notka.bundle.1',code=code,version=version,name=name,minApk=69,
               files={n:dict(bytes=len(b),sha256=hashlib.sha256(b).hexdigest()) for n,b in files.items()})
     raw=json.dumps(sign(info,key),separators=(',',':')).encode()
     buffer=io.BytesIO()
@@ -17,19 +18,19 @@ def build(dist,code,version,name):
             item=zipfile.ZipInfo(filename,(2026,1,1,0,0,0));item.compress_type=zipfile.ZIP_DEFLATED;item.external_attr=0o100644<<16
             z.writestr(item,data,compresslevel=9)
     blob=buffer.getvalue();digest=hashlib.sha256(blob).hexdigest()
-    entry=dict(code=code,version=version,name=name,sha256=digest,format=2,minApk=64)
+    entry=dict(code=code,version=version,name=name,sha256=digest,format=2,minApk=69)
     out=dist/'bundles';out.mkdir(exist_ok=True)
     target=out/f'{code}.zip'
     if target.exists() and target.read_bytes()!=blob:raise ValueError('Published bundle is immutable')
-    target.write_bytes(blob)
     catalog_path=out/'catalog.json'
     source=catalog_path if catalog_path.exists() else dist/'editions/catalog.json'
     envelope=json.loads(source.read_text())
     from cryptography.hazmat.primitives.asymmetric import padding
     from cryptography.hazmat.primitives import hashes
-    key.public_key().verify(base64.b64decode(envelope['signature']),envelope['record'].encode(),padding.PKCS1v15(),hashes.SHA256())
+    verify_envelope(envelope)
     catalog=json.loads(envelope['record']);entries={e['code']:e for e in catalog['editions']}
     if code<catalog['latest'] or code in entries and entries[code]!=entry:raise ValueError('Existing catalog version differs')
+    target.write_bytes(blob)
     entries[code]=entry;catalog.update(latest=code,editions=list(entries.values()))
     catalog_path.write_text(json.dumps(sign(catalog,key),separators=(',',':')))
     Path('.native-build/editor-builtin.zip').write_bytes(blob)

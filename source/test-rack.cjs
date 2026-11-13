@@ -6,7 +6,7 @@ const plain=x=>JSON.parse(JSON.stringify(x));
  await t.run("selectInstrument('vsco-piano-1')");const second=t.run('lanes[0].instrumentId');assert.notEqual(first,second);assert.equal(t.reads.filter(x=>x==='piano').length,1);
  t.run(`openInstrumentSettings('${second}')`);t.els['sound-pan'].value='-70';t.els['sound-pan'].onchange();t.els['sound-attack'].value='1.2';t.els['sound-attack'].onchange();
  assert.equal(t.run(`projectInstruments.find(i=>i.id==='${first}').settings.pan`),0);
- assert.equal(JSON.parse(t.draft).instruments.find(i=>i.id===second).settings.pan,-70);
+ assert.equal(JSON.parse((t.run('flushDraft(true)'),t.draft)).instruments.find(i=>i.id===second).settings.pan,-70);
  t.els.addLane.onclick();t.run(`assignProjectInstrument('${second}')`);assert.equal(t.run('laneInstrument(lanes[0])===laneInstrument(lanes[1])'),true);
  const raw=t.run('encodeTrack()');t.run('applyTrack(readTrack('+JSON.stringify(raw)+'))');assert.equal(t.run('encodeTrack()'),raw);
  const bad=JSON.parse(raw);bad.instruments[0].settings.cutoff=Infinity;assert.throws(()=>t.run('readTrack('+JSON.stringify(JSON.stringify(bad))+')'));

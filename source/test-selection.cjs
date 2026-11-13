@@ -17,7 +17,7 @@ t.finger('move',350,270);t.finger('up',350,270);t.paint();assert.equal(t.run('se
 assert(t.run('selection.has(score[0])&&selection.has(score[1])&&!selection.has(score[2])'));
 // A group preserves relative rhythm/pitch and moves from the touched point without a jump.
 t.finger('down',110,185);t.finger('move',150,219);t.paint();assert.equal(t.run('score[0].start'),480);assert.equal(t.run('score[1].start'),1200);assert.equal(t.run('score[0].pitch'),114);assert.equal(t.run('score[1].pitch'),112);assert.equal(t.run('score[2].start'),1920);assert.equal(t.draft,'');
-t.finger('up',150,219);assert.equal(JSON.parse(t.draft).lanes[0].notes[1].start,1200);
+t.finger('up',150,219);assert.equal(t.draft,'');t.advance(60000);assert.equal(JSON.parse(t.draft).lanes[0].notes[1].start,1200);
 // Offscreen group members are still drawn after moving into the viewport.
 t.run('var seen=new Set();visibleNotes(lanes[0],0,20,n=>seen.add(n))');assert.equal(t.run('seen.size'),2);
 const before=t.snapshot();t.finger('down',150,219);t.finger('move',210,253);t.finger('cancel',210,253);assert.equal(t.snapshot(),before);assert.equal(JSON.parse(t.draft).lanes[0].notes[0].start,480);
@@ -29,7 +29,7 @@ t=setup();t.select();t.finger('down',110,185);t.finger('move',-200,-1000);t.fing
 t=setup();t.select();t.finger('down',110,185);t.finger('move',110,10000);t.finger('up',110,10000);assert.equal(t.run('score[1].pitch'),24);assert.equal(t.run('score[0].pitch'),26);
 // Bulk volume is persisted; delete removes only the selected group and retains the last template.
 t=setup();t.select();t.els.volumeToggle.onclick();t.els.volume.oninput({target:{value:'37'}});t.els.volume.onchange();assert.equal(t.run('score[0].volume'),37);assert.equal(t.run('score[1].volume'),37);assert.equal(t.run('score[2].volume'),60);
-t.els.deleteNote.onclick();assert.equal(t.run('score.length'),1);assert.equal(t.run('score[0].start'),1920);assert.equal(t.run('selection.size'),0);assert.equal(JSON.parse(t.draft).lanes[0].notes.length,1);assert.equal(t.run('templateNote.volume'),37);
+t.els.deleteNote.onclick();assert.equal(t.run('score.length'),1);assert.equal(t.run('score[0].start'),1920);assert.equal(t.run('selection.size'),0);t.advance(60000);assert.equal(JSON.parse(t.draft).lanes[0].notes.length,1);assert.equal(t.run('templateNote.volume'),37);
 // A short tap still creates one note; scrolling before hold cancels the selection timer.
 t=setup();t.finger('down',85,135);t.advance(100);t.finger('up',85,135);t.advance(500);assert.equal(t.run('score.length'),4);assert.equal(t.run('selection.size'),0);
 t=setup();t.finger('down',85,135);t.finger('move',60,135);t.advance(500);assert.equal(t.run('gesture.mode'),'pan');t.finger('up',60,135);assert.equal(t.run('score.length'),3);assert.equal(t.run('selection.size'),0);

@@ -2,19 +2,19 @@ const {boot,settle}=require('./test-instruments.cjs');
 const fs=require('fs'),assert=require('assert/strict'),crypto=require('crypto');
 const dir=(process.env.NOTKA_DIST||'../dist')+'/soundbank/';
 const pub=new crypto.X509Certificate(fs.readFileSync('signing.der')).publicKey;
-const signed=data=>{const record=JSON.stringify(data);return JSON.stringify({record,signature:crypto.sign('SHA256',Buffer.from(record),fs.readFileSync('signing.pem')).toString('base64')})};
+const signed=data=>{const record=JSON.stringify(data);return JSON.stringify({record,signature:crypto.sign('SHA256',Buffer.from(record),require('./signature-trust.cjs').privateKey()).toString('base64')})};
 const manifest=fs.readFileSync(dir+'catalog.json','utf8'),raw=fs.readFileSync(dir+'bank-trumpet-1.json','utf8'),entry=JSON.parse(JSON.parse(manifest).record).instruments[0];
-const id=entry.id;
+const id=entry.id;const expectedCount=new Set(['vsco-piano-1','lib-mda-grand-1','lib-floe-musicbox-1',...JSON.parse(JSON.parse(manifest).record).instruments.map(d=>d.id)]).size;
 function native(store=new Map()){
  const state={store,files:{catalog:manifest,'bank-trumpet-1':raw},status:8,requests:[],jobs:new Map(),removed:[],failWrite:false,badHash:false};let number=0;
  state.api={soundRead:k=>store.get(k)||null,soundWrite(k,v){if(state.failWrite&&k.startsWith('bank-'))return false;store.set(k,v);return true},soundDelete(k){store.delete(k);return true},soundExists:k=>store.has(k),
  soundDownload(k){const n=String(++number);state.requests.push(k);state.jobs.set(n,k);return n},soundStatus:()=>state.status,
  soundText:n=>state.files[state.jobs.get(n)]||null,soundHash:n=>state.badHash?'bad':crypto.createHash('sha256').update(state.files[state.jobs.get(n)]).digest('base64'),
- soundValid:(r,s)=>{try{return crypto.verify('SHA256',Buffer.from(r),pub,Buffer.from(s,'base64'))}catch{return false}},soundDiscard:n=>state.removed.push(n)};
+ soundValid:(r,s)=>{try{return require('./signature-trust.cjs').verify(r,s)}catch{return false}},soundDiscard:n=>state.removed.push(n)};
  return state;
 }
 (async()=>{
- const n=native(),t=boot(true,n.api);await settle();await t.run('checkSoundCatalog()');assert.equal(t.run('instruments.length'),8);assert.equal(n.requests.length,1);
+ const n=native(),t=boot(true,n.api);await settle();await t.run('checkSoundCatalog()');assert.equal(t.run('instruments.length'),expectedCount);assert.equal(n.requests.length,1);
  t.run('openLaneInstrument()');t.els.closeInstrument.onclick();t.run('openLaneInstrument()');assert.equal(n.requests.length,1);
  await t.run(`downloadInstrument('${id}')`);assert(n.store.has(entry.asset));assert.equal(n.store.get(entry.asset),raw);assert(!n.store.has('pending-bank'));
  const requests=n.requests.length;await t.run(`selectInstrument('${id}')`);assert.equal(t.run('lanes[0].instrument'),id);assert.equal(n.requests.length,requests);
@@ -55,7 +55,7 @@ function native(store=new Map()){
  const missing=JSON.parse(track);missing.version=2;delete missing.instruments;missing.lanes[0].instrument='lib-unavailable-1';const imported=dynamic.run('readTrack('+JSON.stringify(JSON.stringify(missing))+')');assert.equal(imported.lanes[0].instrument,'lib-unavailable-1');
  const oldCatalog=JSON.parse(JSON.parse(manifest).record);oldCatalog.instruments=[entry];oldCatalog.version=1;
  const migratedHost=native(new Map([['catalog',signed(oldCatalog)]]));migratedHost.status=16;
- const migrated=boot(true,migratedHost.api);await settle();assert.equal(migrated.run('instruments.length'),8);
+ const migrated=boot(true,migratedHost.api);await settle();assert.equal(migrated.run('instruments.length'),expectedCount);
  for(const previous of ['classic',undefined,'vsco-violin-1','vsco-flute-1','vsco-bass-1']){
   const file=JSON.parse(track);file.version=2;delete file.instruments;file.lanes[0].instrument=previous;file.lanes[0].notes=[{pitch:64,start:137,len:840,volume:73}];
   const result=migrated.run('readTrack('+JSON.stringify(JSON.stringify(file))+')');

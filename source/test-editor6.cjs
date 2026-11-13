@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
-const script=fs.readFileSync('app/index.html','utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
+const script=fs.readFileSync(process.env.NOTKA_EDITOR_HTML||'app/index.html','utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
 class El{
  constructor(){this.offsetWidth=250;this.offsetHeight=70;this.children=[];this.dataset={};this.attrs={};this.style={setProperty(){}};this.classList={toggle:()=>this.light=!this.light};this.clientWidth=376;this.clientHeight=540}
  append(e){for(const child of (e.fragment?e.children:[e])){this.children.push(child);child.parent=this}}
@@ -16,37 +16,45 @@ class Audio{
 const doc={getElementById:id=>els[id]??=new El(),documentElement:new El(),createElement:()=>new El(),createDocumentFragment:()=>Object.assign(new El(),{fragment:true}),addEventListener(k,f){this[k]=f}};
 const ctx=vm.createContext({setTimeout:(fn,n)=>{const id=++ids;delays.set(id,{fn,at:time+n});return id},clearTimeout:id=>delays.delete(id),cancelAnimationFrame:()=>{},document:doc,window:new El(),AudioContext:Audio,NotkaPlayer:{instrumentData:id=>fs.readFileSync('app/instruments/'+id+'.json','utf8')},atob:x=>Buffer.from(x,'base64').toString('binary'),Uint8Array,requestAnimationFrame:f=>{frame=f;return 1},setInterval:f=>{timer=f;return 1},clearInterval:()=>timer=null});
 vm.runInContext(script,ctx);
+vm.runInContext('Date.now=()=>testClock()',Object.assign(ctx,{testClock:()=>time}));
 const run=s=>vm.runInContext(s,ctx),flush=()=>{if(frame){const f=frame;frame=null;f()}};
+// Fix zoom for gesture scenarios; startup fits the grid to the viewport.
+run('col=40;paint()');
 const roll=els.roll;
-function finger(type,x,y){roll['onpointer'+type]({pointerId:1,isPrimary:true,button:0,clientX:x,clientY:y})}
+// Historical gesture offsets are measured from the piano-roll content edge.
+const contentX=offset=>run('keyWidth')+offset;
+function finger(type,x,y){if(type==='down')advance(400);roll['onpointer'+type]({pointerId:1,isPrimary:true,button:0,clientX:x,clientY:y})}
 function tap(x,y){finger('down',x,y);finger('up',x,y);flush()}
 function drag(x,y,ex,ey){finger('down',x,y);finger('move',ex,ey);finger('up',ex,ey);flush()}
 (async()=>{
  await run("unlock();prepareInstrument('vsco-piano-1')");
  const n=()=>run('score[0]'),snap=v=>{els.snap.onchange({target:{value:String(v)}});flush()};
- assert.equal(run('division'),4);tap(69,200);assert.equal(n().len,240);
+ assert.equal(run('division'),4);tap(contentX(13),200);assert.equal(n().len,240);
  run('removeNote(score[0])');snap(2);
- tap(69,200);assert.equal(n().start,0);assert.equal(n().len,480);const orig=n().pitch;
- finger('down',69,200);flush();assert(els.volumeRow.hidden);assert.equal(run('selected'),n());assert(!els.inspector.hidden);
- finger('move',149,166);finger('up',149,166);flush();assert.equal(n().start,960);assert.equal(n().pitch,orig+1);
- drag(173,166,253,166);assert.equal(n().start,960);assert.equal(n().len,1440);
+ tap(contentX(13),200);assert.equal(n().start,0);assert.equal(n().len,480);const orig=n().pitch;
+ finger('down',contentX(13),200);flush();assert(els.volumeRow.hidden);assert.equal(run('selected'),n());assert(!els.inspector.hidden);
+ finger('move',contentX(93),166);finger('up',contentX(93),166);flush();assert.equal(n().start,960);assert.equal(n().pitch,orig+1);
+ drag(contentX(117),166,contentX(197),166);assert.equal(n().start,960);assert.equal(n().len,1440);
  els.volumeToggle.onclick();flush();assert(!els.volumeRow.hidden);assert.equal(els.volumeToggle.attrs['aria-expanded'],'true');els.volumeToggle.onclick();assert(els.volumeRow.hidden);els.volumeToggle.onclick();
  els.volume.oninput({target:{value:27}});assert.equal(n().volume,27);els.volume.onchange();
- const startSnap=n().start,lenSnap=n().len;snap(3);assert.equal(n().start,startSnap);assert.equal(n().len,lenSnap);tap(99,245);assert.equal(run('score[1].start'),320);assert.equal(run('score[1].len'),1440);assert.equal(run('score[1].volume'),27);
- snap(8);tap(99,290);assert.equal(run('score[2].start'),120);
- tap(99,290);assert.equal(run('score.length'),3);assert(els.volumeRow.hidden);els.volumeToggle.onclick();els.volume.oninput({target:{value:0}});els.closeNote.onclick();
- tap(149,385);assert.equal(run('score[3].volume'),0);assert.equal(run('score[1].volume'),27);
- tap(149,385);els.deleteNote.onclick();assert.equal(run('templateNote'),null);
- snap(0);tap(75,340);const free=run('score[3]');assert.equal(free.start,114);assert.equal(free.len,240);assert.equal(free.volume,100);
- drag(112,340,125,340);assert.equal(free.len,318);
- finger('down',81,340);finger('move',89,306);assert.equal(free.start,162);finger('move',89,340);assert.equal(free.start,162);finger('cancel',89,340);assert.equal(free.start,114);
+ const startSnap=n().start,lenSnap=n().len;snap(3);assert.equal(n().start,startSnap);assert.equal(n().len,lenSnap);tap(contentX(43),245);assert.equal(run('score[1].start'),320);assert.equal(run('score[1].len'),1440);assert.equal(run('score[1].volume'),27);
+ snap(8);tap(contentX(43),290);assert.equal(run('score[2].start'),120);
+ tap(contentX(43),290);assert.equal(run('score.length'),3);assert(els.volumeRow.hidden);els.volumeToggle.onclick();els.volume.oninput({target:{value:0}});els.closeNote.onclick();
+ tap(contentX(93),385);assert.equal(run('score[3].volume'),0);assert.equal(run('score[1].volume'),27);
+ tap(contentX(93),385);els.deleteNote.onclick();assert.equal(run('JSON.stringify(templateNote)'),JSON.stringify({len:1440,volume:0}));
+ // Delete retains the last note parameters; verify inheritance before the fresh free-grid scenario.
+ snap(0);tap(contentX(19),340);assert.equal(run('score[3].len'),1440);assert.equal(run('score[3].volume'),0);
+ run('removeNote(score[3]);templateNote=null;copyNoteLength=false');
+ snap(0);tap(contentX(19),340);const free=run('score[3]');assert.equal(free.start,114);assert.equal(free.len,240);assert.equal(free.volume,100);
+ drag(contentX(56),340,contentX(69),340);assert.equal(free.len,318);
+ finger('down',contentX(25),340);finger('move',contentX(33),306);assert.equal(free.start,162);finger('move',contentX(33),340);assert.equal(free.start,162);finger('cancel',contentX(33),340);assert.equal(free.start,114);
  // Swiping on an empty row pans.
- finger('down',81,440);finger('move',51,440);finger('up',51,440);assert.equal(free.start,114);assert(run('x')>0);
- await els.playStart.onclick();assert.equal(run('current'),0);els.play.onclick();flush();finger('down',81,340);finger('up',81,340);els.deleteNote.onclick();assert(!run('score').includes(free));
+ finger('down',contentX(25),440);finger('move',contentX(-5),440);finger('up',contentX(-5),440);assert.equal(free.start,114);assert(run('x')>0);
+ await els.playStart.onclick();assert.equal(run('current'),0);els.play.onclick();flush();finger('down',contentX(25),340);finger('up',contentX(25),340);els.deleteNote.onclick();assert(!run('score').includes(free));
  // A new note at 100 BPM, lasting 1.5 beats, has .9 seconds of sustain.
  run('rowIndexes.delete(score);score.splice(0);score.push({start:0,len:1440,pitch:60,volume:27},{start:0,len:480,pitch:64,volume:0});controls()');
  await new Promise(r=>setImmediate(r));let offset=sounds.length;await els.play.onclick();
- assert.equal(sounds.length-offset,1);let o=sounds[offset];assert(Math.abs(o.until-o.at-(.9+JSON.parse(fs.readFileSync('app/instruments/piano.json')).release+.01))<1e-6);
+ assert.equal(sounds.length-offset,1);let o=sounds[offset];assert(Math.abs(o.until-o.at-(.9+JSON.parse(fs.readFileSync('app/instruments/piano.json')).release))<1e-6);
  audio.currentTime=.7;timer();assert(run('running'));audio.currentTime=1.1;timer();assert(!run('running'));
  // Start halfway through a sustained note, between grid lines, at several zoom levels.
  for(const division of [0,2,3,16]){
@@ -54,7 +62,7 @@ function drag(x,y,ex,ey){finger('down',x,y);finger('move',ex,ey);finger('up',ex,
   offset=sounds.length;await els.play.onclick();
   assert(Math.abs(run('current')-3977.5)<1e-8);
   assert.equal(sounds.length-offset,1);o=sounds[offset];
-  assert(Math.abs(o.until-o.at-(342.5*(60/100/960)+JSON.parse(fs.readFileSync('app/instruments/piano.json')).release+.01))<1e-6);
+  assert(Math.abs(o.until-o.at-(342.5*(60/100/960)+JSON.parse(fs.readFileSync('app/instruments/piano.json')).release))<1e-6);
   els.play.onclick();
  }
  run('x=pixels(score[0].start+score[0].len)');offset=sounds.length;
@@ -80,7 +88,7 @@ function drag(x,y,ex,ey){finger('down',x,y);finger('move',ex,ey);finger('up',ex,
  send('down',1,100,150);send('down',2,200,250);
  send('move',1,75,100);send('move',2,225,300);near(run('col'),96);near(run('row'),34);
  send('down',3,250,300);send('up',2,225,300);send('up',3,250,300);send('up',1,75,100);
- near(run('cols'),Math.ceil(320/96)+1);assert.equal(run('contacts.size'),0);
+ near(run('cols'),Math.ceil(run('roll.clientWidth-keyWidth')/96)+1);assert.equal(run('contacts.size'),0);
  assert.equal(run('JSON.stringify(score)'),original);assert.equal(run('templateNote'),template);
  // A second finger interrupts an in-progress note drag and restores original data.
  run('x=0;y=0;rowIndexes.delete(score);score.splice(0);addNote(0,highestPitch-4);paint()');
@@ -93,20 +101,20 @@ function drag(x,y,ex,ey){finger('down',x,y);finger('move',ex,ey);finger('up',ex,
  for(const [scroll,py,out,pitch,label] of [[-1e6,40,-100,119,'Си8'],[1e6,535,700,24,'До1']]){
   run('rowIndexes.delete(score);score.splice(0);templateNote=null;x=0');
   roll.wheel({deltaX:0,deltaY:scroll,preventDefault(){}});flush();
-  assert(els.keys.children.some(k=>!k.hidden&&k.textContent===label));
-  tap(80,py);assert.equal(n().pitch,pitch);
-  finger('down',80,py);finger('move',80,out);finger('up',80,out);
+  assert(els.keys.children.some(k=>!k.hidden&&k.attrs['aria-label']===label));
+  tap(contentX(24),py);assert.equal(n().pitch,pitch);
+  finger('down',contentX(24),py);finger('move',contentX(24),out);finger('up',contentX(24),out);
   assert.equal(n().pitch,pitch);
  }
  // A tall viewport at minimum zoom can show all 96 keys. Empty space is inert.
  roll.clientHeight=2000;run('row=16;resize()');assert.equal(els.keys.children.length,96);
- assert.equal(els.keys.children[0].textContent,'Си8');assert.equal(els.keys.children.at(-1).textContent,'До1');
- tap(145,1900);assert.equal(run('score.length'),1);
+ assert.equal(els.keys.children[0].attrs['aria-label'],'Си8');assert.equal(els.keys.children.at(-1).attrs['aria-label'],'До1');
+ tap(contentX(89),1900);assert.equal(run('score.length'),1);
  // Grab the right half of a long off-grid note, just before its resize handle.
  run('roll.clientHeight=540;row=34;col=40;division=2;x=y=0;resize();rowIndexes.delete(score);score.length=0;score.push({start:300,len:1440,pitch:highestPitch-4,volume:50});paint()');
- finger('down',185,183);assert.equal(run('gesture.mode'),'move');assert.equal(n().start,300);
- finger('move',188,183);assert.equal(n().start,300);
- finger('move',225,183);assert.equal(n().start,780);finger('up',225,183);assert.equal(n().len,1440);
+ finger('down',contentX(129),183);assert.equal(run('gesture.mode'),'move');assert.equal(n().start,300);
+ finger('move',contentX(132),183);assert.equal(n().start,300);
+ finger('move',contentX(169),183);assert.equal(n().start,780);finger('up',contentX(169),183);assert.equal(n().len,1440);
  console.log('PASS immediate anchored drag, pitch/time drag, edge resize, volume, delete, 3/8 subdivisions, continuous resize/move, cancellation, scroll, tempo, playback, per-axis pinch, anchored midpoint and interrupted edits.');
  // The time/pitch index must not rescan unrelated notes during repeated pointer moves.
  run('rowIndexes.delete(score);score.length=0;selected=null;let checks=0;for(let i=0;i<24000;i++){const start=Math.floor(i/12)*480;score.push({get start(){checks++;return start},pitch:48+i%12,len:240,volume:100})};overlap(0,10,48);checks=0');

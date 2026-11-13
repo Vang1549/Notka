@@ -21,7 +21,7 @@ function boot(native=true,extras={},runtime={}){
   createBuffer(channels,length,sampleRate){const data=Array.from({length:channels},()=>new Float32Array(length));return {numberOfChannels:channels,length,sampleRate,duration:length/sampleRate,getChannelData:i=>data[i]}}
   createOscillator(){return {...this.createBufferSource(),frequency:param()}}
   decodeAudioData(bytes,ok,bad){
-   const b=Buffer.from(bytes);assert.equal(b.toString('ascii',0,4),'RIFF');assert([1,2].includes(b.readUInt16LE(22)));assert.equal(b.readUInt16LE(34),16);
+   const b=Buffer.from(bytes);if(b.toString('ascii',0,4)!=='RIFF'){assert(b.toString('ascii',0,3)==='ID3'||(b[0]===255&&(b[1]&224)===224),'Expected WAV or MP3');const resolve=()=>fail?bad(Error('decode failure')):ok({duration:3,rootSignature:b.subarray(0,90).toString('base64')});if(delay)pending.push(resolve);else queueMicrotask(resolve);return}assert.equal(b.toString('ascii',0,4),'RIFF');assert([1,2].includes(b.readUInt16LE(22)));assert.equal(b.readUInt16LE(34),16);
    const buffer={duration:b.readUInt32LE(40)/(b.readUInt32LE(24)*b.readUInt16LE(32)),rootSignature:b.toString('base64',44,90)};
    const resolve=()=>fail?bad(Error('decode failure')):ok(buffer);
    if(delay)pending.push(resolve);else queueMicrotask(resolve);
@@ -29,9 +29,10 @@ function boot(native=true,extras={},runtime={}){
  }
  const els={},doc={hidden:false,documentElement:new El(),createElement:()=>{const el=new El();Object.defineProperty(el,"id",{get(){return this._id},set(v){this._id=v;els[v]=this}});return el},createDocumentFragment:()=>Object.assign(new El(),{fragment:true}),getElementById:id=>els[id]??=new El(),addEventListener(k,f){this[k]=f}};
  const host={writeDraft(raw){draft=raw;return true},readDraft(){return ''},restoreRequested:()=>false};
- if(native)host.instrumentData=id=>{reads.push(id);return fs.readFileSync((id==='musicbox-floe'?'private-48/':'app/instruments/')+id+'.json','utf8')};
+ if(native)host.instrumentData=id=>id==='musicbox-floe'?null:fs.readFileSync('app/instruments/'+id+'.json','utf8');
  Object.assign(host,extras);
- const ctx=vm.createContext({document:doc,window:new El(),AudioContext:Audio,NotkaPlayer:host,atob:x=>Buffer.from(x,'base64').toString('binary'),btoa:x=>Buffer.from(x,'binary').toString('base64'),Uint8Array,setTimeout,clearTimeout,requestAnimationFrame:()=>1,cancelAnimationFrame(){},setInterval:f=>{interval=f;return 1},clearInterval:()=>interval=null,...runtime});
+ if(host.instrumentData){const read=host.instrumentData;host.instrumentData=id=>{reads.push(id);return read(id)}}
+ const ctx=vm.createContext({document:doc,window:new El(),AudioContext:Audio,NotkaPlayer:host,atob:x=>Buffer.from(x,'base64').toString('binary'),btoa:x=>Buffer.from(x,'binary').toString('base64'),Uint8Array,setTimeout:(fn,ms)=>{const id=setTimeout(fn,ms);if(ms>=60000)id.unref();return id},clearTimeout,requestAnimationFrame:()=>1,cancelAnimationFrame(){},setInterval:f=>{interval=f;return 1},clearInterval:()=>interval=null,...runtime});
  vm.runInContext(script,ctx);const run=s=>vm.runInContext(s,ctx);
  // Test-only aliases for edition 64's shortened functions; never shipped in the editor.
  if(process.env.NOTKA_EDITOR_MAP)for(const [name,packed] of Object.entries(JSON.parse(fs.readFileSync(process.env.NOTKA_EDITOR_MAP,'utf8')))){
@@ -47,7 +48,7 @@ if(require.main===module)(async()=>{
  const t=library();assert.equal(t.run('lanes[0].instrument'),'vsco-piano-1');
  t.run('openLaneInstrument()');await t.run("selectInstrument('lib-vsco-violin-1')");assert.equal(t.run('lanes[0].instrument'),'lib-vsco-violin-1');
  assert.equal(t.started.length,1);assert(t.started[0].loop);assert(t.started[0].loopEnd>t.started[0].loopStart);
- assert.equal(JSON.parse(t.draft).lanes[0].instrument,'lib-vsco-violin-1');
+ assert.equal(JSON.parse((t.run('flushDraft(true)'),t.draft)).lanes[0].instrument,'lib-vsco-violin-1');
  t.els.closeInstrument.onclick();assert.equal(t.run('voices.size'),0);
  t.run("score.push({pitch:60,start:0,len:960,volume:65})");t.els.addLane.onclick();
  t.run('openLaneInstrument()');await t.run("selectInstrument('lib-vsco-flute-1')");t.els.closeInstrument.onclick();

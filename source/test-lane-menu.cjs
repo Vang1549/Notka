@@ -2,7 +2,7 @@ const {boot}=require('./test-instruments.cjs'),assert=require('assert/strict');
 const t=boot(false),r=t.run;
 const flag=i=>t.els.ghostChoices.children[i].children[2].children[0];
 t.els.editLane.onclick();assert(t.els.deleteLane.disabled);assert(!flag(0).disabled);assert.equal(flag(0).checked,false);
-flag(0).checked=true;flag(0).onchange();assert.equal(r('lanes[0].ghost'),true);assert.equal(r('isBackground(lanes[0])'),false);assert.equal(flag(0).className,'deferred');assert.equal(JSON.parse(t.draft).lanes[0].ghost,true);
+flag(0).checked=true;flag(0).onchange();assert.equal(r('lanes[0].ghost'),true);assert.equal(r('isBackground(lanes[0])'),false);assert.equal(flag(0).className,'deferred');assert.equal(JSON.parse((t.run('flushDraft(true)'),t.draft)).lanes[0].ghost,true);
 t.els.addLane.onclick();assert.equal(r('isBackground(lanes[0])'),true);assert.equal(flag(0).className,'');assert.equal(flag(0).checked,true);
 r('chooseLane(0)');assert.equal(r('isBackground(lanes[0])'),false);assert(flag(0).checked);assert.equal(flag(0).className,'deferred');
 flag(0).checked=false;flag(0).onchange();r('chooseLane(1)');assert.equal(r('isBackground(lanes[0])'),false);

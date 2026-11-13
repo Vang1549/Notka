@@ -3,7 +3,7 @@ const {boot}=require('./test-instruments.cjs'),assert=require('assert/strict');
  const t=boot();
  t.run("bpm=120;score.push({pitch:60,start:0,len:960,volume:80},{pitch:64,start:960,len:960,volume:80})");
  t.els.stageLoop.onclick();assert.equal(t.els.stageLoop.attrs['aria-pressed'],'true');
- const restored=boot(true,{readDraft:()=>t.draft,restoreRequested:()=>true});assert.equal(restored.run('options.loop'),true);
+ t.run('flushDraft(true)');const restored=boot(true,{readDraft:()=>t.draft,restoreRequested:()=>true});assert.equal(restored.run('options.loop'),true);
  await t.run("play('visual')");const origin=t.run('playback.start');
  // Notes in upcoming rounds must descend before the boundary, with no scene reset.
  const future=t.run('sceneVisible(scene,.9).map(n=>n.start)');assert(future.includes(1920));

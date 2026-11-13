@@ -17,7 +17,7 @@ public class EditorStoreTest {
     static Map<String,byte[]> files(String body)throws Exception{
         Map<String,byte[]> files=new LinkedHashMap<>();files.put("index.html","<script src='runtime.js'></script>".getBytes("UTF-8"));files.put("runtime.js",body.getBytes("UTF-8"));
         JSONObject specs=new JSONObject();for(Map.Entry<String,byte[]> e:files.entrySet())specs.put(e.getKey(),new JSONObject().put("sha256",EditorStore.hash(e.getValue())).put("bytes",e.getValue().length));
-        String record=new JSONObject().put("kind","notka.bundle.1").put("code",72).put("version","0.72").put("minApk",64).put("files",specs).toString();
+        String record=new JSONObject().put("kind","notka.bundle.1").put("code",72).put("version","0.72").put("minApk",66).put("files",specs).toString();
         Signature sign=Signature.getInstance("SHA256withRSA");sign.initSign(key.getPrivate());sign.update(record.getBytes("UTF-8"));
         files.put("manifest.json",new JSONObject().put("record",record).put("signature",Base64.encodeToString(sign.sign(),Base64.NO_WRAP)).toString().getBytes("UTF-8"));return files;
     }
@@ -29,11 +29,23 @@ public class EditorStoreTest {
     public static void main(String[] args)throws Exception{
         KeyPairGenerator gen=KeyPairGenerator.getInstance("RSA");gen.initialize(2048);key=gen.generateKeyPair();File root=Files.createTempDirectory("notka-editor-test").toFile();
         try{
+            PublicKey current=java.security.cert.CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream("signing.der")).getPublicKey();
+            EditorStore.legacyKey=java.security.cert.CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream("signing-legacy.der")).getPublicKey();
+            JSONObject legacy=new JSONObject(new String(Files.readAllBytes(Paths.get("../dist/editions/71.json")),"UTF-8"));
+            if(!EditorStore.trustedSignature(legacy.getString("record"),legacy.getString("signature"),current))throw new AssertionError("Pinned legacy signature rejected");
+            if(EditorStore.trustedSignature(legacy.getString("record")+" ",legacy.getString("signature"),current))throw new AssertionError("Tampered legacy signature accepted");
+            JSONObject fresh=new JSONObject(new String(Files.readAllBytes(Paths.get("../dist/bundles/catalog.json")),"UTF-8"));
+            if(!EditorStore.signedBy(fresh.getString("record"),fresh.getString("signature"),current))throw new AssertionError("New catalog not signed by current key");
+            if(!EditorStore.trustedSignature(fresh.getString("record"),fresh.getString("signature"),current))throw new AssertionError("New signature rejected");
+            Signature untrusted=Signature.getInstance("SHA256withRSA");untrusted.initSign(key.getPrivate());untrusted.update("foreign".getBytes("UTF-8"));
+            if(EditorStore.trustedSignature("foreign",Base64.encodeToString(untrusted.sign(),Base64.NO_WRAP),current))throw new AssertionError("Foreign key accepted");
+            EditorStore.legacyKey=null;
+            System.out.println("PASS native current/legacy signature trust and tamper/foreign-key rejection.");
             char[] large=new char[300000];Arrays.fill(large,'x');byte[] valid=zip(files("//"+new String(large))),bad;
             String digest=EditorStore.hash(valid);String id=install(root,valid,digest,72);
             if(!id.equals(digest)||id.length()!=64)throw new AssertionError("Noncompact token");
             if(!install(root,valid,digest,72).equals(id))throw new AssertionError("Non-idempotent install");
-            reject(root,valid,"0"+digest.substring(1),72);
+            reject(root,valid,(digest.charAt(0)=='0'?"1":"0")+digest.substring(1),72);
             reject(root,valid,digest,73);
             Map<String,byte[]> corrupt=files("ok");corrupt.put("runtime.js","changed".getBytes("UTF-8"));bad=zip(corrupt);reject(root,bad,EditorStore.hash(bad),72);
             corrupt=files("ok");corrupt.remove("runtime.js");bad=zip(corrupt);reject(root,bad,EditorStore.hash(bad),72);

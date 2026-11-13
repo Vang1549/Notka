@@ -1,3 +1,4 @@
+from signing_identity import load_signing_key,verify_envelope
 """Sign immutable editor editions and the compatible version catalog, separate from host APK releases."""
 import base64,json,re,zipfile,hashlib,sys,subprocess
 from pathlib import Path
@@ -20,10 +21,10 @@ def sign(data,key):
 
 def publish_editor(dist,code,version,name=None):
     out=dist/'editions'
-    key=serialization.load_pem_private_key(Path('signing.pem').read_bytes(),password=None)
+    key=load_signing_key()
     catalog_path=out/'catalog.json'
     previous=json.loads(catalog_path.read_text())
-    key.public_key().verify(base64.b64decode(previous['signature']),previous['record'].encode(),padding.PKCS1v15(),hashes.SHA256())
+    verify_envelope(previous)
     catalog=json.loads(previous['record'])
     raw=Path('app/index.html').read_bytes()
     if code>=56:

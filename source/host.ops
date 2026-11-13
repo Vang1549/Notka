@@ -4,6 +4,7 @@ done
 
 method Main:onCreate:V:Bundle 6
 super Activity:onCreate:V:Bundle 4 5
+static Lstudio/notka/piano/Diagnostics;:install:V:Context 4
 new 0 Web
 direct Web:<init>:V:Context 0 4
 virtual Web:getSettings:Settings 0
@@ -19,9 +20,25 @@ virtual Activity:setContentView:V:View 4 0
 static Lstudio/notka/piano/SystemUi;:apply:V:Activity 4
 done
 
-method Main:onResume:V 1
-super Activity:onResume:V 0
-static Lstudio/notka/piano/SystemUi;:apply:V:Activity 0
+method Main:onResume:V 6 catch
+super Activity:onResume:V 5
+static Lstudio/notka/piano/SystemUi;:apply:V:Activity 5
+str 0 16908290
+static Integer:parseInt:I:String 0
+result 0
+virtual Activity:findViewById:View:I 5 0
+resultobj 0
+cast 0 Landroid/view/ViewGroup;
+const 1 0
+virtual Landroid/view/ViewGroup;:getChildAt:View:I 0 1
+resultobj 0
+cast 0 Web
+str 1 if(typeof panelResume==='function')panelResume()
+const 2 0
+virtual Web:evaluateJavascript:V:String:Landroid/webkit/ValueCallback; 0 1 2
+done
+error:
+exception 0
 done
 
 method Main:onWindowFocusChanged:V:Z 2
@@ -78,14 +95,9 @@ done
 # kind=0 gets only the channel. A validated positive release number chooses its versioned APK.
 method Main:begin:String:I 8 bridge catch
 zero 7 channel
-str 0 https://github.com/Vang1549/Notka/releases/download/apk-
+str 0 @ORIGIN@/Notka-
 static String:valueOf:String:I 7
 resultobj 1
-virtual String:concat:String:String 0 1
-resultobj 0
-str 2 /Notka-
-virtual String:concat:String:String 0 2
-resultobj 0
 virtual String:concat:String:String 0 1
 resultobj 0
 str 1 .apk
@@ -317,7 +329,7 @@ const 0 0
 ret 0
 
 method Main:openPage:Z 5 bridge catch
-str 0 https://github.com/Vang1549/Notka/releases
+str 0 @ORIGIN@
 static Uri:parse:Uri:String 0
 resultobj 0
 str 2 android.intent.action.VIEW
@@ -331,35 +343,11 @@ exception 0
 const 0 0
 ret 0
 
-method Main:valid:Z:String:String 9 bridge catch
-str 0 MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAr1GBkXBwtVRD6bm6J1uK++wEuq7PLb61sJGBStvBtR/v8xcksFuOzlKM6WzezRd5gbn7ab+gw6+OQ6iRtgo3YpGjKT0feNmj8vt7//IwNLerN2V0v8fPditanxQ012rxRX4qfkYPXMYVZcwY9ZUu3osQ/tQSIL+DbOAjY+rk6mTa5lhrHaGe2x0YK7OLoh13ooy2Xu5V6/habyL6J8pcJ2Y+iM/tDhIaKsrnpmHz45y6XlT2GWfAHmCuYT5wNwsBxxdrzcn2thA1Mef2wT3+/UYcG4BOKmcJ4238jRwBaRz+KvXU3POH6xhJt2ggLi6Hgo/5MivlZHvlBJT940/VnW7qPL2BiXHkMU0tqsAm6AcienPPLHmagWATAxZ9/QG6InY8ZJmmmT9PRbahFT3r6I7YrNAFkt7Ped3XS2VlYqtVu4aecf8cap8YLP3Od4nUp4725yJkEloIY1mnGEAdUpccCRXRYk7Kbu7gZlm+lGbYzGojzjqe4T8fSi9LqKxnAgMBAAE=
-const 1 0
-static B64:decode:Bytes:String:I 0 1
-resultobj 0
-new 2 X509Key
-direct X509Key:<init>:V:Bytes 2 0
-str 0 RSA
-static KeyFactory:getInstance:KeyFactory:String 0
-resultobj 0
-virtual KeyFactory:generatePublic:PublicKey:KeySpec 0 2
-resultobj 2
-str 0 SHA256withRSA
-static Signature:getInstance:Signature:String 0
-resultobj 0
-virtual Signature:initVerify:V:PublicKey 0 2
-str 3 UTF-8
-virtual String:getBytes:Bytes:String 7 3
-resultobj 3
-virtual Signature:update:V:Bytes 0 3
-static B64:decode:Bytes:String:I 8 1
-resultobj 3
-virtual Signature:verify:Z:Bytes 0 3
+method Main:valid:Z:String:String 5 bridge
+static Lstudio/notka/piano/EditorStore;:valid:Z:Context:String:String 2 3 4
 result 0
 ret 0
-error:
-exception 0
-const 0 0
-ret 0
+
 
 # Pass only a verified, bounded editor document in an explicit in-app Intent.
 method Main:openEditor:Z:String 4 bridge
@@ -440,6 +428,7 @@ done
 
 method Player:onCreate:V:Bundle 9 catch
 super Activity:onCreate:V:Bundle 7 8
+static Lstudio/notka/piano/Diagnostics;:install:V:Context 7
 zero 8 chosen
 goto finish
 chosen:
@@ -1452,35 +1441,11 @@ exception 0
 done
 
 
-method Player:soundValid:Z:String:String 9 bridge catch
-str 0 MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAr1GBkXBwtVRD6bm6J1uK++wEuq7PLb61sJGBStvBtR/v8xcksFuOzlKM6WzezRd5gbn7ab+gw6+OQ6iRtgo3YpGjKT0feNmj8vt7//IwNLerN2V0v8fPditanxQ012rxRX4qfkYPXMYVZcwY9ZUu3osQ/tQSIL+DbOAjY+rk6mTa5lhrHaGe2x0YK7OLoh13ooy2Xu5V6/habyL6J8pcJ2Y+iM/tDhIaKsrnpmHz45y6XlT2GWfAHmCuYT5wNwsBxxdrzcn2thA1Mef2wT3+/UYcG4BOKmcJ4238jRwBaRz+KvXU3POH6xhJt2ggLi6Hgo/5MivlZHvlBJT940/VnW7qPL2BiXHkMU0tqsAm6AcienPPLHmagWATAxZ9/QG6InY8ZJmmmT9PRbahFT3r6I7YrNAFkt7Ped3XS2VlYqtVu4aecf8cap8YLP3Od4nUp4725yJkEloIY1mnGEAdUpccCRXRYk7Kbu7gZlm+lGbYzGojzjqe4T8fSi9LqKxnAgMBAAE=
-const 1 0
-static B64:decode:Bytes:String:I 0 1
-resultobj 0
-new 2 X509Key
-direct X509Key:<init>:V:Bytes 2 0
-str 0 RSA
-static KeyFactory:getInstance:KeyFactory:String 0
-resultobj 0
-virtual KeyFactory:generatePublic:PublicKey:KeySpec 0 2
-resultobj 2
-str 0 SHA256withRSA
-static Signature:getInstance:Signature:String 0
-resultobj 0
-virtual Signature:initVerify:V:PublicKey 0 2
-str 3 UTF-8
-virtual String:getBytes:Bytes:String 7 3
-resultobj 3
-virtual Signature:update:V:Bytes 0 3
-static B64:decode:Bytes:String:I 8 1
-resultobj 3
-virtual Signature:verify:Z:Bytes 0 3
+method Player:soundValid:Z:String:String 5 bridge
+static Lstudio/notka/piano/EditorStore;:valid:Z:Context:String:String 2 3 4
 result 0
 ret 0
-error:
-exception 0
-const 0 0
-ret 0
+
 
 # Pass only a verified, bounded editor document in an explicit in-app Intent.
 
@@ -2493,3 +2458,68 @@ error:
 exception 0
 const 0 0
 retobj 0
+
+method Main:diagnosticsConfig:String 2 bridge
+static Lstudio/notka/piano/Diagnostics;:config:String:Context 1
+resultobj 0
+retobj 0
+
+method Main:diagnosticsConfigure:Z:String 3 bridge
+static Lstudio/notka/piano/Diagnostics;:configure:Z:Context:String 1 2
+result 0
+ret 0
+
+method Main:diagnosticsReport:String 2 bridge
+static Lstudio/notka/piano/Diagnostics;:report:String:Context 1
+resultobj 0
+retobj 0
+
+method Main:diagnosticsStore:Z:String 3 bridge
+static Lstudio/notka/piano/Diagnostics;:store:Z:Context:String 1 2
+result 0
+ret 0
+
+method Main:diagnosticsClear:Z 2 bridge
+static Lstudio/notka/piano/Diagnostics;:clear:Z:Context 1
+result 0
+ret 0
+
+method Player:diagnosticsConfig:String 2 bridge
+static Lstudio/notka/piano/Diagnostics;:config:String:Context 1
+resultobj 0
+retobj 0
+
+method Player:diagnosticsConfigure:Z:String 3 bridge
+static Lstudio/notka/piano/Diagnostics;:configure:Z:Context:String 1 2
+result 0
+ret 0
+
+method Player:diagnosticsReport:String 2 bridge
+static Lstudio/notka/piano/Diagnostics;:report:String:Context 1
+resultobj 0
+retobj 0
+
+method Player:diagnosticsStore:Z:String 3 bridge
+static Lstudio/notka/piano/Diagnostics;:store:Z:Context:String 1 2
+result 0
+ret 0
+
+method Player:diagnosticsClear:Z 2 bridge
+static Lstudio/notka/piano/Diagnostics;:clear:Z:Context 1
+result 0
+ret 0
+
+method Main:diagnosticsExport:Z 2 bridge
+static Lstudio/notka/piano/Diagnostics;:export:Z:Activity 1
+result 0
+ret 0
+
+method Main:diagnosticsStatus:String 2 bridge
+static Lstudio/notka/piano/Diagnostics;:status:String:Context 1
+resultobj 0
+retobj 0
+
+method Main:onActivityResult:V:I:I:Intent 4
+super Activity:onActivityResult:V:I:I:Intent 0 1 2 3
+static Lstudio/notka/piano/Diagnostics;:result:V:Activity:I:I:Intent 0 1 2 3
+done

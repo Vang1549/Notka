@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://cdn.azul.com/zulu/bin/zulu21.54.109-ca-jdk21.0.13.0.3-linux_x64.tar.gz",
+    "file": "zulu21.54.109-ca-jdk21.0.13.0.3-linux_x64.tar.gz",
+    "sha256": "abe544103f1c4f0cc4b8997c0cac847eb1e842382eef57ce361c982fb0a3de11"
+  },
+  {
+    "url": "https://nodejs.org/dist/v24.22.3/node-v24.22.3-linux-x64.tar.xz",
+    "file": "node-v24.22.3-linux-x64.tar.xz",
+    "sha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+  },
+  {
+    "url": "https://bootstrap.pypa.io/get-pip.py",
+    "file": "get-pip.py",
+    "sha256": "356e0d0de21cdc348c3394084d90939b85e4246c4d14c76aee6ca4f46646ea98"
+  }
+]

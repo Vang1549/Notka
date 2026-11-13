@@ -1,3 +1,4 @@
+from signing_identity import load_signing_key,verify_envelope
 """Stage only the APK and its signed release record for the update host."""
 import argparse,base64,hashlib,json,shutil,zipfile
 from pathlib import Path
@@ -13,7 +14,7 @@ data=dict(app='studio.notka.piano',code=args.code,version=args.version,sha256=b6
 if (args.panel_code is None)!=(args.panel_version is None):raise ValueError('Provide both panel code and version')
 if args.panel_code is not None:data['panel']=dict(code=args.panel_code,version=args.panel_version)
 record=json.dumps(data,separators=(',',':'))
-key=serialization.load_pem_private_key(Path('signing.pem').read_bytes(),password=None)
+key=load_signing_key()
 sig=key.sign(record.encode(),padding.PKCS1v15(),hashes.SHA256())
 shutil.copyfile(apk,args.dist/f'Notka-{args.code}.apk')
 (args.dist/'channel.json').write_text(json.dumps(dict(record=record,signature=b64(sig))))

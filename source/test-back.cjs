@@ -12,7 +12,7 @@ const tap=(el,target=el)=>{el.onpointerdown({target});el.onclick({target,stopPro
 (async()=>{
  const t=setup();await t.run("play('visual')");t.els.stagePrefs.onclick();
  t.els.speed.value='1.7';t.els.speed.oninput();back(t);
- assert(t.els.preferences.hidden);assert(!t.els.stage.hidden);assert.equal(JSON.parse(t.draft).scene.speed,1.7);
+ assert(t.els.preferences.hidden);assert(!t.els.stage.hidden);assert.equal(JSON.parse((t.run('flushDraft(true)'),t.draft)).scene.speed,1.7);
  back(t);assert(t.els.stage.hidden);assert(!t.els.exitSheet||t.els.exitSheet.hidden);assert.equal(t.getExits(),0);
  back(t);assert(!t.els.exitSheet.hidden);back(t);assert(t.els.exitSheet.hidden);assert.equal(t.getExits(),0);
  // Nested deletion confirmation consumes one Back/outside tap, then its parent closes.

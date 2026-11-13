@@ -3,3 +3,5 @@ restoreSourceStep();restoreSoundCatalog();renderLanes();resize();controls();
 window.addEventListener('pagehide',suspendEditor);
 if(!trackHost)byId('status').textContent=panelHint;
 else if(trackHost.restoreRequested()){showPrefs(false,byId('prefs'));byId('loadTrack').onclick();recoverDraft()}
+
+diagnostics.start();

@@ -20,8 +20,8 @@ async function prepareInstrument(id){
  if(!def)throw Error('Инструмент отсутствует в каталоге. Подключись к интернету и открой редактор заново.');
  if(!def.asset||!sampleHost)throw instrumentError();
  const pending=(async()=>{
-  const data=readInstrumentData(def);checkBank(data,def);
-  const bank=await decodeInstrumentBank(data,def);
+  const started=diagnostics.enabled?diagnostics.now():0;const data=readInstrumentData(def);checkBank(data,def);
+  const bank=await decodeInstrumentBank(data,def);if(diagnostics.enabled)diagnostics.operation('instrumentLoad',diagnostics.now()-started);
   instrumentCache.set(id,bank);trimInstrumentCache(id);return bank;
  })();
  instrumentLoads.set(id,pending);
@@ -75,12 +75,28 @@ function envelopePlan(bank,s,length,volume){
  const value=t=>t<=length?before(t):Math.max(0,offLevel*(1-(t-length)/release));
  return {stops,value,release};
 }
+// Banks are immutable after decode. Keep variant groups and nearest-root results
+// outside the audio callback; WeakMap entries disappear with evicted banks.
+const bankLookups=new WeakMap(),preparedVoiceSettings=new WeakSet();
+function prepareVoiceSettings(raw){const s=Object.freeze(soundSettings(raw));preparedVoiceSettings.add(s);return s}
+function nearestSample(bank,pitch,variant){
+ let index=bankLookups.get(bank);
+ if(!index||index.samples!==bank.samples||index.length!==bank.samples.length||index.variants!==(bank.roundRobins||1)){
+  const pools=Array.from({length:bank.roundRobins||1},()=>[]);
+  for(const sample of bank.samples)if(pools[sample.rr||0])pools[sample.rr||0].push(sample);
+  index={samples:bank.samples,length:bank.samples.length,variants:bank.roundRobins||1,pools,nearest:pools.map(()=>new Map())};bankLookups.set(bank,index);
+ }
+ const group=variant%index.variants,cache=index.nearest[group];
+ if(cache.has(pitch))return cache.get(pitch);
+ const pool=index.pools[group];let sample=pool[0]||bank.samples[0];
+ for(const candidate of pool)if(Math.abs(candidate.root-pitch)<Math.abs(sample.root-pitch))sample=candidate;
+ cache.set(pitch,sample);return sample;
+}
 function createInstrumentVoice(context,destination,bank,rawSettings,pitch,when,length,volume,elapsed=0,variant=0){
- const s=soundSettings(rawSettings);if(!volume||!s.volume)return;
+ const s=preparedVoiceSettings.has(rawSettings)?rawSettings:soundSettings(rawSettings);if(!volume||!s.volume)return;
  if(s.filter!=='off'&&!context.createBiquadFilter)throw Error('Для фильтра обнови Android System WebView.');
  if(s.pan!==0&&!context.createStereoPanner)throw Error('Для панорамы обнови Android System WebView.');
- const tuned=pitch+s.transpose,group=variant%(bank.roundRobins||1),pool=bank.samples.filter(sample=>(sample.rr||0)===group);let sample=pool[0]||bank.samples[0];
- for(const candidate of pool)if(Math.abs(candidate.root-tuned)<Math.abs(sample.root-tuned))sample=candidate;
+ const tuned=pitch+s.transpose,sample=nearestSample(bank,tuned,variant);
  const buffer=s.reverse?reverseBuffer(context,sample.buffer):sample.buffer,rate=Math.pow(2,(tuned-sample.root+(sample.tune+s.fine)/100)/12),low=buffer.duration*s.start/100,high=buffer.duration*s.end/100;
  let loopLow=0,loopHigh=0;
  if(sample.loop&&s.loop==='original'){
@@ -120,5 +136,5 @@ async function preview(pitch,volume=100){
  try{
   await unlock();await prepareInstrument(id);
   if(token===previewSerial&&epoch===generation&&lane===lanes[activeLane]&&id===(lane.instrument||'vsco-piano-1')&&!running&&!document.hidden)instrumentNote(id,pitch,audio.currentTime+.006,.48,volume,laneInstrument(lane).settings);
- }catch(e){if(token===previewSerial&&epoch===generation){byId('status').textContent=e.message||'Звук недоступен.'}}
+ }catch(e){diagnostics.error('preview',e);if(token===previewSerial&&epoch===generation){byId('status').textContent=e.message||'Звук недоступен.'}}
 }

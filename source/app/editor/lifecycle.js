@@ -25,7 +25,7 @@ try{
  document.documentElement.setAttribute('data-note-depth',String(colors.depth===true));
  document.documentElement.style.colorScheme=colors.scheme==='light'?'light':'dark';
 }catch{}
-function suspendEditor(){cancelLaneHold();instrumentRequest++;previewSerial++;contacts.clear();pinch=null;finishGesture(true);flushDraft();stop()}
-document.addEventListener('visibilitychange',()=>{sourceVisibility();if(document.hidden)suspendEditor()});
+function suspendEditor(){stopLibraryAudition();cancelInstrumentHold();stopSceneDemo();stopSceneOverview();cancelLaneHold();instrumentRequest++;previewSerial++;contacts.clear();pinch=null;finishGesture(true);flushDraft(true);diagnostics.suspend();stageScrub=null;if(playback?.visual)pauseStage();else stop()}
+document.addEventListener('visibilitychange',()=>{sourceVisibility();if(document.hidden)suspendEditor();else if(!byId('preferences').hidden&&!byId('visualOptions').hidden){startSceneOverview();queueSceneDemo()}});
 window.addEventListener('resize',resize);
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(resize).observe(roll);

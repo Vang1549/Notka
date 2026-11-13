@@ -63,15 +63,30 @@ public final class EditorStore {
     static void remove(File file){File[] children=file.listFiles();if(children!=null)for(File f:children)remove(f);file.delete();}
     static boolean name(String s){return s.matches("[A-Za-z0-9][A-Za-z0-9_.-]{0,79}\\.(html|js|css|txt)");}
     static boolean token(String s){return s!=null&&s.matches("(?:legacy-)?[0-9a-f]{64}");}
+    static volatile PublicKey legacyKey;
     static PublicKey key(Context c)throws Exception{
+        try(InputStream in=c.getAssets().open("editor-signing-legacy.der")){
+            legacyKey=CertificateFactory.getInstance("X.509").generateCertificate(in).getPublicKey();
+        }
         try(InputStream in=c.getAssets().open("editor-signing.der")){return CertificateFactory.getInstance("X.509").generateCertificate(in).getPublicKey();}
+    }
+    static boolean signedBy(String record,String encoded,PublicKey key){
+        try{
+            Signature verifier=Signature.getInstance("SHA256withRSA");verifier.initVerify(key);verifier.update(record.getBytes("UTF-8"));
+            return verifier.verify(Base64.decode(encoded,Base64.DEFAULT));
+        }catch(Exception e){return false;}
+    }
+    static boolean trustedSignature(String record,String signature,PublicKey current){
+        return signedBy(record,signature,current)||(legacyKey!=null&&signedBy(record,signature,legacyKey));
+    }
+    public static boolean valid(Context c,String record,String signature){
+        try{return trustedSignature(record,signature,key(c));}catch(Exception e){return false;}
     }
     static JSONObject manifest(byte[] raw,PublicKey key)throws Exception{
         JSONObject envelope=new JSONObject(text(raw));String record=envelope.getString("record");
-        Signature verifier=Signature.getInstance("SHA256withRSA");verifier.initVerify(key);verifier.update(record.getBytes("UTF-8"));
-        if(!verifier.verify(Base64.decode(envelope.getString("signature"),Base64.DEFAULT)))throw new IOException("Editor signature mismatch");
+        if(!trustedSignature(record,envelope.getString("signature"),key))throw new IOException("Editor signature mismatch");
         JSONObject info=new JSONObject(record);
-        if(!"notka.bundle.1".equals(info.getString("kind"))||info.getInt("code")<1||info.getInt("minApk")>64||!info.getString("version").matches("[0-9]+(\\.[0-9]+){1,3}"))throw new IOException("Unsupported editor bundle");
+        if(!"notka.bundle.1".equals(info.getString("kind"))||info.getInt("code")<1||info.getInt("minApk")>69||!info.getString("version").matches("[0-9]+(\\.[0-9]+){1,3}"))throw new IOException("Unsupported editor bundle");
         JSONObject files=info.getJSONObject("files");
         if(files.length()<2||files.length()>64||!files.has("index.html")||!files.has("runtime.js"))throw new IOException("Incomplete editor");
         int total=0;Iterator<String> names=files.keys();

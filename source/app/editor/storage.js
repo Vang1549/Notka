@@ -6,6 +6,8 @@ function encodeTrack(draft=false){
  reconcileRack();return JSON.stringify({format:'notka.track',version:3,ppq:PPQ,bpm,division,noteDivision,viewDivision,activeLane,lanes,instruments:projectInstruments,scene:cleanSceneOptions(options),instrumentSources:instrumentReferences(lanes),...(draft&&songFile?{draftFile:songFile}:{})});
 }
 function readTrack(raw){
+ const started=diagnostics.enabled?diagnostics.now():0;
+ try{
  if(!raw)throw Error('Файл пуст, слишком велик или недоступен.');
  const t=JSON.parse(raw),integer=Number.isSafeInteger;
  if(t?.format!=='notka.track'||![1,2,3].includes(t.version)||t.ppq!==PPQ||!integer(t.bpm)||t.bpm<40||t.bpm>220||
@@ -35,6 +37,7 @@ function readTrack(raw){
   lane.instrumentId=item.id;
  }
  return {bpm:t.bpm,division:t.division,noteDivision:t.noteDivision??0,viewDivision:t.viewDivision??0,activeLane:active,lanes:cleanLanes,instruments:rack,scene:cleanSceneOptions(t.scene)};
+ }catch(e){diagnostics.error('trackParse',e);throw e}finally{if(diagnostics.enabled)diagnostics.operation('trackParse',diagnostics.now()-started)}
 }
 function readNotes(notes){
  const integer=Number.isSafeInteger;
@@ -46,18 +49,25 @@ function readNotes(notes){
  });
  return clean;
 }
-function flushDraft(){
- clearTimeout(draftTimer);draftTimer=0;
+const draftInterval=60000;
+function scheduleDraft(delay=draftInterval){
+ if(!draftTimer&&draftPending&&trackHost)draftTimer=setTimeout(()=>{draftTimer=0;flushDraft()},delay);
+}
+function flushDraft(force=false){
  if(!draftPending||!trackHost)return;
- if(gesture?.n){draftTimer=setTimeout(flushDraft,180);return}
- try{if(trackHost.writeDraft(encodeTrack(true))){draftPending=false;return}}catch{}
+ // Closing popovers and releasing sliders must not bypass the minute interval.
+ if(draftTimer&&!force)return;
+ clearTimeout(draftTimer);draftTimer=0;
+ if(gesture?.n){scheduleDraft(1000);return}
+ const started=diagnostics.enabled?diagnostics.now():0;
+ try{
+  if(trackHost.writeDraft(encodeTrack(true))){draftPending=false;if(diagnostics.enabled)diagnostics.operation('autosave',diagnostics.now()-started);return}
+  diagnostics.error('autosave','Не удалось записать автокопию.');
+ }catch(e){diagnostics.error('autosave',e)}
  byId('status').textContent='Не удалось записать автокопию. Проверь свободное место.';
+ scheduleDraft();
 }
-function trackChanged(defer=false){
- trackStarted=true;draftPending=true;
- if(defer){if(!draftTimer)draftTimer=setTimeout(flushDraft,180)}
- else flushDraft();
-}
+function trackChanged(){trackStarted=true;draftPending=true;scheduleDraft()}
 function applyTrack(t){
  stop();finishGesture(true);contacts.clear();pinch=null;clearSelection();templateNote=null;
  songFile=t.songFile||null;projectInstruments=t.instruments;lanes=t.lanes;activeLane=t.activeLane;score=lanes[activeLane].notes;renderLanes();

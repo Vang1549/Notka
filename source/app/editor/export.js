@@ -1,6 +1,6 @@
 const exportHost=trackHost&&['beginExport','appendExport','finishExport','cancelExport'].every(k=>typeof trackHost[k]==='function')?trackHost:null;
 let exportJob=null;
-const editorVersion='0.72';
+const editorVersion='0.82';
 const exportBase=name=>name.trim().replace(/\.notka$/i,'').replace(/(?:\(v\d+(?:\.\d+)+\))+$/i,'').trim();
 const exportRate=32000,exportLimit=256*1024*1024;
 const exportText=s=>new Uint8Array(Array.from(unescape(encodeURIComponent(s)),c=>c.charCodeAt(0)));
@@ -138,7 +138,7 @@ async function exportMusic(withAudio){
   exportCheck(job);const stamp=new Date().toISOString().replace(/[-:]/g,'').replace('T','-').slice(0,15),file=name+'-'+stamp+(withAudio?'.zip':'.mid');
   if(!exportHost.finishExport(file))throw Error('Не удалось сохранить экспорт. Проверь свободное место.');
   byId('exportStatus').textContent='Готово: '+file+'\n'+folderHint();
- }catch(e){if(!notka)exportHost.cancelExport();byId('exportStatus').textContent=e.message||'Не удалось экспортировать трек.'}
+ }catch(e){diagnostics.error('export',e);if(!notka)exportHost.cancelExport();byId('exportStatus').textContent=e.message||'Не удалось экспортировать трек.'}
  finally{exportJob=null;exportBusy(false)}
 }
 byId('exportNotka').onclick=()=>exportMusic('notka');byId('exportMidi').onclick=()=>exportMusic(false);byId('exportAudio').onclick=()=>exportMusic(true);
@@ -150,7 +150,7 @@ byId('stageExport').onclick=()=>{
  try{
   if(!mediaExport){const script=document.createElement('script');script.textContent=NotkaPlayer.mediaExportScript();document.body.append(script);script.remove();mediaExport=window.NotkaMediaExport({
    host:exportHost,snapshot:()=>({track:readTrack(encodeTrack()),name:exportBase(songFile||'Мой трек'),folder:folderHint()}),
-   stop:()=>{stop();flushDraft()},busy:v=>{fileBusy=v;trackActions()},
+   stop:()=>{stageScrub=null;if(playback?.visual)pauseStage();else stop();flushDraft()},busy:v=>{fileBusy=v;trackActions()},
    prepare:async id=>{if(!audio)await unlock();return prepareInstrument(id)},bank:id=>instrumentCache.get(id),
    settings:(lane,track)=>laneInstrument(lane,track.instruments).settings,voice:createInstrumentVoice,
    layout:keyLayout,render:renderScene,travel:sceneTravel,write:exportWrite,wave:renderWave

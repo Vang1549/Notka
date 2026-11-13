@@ -1,5 +1,5 @@
-node_modules/
-.native-tools/
+node_modules
+.native-tools
 .native-build/
 __pycache__/
 *.pyc
@@ -9,9 +9,5 @@ signing.pem
 private-*/
 source/Notka-*.apk
 source/app/media-export.bundle.js
-
-/dist/Notka-*.apk
-/publication-cache/
-
-/transport/
-/release-assets/
+/outputs/
+/work/

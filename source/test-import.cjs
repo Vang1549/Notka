@@ -1,6 +1,6 @@
-if(!require('fs').existsSync('private-48/musicbox-floe.json')){console.log('SKIP private Music Box fixture is not distributed; public-bank playback is tested separately.');process.exit(0)}
+const musicbox=require('./test-support/musicbox.cjs');
 const {boot,settle}=require('./test-instruments.cjs'),{installedSounds}=require('./test-sound-host.cjs'),assert=require('assert/strict'),fs=require('fs');
-const id='lib-floe-musicbox-1',bank=fs.readFileSync('private-48/musicbox-floe.json','utf8'),pause=ms=>new Promise(r=>setTimeout(r,ms));
+const id='lib-floe-musicbox-1',bank=musicbox.raw,pause=ms=>new Promise(r=>setTimeout(r,ms));
 function setup(){
  const disk=new Map(),state={result:'picked',raw:bank,saved:null,picks:0,commits:0,failSave:false};
  const bridge={...installedSounds(),soundRead:k=>disk.get(k)||null,soundWrite:(k,v)=>{disk.set(k,v);return true},soundExists:()=>false,
@@ -10,7 +10,7 @@ function setup(){
   deleteImportedInstrument:()=>{state.saved=null;return true},importedBytes:()=>String(state.saved?.length||0)};
  const t=boot(true,bridge);t.run('renderInstruments()');return {t,state,bridge,disk};
 }
-function split(t){return t.els.instrumentChoices.children.find(x=>x.className==='instrument-row'&&x.children[0].textContent.includes('FrozenPlain')).children[2]}
+function split(t){return t.els.instrumentChoices.children.find(x=>x.className==='instrument-row'&&x.children[0].textContent.includes('FrozenPlain')).children.find(x=>x.className?.includes('source-split'))}
 function visit(t){const group=split(t);group.children[0].onclick();assert(group.children[1].disabled);t.doc.hidden=true;t.doc.visibilitychange();t.doc.hidden=false;t.doc.visibilitychange();t.run('renderInstruments()');assert(!split(t).children[1].disabled)}
 (async()=>{
  let {t,state,bridge,disk}=setup();assert(split(t).children[1].disabled);await t.run('importMusicbox()');assert.equal(state.picks,0);

@@ -1,0 +1,10 @@
+{
+  "apk_version": "0.69",
+  "editor_version": "0.82",
+  "apk_sha256": "8d3d486f57f4cc113558d10e67c94a978bab1b25bb5ce94b5f51f3808dccf7d6",
+  "certificate_sha256": "a68026e80ca5d32cb3951f2c3a51e2a222c602eea27950588b947a340a7930ef",
+  "automated_checks": true,
+  "android_device_tested": false,
+  "private_key_in_outputs": false,
+  "validation_log": "release-reports/0.69-checks.log"
+}

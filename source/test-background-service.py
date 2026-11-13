@@ -41,6 +41,10 @@ service,flags=methods(Path('.native-build/classes.dex').read_bytes())
 links=[m for m in host if m[0]=='Lstudio/notka/piano/ExportRuntime;']
 assert len(links)==6
 for m in links:assert m in flags and flags[m]&9==9,m
+# Diagnostics crosses the same DEX boundary in both activities, including SAF results.
+diag_links=[m for m in host if m[0]=='Lstudio/notka/piano/Diagnostics;']
+assert len(diag_links)==9
+for m in diag_links:assert m in flags and flags[m]&9==9,m
 # Resolve the immersive callbacks across DEX files too (including old Android).
 ui_links=[m for m in host if m[0]=='Lstudio/notka/piano/SystemUi;']
 assert len(ui_links)==2
@@ -49,7 +53,8 @@ file_links=[m for m in host if m[0]=='Lstudio/notka/piano/StorageFiles;']
 assert len(file_links)==2
 for m in file_links:assert m in flags and flags[m]&9==9,m
 editor_links=[m for m in host if m[0]=='Lstudio/notka/piano/EditorStore;']
-assert len(editor_links)==8
+assert len(editor_links)==9
+assert ('Lstudio/notka/piano/EditorStore;','valid','(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Z') in editor_links
 for m in editor_links:assert m in flags and flags[m]&9==9,m
 for name,proto in [('onBind','(Landroid/content/Intent;)Landroid/os/IBinder;'),('onStartCommand','(Landroid/content/Intent;II)I'),('onDestroy','()V'),('onTaskRemoved','(Landroid/content/Intent;)V'),('onTimeout','(II)V')]:
  assert flags[('Lstudio/notka/piano/ExportService;',name,proto)]&1

@@ -9,10 +9,10 @@
 #themePreview{height:56px;position:relative;overflow:hidden;border:1px solid var(--border);border-radius:8px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),var(--line) calc(12.5% - 1px),var(--line) 12.5%),repeating-linear-gradient(0deg,var(--cell) 0,var(--cell) 13px,var(--black) 13px,var(--black) 26px)}#themePreview i{position:absolute;height:10px;background:var(--accent);border-radius:3px;box-shadow:inset 0 0 0 1px #0004}#themePreview i:nth-child(1){left:12.5%;bottom:3px;width:24%}#themePreview i:nth-child(2){left:37.5%;bottom:16px;width:12%}#themePreview i:nth-child(3){left:50%;bottom:29px;width:36%}#themePreview:after{content:"";position:absolute;top:0;bottom:0;left:58%;width:2px;background:var(--cursor)}
 .theme-choice{display:flex;align-items:center;gap:8px}.theme-choice select{flex:1;min-width:0}.theme-choice #addTheme{width:42px;font-size:24px;padding:0}#themeName{min-width:0;width:60%;padding:7px;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:6px}#themePreview[data-note-depth="true"] i{background:linear-gradient(to bottom,#ffffff66,transparent 45%,#00000033),var(--accent);box-shadow:inset 0 1px 0 #ffffff88,inset 0 -1px 0 #0007,0 1px 2px #0005}
 #panelHome{display:grid;gap:10px}#filePanel{display:grid;gap:10px}#fileGroups details{border-top:1px solid var(--border);padding:9px 0}#fileGroups summary{font-weight:650;padding:6px 0;cursor:pointer}#fileGroups p{margin:5px 0}#fileStatus{white-space:pre-line;overflow-wrap:anywhere}#fileStatus:empty{display:none}.file-search{display:flex;gap:6px;margin:10px 0}.file-search input{width:100%;min-width:0;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font:inherit}.file-search .button{width:44px;flex:none}.file-row{display:flex;gap:6px;align-items:center;padding:8px 0}.file-row label{display:flex;align-items:center;gap:8px;min-width:0;flex:1;min-height:44px}.file-row label>span{min-width:0;overflow-wrap:anywhere}.file-row input{width:20px;height:20px;flex:none;accent-color:var(--accent)}.file-row small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.file-row .file-trash{width:44px;flex:none;display:grid;place-items:center;padding:0;color:#ef6666}.file-select{font-size:12px;min-height:36px;margin:5px 0}.file-danger{color:#ef6666}#fileConfirmNames{max-height:35vh;overflow:auto;padding-left:20px;overflow-wrap:anywhere}.update-card{overscroll-behavior:contain}#deleteFiles{margin:0 0 8px}
-</style><aside id="compat" style="background:#19231c;color:#fff;padding:16px;font:16px sans-serif">Для запуска обнови Android System WebView (или Chrome, если он используется как WebView) и снова открой «Нотку».</aside><main><section class="card"><div class="top"><span class="badge"><b>♫</b> Нотка</span><button id="updates" class="button">Настройки</button></div><h1>Выбор версии</h1>
+#diagnosticsPanel{display:grid;gap:12px}#diagnosticsPanel label{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}#diagnosticsPanel input{width:22px;height:22px;flex:none;accent-color:var(--accent)}#diagnosticsSummary,#diagnosticsStatus{white-space:pre-line;overflow-wrap:anywhere}</style><aside id="compat" style="background:#19231c;color:#fff;padding:16px;font:16px sans-serif">Для запуска обнови Android System WebView (или Chrome, если он используется как WebView) и снова открой «Нотку».</aside><main><section class="card"><div class="top"><span class="badge"><b>♫</b> Нотка</span><button id="updates" class="button">Настройки</button></div><h1>Выбор версии</h1>
 <button id="last" class="button play"><span class="action-title">Запустить последнюю загруженную версию:</span><span class="edition-label" id="localVersion"></span></button><button id="others" class="button" aria-expanded="false">Другие версии ▾</button><div id="versions" hidden><div id="choices"></div></div>
-<p id="launchStatus" role="status"></p><button class="button" id="cancelFetch" hidden>Отменить загрузку</button><footer class="version-footer" aria-label="Версии и обновления"><div class="version-item"><p id="editorVersions">Редактор — (—)</p><button id="latest" class="button play" aria-label="Обновить редактор" hidden>Обновить</button></div><p id="catalogStatus" role="status"></p><div class="version-item"><p id="apkVersions">APK 0.64 (—)</p><button class="button play" id="downloadUpdate" aria-label="Обновить APK" hidden>Обновить</button></div><div class="version-item"><p id="panelVersions">Панель 0.56 (—)</p><button class="button play" id="downloadPanel" aria-label="Обновить панель" hidden>Обновить</button></div><p id="apkBundleHint" hidden>Обновление APK также обновит редактор и панель.</p><p id="updateState" role="status"></p></footer></section></main>
-<section id="updateBox" role="dialog" aria-modal="true" aria-labelledby="updateTitle" hidden><div class="update-card"><div class="meta"><h2 id="updateTitle">Настройки панели</h2><button class="button" id="closeUpdate" aria-label="Закрыть">✕</button></div><div id="panelHome"><button class="button" id="openFiles">Скачанные файлы</button><button class="button" id="openThemes">Темы</button><button class="button" id="releasePage">Страница выпусков ↗</button></div><div id="themePanel" hidden><div id="themeSettings"><div class="theme-choice"><label for="appearance">Тема</label><select id="appearance"></select><button class="button" type="button" id="addTheme" aria-label="Добавить свою тему">+</button></div><label id="themeNameRow" hidden>Название <input id="themeName" maxlength="40" autocomplete="off"></label><div id="themePreview" role="img" aria-label="Предпросмотр нотной сетки"><i></i><i></i><i></i></div>
+<p id="launchStatus" role="status"></p><button class="button" id="cancelFetch" hidden>Отменить загрузку</button><footer class="version-footer" aria-label="Версии и обновления"><div class="version-item"><p id="editorVersions">Редактор — (—)</p><button id="latest" class="button play" aria-label="Обновить редактор" hidden>Обновить</button></div><p id="catalogStatus" role="status"></p><div class="version-item"><p id="apkVersions">APK 0.68 (—)</p><button class="button play" id="downloadUpdate" aria-label="Обновить APK" hidden>Обновить</button></div><div class="version-item"><p id="panelVersions">Панель 0.60 (—)</p><button class="button play" id="downloadPanel" aria-label="Обновить панель" hidden>Обновить</button></div><p id="apkBundleHint" hidden>Обновление APK также обновит редактор и панель.</p><p id="updateState" role="status"></p></footer></section></main>
+<section id="updateBox" role="dialog" aria-modal="true" aria-labelledby="updateTitle" hidden><div class="update-card"><div class="meta"><h2 id="updateTitle">Настройки панели</h2><button class="button" id="closeUpdate" aria-label="Закрыть">✕</button></div><div id="panelHome"><button class="button" id="openFiles">Скачанные файлы</button><button class="button" id="openThemes">Темы</button><button class="button" id="openDiagnostics">Диагностика</button><button class="button" id="releasePage">Страница выпусков ↗</button></div><div id="diagnosticsPanel" hidden><label><span>Записывать диагностику</span><input type="checkbox" id="diagnosticsEnabled"></label><label><span>Показывать показатели на экране</span><input type="checkbox" id="diagnosticsOverlay"></label><p>FPS, время кадров, память звука и ошибки редактора. Отчёт хранится на телефоне; отправить его можно вручную.</p><p id="diagnosticsSummary"></p><button class="button play" id="saveDiagnostics">Скачать отчёт</button><button class="button" id="clearDiagnostics">Удалить отчёт</button><p id="diagnosticsStatus" role="status"></p></div><div id="themePanel" hidden><div id="themeSettings"><div class="theme-choice"><label for="appearance">Тема</label><select id="appearance"></select><button class="button" type="button" id="addTheme" aria-label="Добавить свою тему">+</button></div><label id="themeNameRow" hidden>Название <input id="themeName" maxlength="40" autocomplete="off"></label><div id="themePreview" role="img" aria-label="Предпросмотр нотной сетки"><i></i><i></i><i></i></div>
 <div id="themeColorSettings"><div class="themePair"><button type="button" class="button" id="pickBase" aria-pressed="true"><i class="chip" id="baseChip"></i>Основной</button><button type="button" class="button" id="pickAccent" aria-pressed="false"><i class="chip" id="accentChip"></i>Второстепенный</button></div>
 <div id="colorPad" tabindex="0" role="group" aria-label="Палитра. По горизонтали насыщенность, по вертикали яркость. Можно использовать стрелки."><i id="colorPoint"></i></div>
 <label for="hue">Оттенок <output id="hueValue"></output></label><input type="range" id="hue" min="0" max="360" step="1">
@@ -24,8 +24,8 @@
 const byId=id=>document.getElementById(id);
 /* PACKED_EDITIONS */
 const updateBox=byId('updateBox'),updateState=byId('updateState'),downloadButton=byId('downloadUpdate');
-let downloadId=null,release=null,apkChecking=false;
-const currentVersion=64,currentApk='0.64',currentPanel={code:56,version:'0.56'},panelButton=byId('downloadPanel');
+let downloadId=null,release=null,apkChecking=false,lastApkCheck=0;
+const currentVersion=68,currentApk='0.68',currentPanel={code:60,version:'0.60'},panelButton=byId('downloadPanel');
 function apkAction(install=false){
  downloadButton.textContent=panelButton.textContent=install?'Установить':'Обновить';
  downloadButton.setAttribute('aria-label',install?'Установить APK':'Обновить APK');
@@ -71,26 +71,29 @@ byId('updates').onclick=()=>{
 };
 byId('closeUpdate').onclick=()=>panelBack();
 async function checkApkAtStartup(){
- if(apkChecking)return;apkChecking=true;
+ if(apkChecking||downloadButton.disabled||downloadButton.dataset.installer)return;
+ apkChecking=true;lastApkCheck=Date.now();
  let channelId=null;
  try{
   channelId=requestFile(0);await waitDownload(channelId,30000);
   const raw=NotkaUpdates.channel(channelId);
   if(!raw||raw.trim()[0]!=='{')throw Error('Сервер не вернул сведения о версии.');
   const incoming=parseRelease(raw);
+  if(downloadButton.disabled||downloadButton.dataset.installer)return;
   remember('notka.apkChannel',raw);release=incoming;renderApkVersions(incoming);
   updateState.textContent='';apkAction();
- }catch(e){updateState.textContent='Не удалось проверить обновления APK и панели.'}
- finally{if(channelId!==null)NotkaUpdates.discard(channelId)}
+ }catch(e){if(!downloadButton.disabled&&!downloadButton.dataset.installer)updateState.textContent='Не удалось проверить обновления APK и панели.'}
+ finally{apkChecking=false;if(channelId!==null)NotkaUpdates.discard(channelId)}
 }
 downloadButton.onclick=async()=>{
  if(!release||release.code<=currentVersion||downloadButton.disabled)return;
  downloadButton.disabled=panelButton.disabled=true;
+ const candidate=release;
  try{
   if(!downloadButton.dataset.installer){
-   updateState.textContent='Скачиваем APK '+release.version+'…';
-   downloadId=requestFile(release.code);await waitDownload(downloadId,300000);
-   if(NotkaUpdates.hash(downloadId)!==release.sha256)throw Error('Файл не прошёл проверку целостности. Повтори загрузку.');
+   updateState.textContent='Скачиваем APK '+candidate.version+'…';
+   downloadId=requestFile(candidate.code);await waitDownload(downloadId,300000);
+   if(NotkaUpdates.hash(downloadId)!==candidate.sha256)throw Error('Файл не прошёл проверку целостности. Повтори загрузку.');
    // Keep the provider URI alive until the Android installer finishes or the user checks again.
    downloadButton.dataset.installer='1';apkAction(true);
    updateState.textContent='Обновление скачано и проверено.';return;
@@ -440,8 +443,19 @@ async function perform(action){
  catch(error){if(task===t)phase.textContent=error.message+' Можно открыть версию с пометкой «На телефоне».'}
  finally{if(task===t){task=null;renderPanel()}}
 }
-document.addEventListener?.('visibilitychange',()=>{if(!document.hidden){renderPanel();if(Date.now()-lastCheck>60000&&!task)checkCatalog()}});
-if(typeof window!=='undefined')window.addEventListener('focus',renderPanel);
+function panelResume(force=false){
+ if(document.hidden)return;
+ renderPanel();
+ diagnosticsResume();
+ if(task)return;
+ if(force===true||Date.now()-lastCheck>=60000)checkCatalog();
+ if(force===true||Date.now()-lastApkCheck>=60000)checkApkAtStartup();
+}
+document.addEventListener?.('visibilitychange',panelResume);
+if(typeof window!=='undefined'){
+ window.addEventListener('focus',panelResume);
+ window.addEventListener('online',()=>panelResume(true));
+}
 byId('latest').onclick=()=>{const next=pendingEdition();if(next)return perform(t=>openEdition(next,t))};
 byId('last').onclick=()=>perform(t=>openEdition(newestLocal(),t));
 byId('others').onclick=()=>{list.hidden=!list.hidden;byId('others').setAttribute('aria-expanded',String(!list.hidden));byId('others').textContent=list.hidden?'Другие версии ▾':'Другие версии ▴'};
@@ -551,9 +565,41 @@ function closeThemes(){
 }
 function panelBack(){
  document.activeElement?.blur?.();if(fileDeleting)return;
- if(!updateBox.hidden){if(!byId('filePanel').hidden){if(!byId('fileConfirm').hidden)cancelFileDelete();else closeFiles()}else if(!byId('themeDeleteConfirm').hidden)byId('cancelThemeDelete').onclick();else if(!byId('themePanel').hidden)closeThemes();else{if(themeDirty)saveAppearance();updateBox.hidden=true;byId('updates').focus()}return}
+ if(!updateBox.hidden){if(!byId('diagnosticsPanel').hidden){closeDiagnostics()}else if(!byId('filePanel').hidden){if(!byId('fileConfirm').hidden)cancelFileDelete();else closeFiles()}else if(!byId('themeDeleteConfirm').hidden)byId('cancelThemeDelete').onclick();else if(!byId('themePanel').hidden)closeThemes();else{if(themeDirty)saveAppearance();updateBox.hidden=true;byId('updates').focus()}return}
  if(!list.hidden){byId('others').onclick();return}NotkaUpdates.closePanel?.();
 }
+
+function refreshDiagnostics(){
+ const supported=typeof NotkaUpdates.diagnosticsConfig==='function';
+ byId('diagnosticsEnabled').disabled=!supported;
+ if(!supported){byId('diagnosticsStatus').textContent='Для диагностики установи APK 0.66.';byId('diagnosticsOverlay').disabled=true;byId('saveDiagnostics').disabled=byId('clearDiagnostics').disabled=true;return}
+ try{
+  const config=JSON.parse(NotkaUpdates.diagnosticsConfig()),report=JSON.parse(NotkaUpdates.diagnosticsReport()),samples=report.samples||[],last=samples.at(-1);
+  byId('diagnosticsEnabled').checked=config.enabled===true;byId('diagnosticsOverlay').checked=config.overlay===true;byId('diagnosticsOverlay').disabled=!config.enabled;
+  byId('saveDiagnostics').disabled=byId('clearDiagnostics').disabled=!report.format;
+  byId('diagnosticsSummary').textContent=report.format?'Последний сеанс · редактор '+(report.editor||'—')+'\n'+(report.updatedAt?new Date(report.updatedAt).toLocaleString():'')+'\nЗамеров: '+samples.length+' · ошибок: '+((report.errors||[]).length+(report.nativeCrash?1:0))+(last?'\nПоследний замер: '+(last.mode==='player'?last.drawFps:last.fps)+' FPS · звук '+(last.audioBytes/1048576).toFixed(1)+' МБ':''):'Отчёта пока нет. Включи запись и открой редактор.';
+ }catch{byId('diagnosticsStatus').textContent='Не удалось прочитать диагностику.'}
+}
+function configureDiagnostics(){
+ const value={enabled:byId('diagnosticsEnabled').checked,overlay:byId('diagnosticsOverlay').checked};
+ if(!NotkaUpdates.diagnosticsConfigure(JSON.stringify(value)))byId('diagnosticsStatus').textContent='Не удалось сохранить настройки.';
+ else byId('diagnosticsStatus').textContent=value.enabled?'Запись начнётся при открытии редактора.':'Запись выключена. Предыдущий отчёт сохранён.';
+ refreshDiagnostics();
+}
+function closeDiagnostics(){byId('diagnosticsPanel').hidden=true;byId('panelHome').hidden=false;byId('updateTitle').textContent='Настройки панели';byId('closeUpdate').textContent='✕';byId('closeUpdate').setAttribute('aria-label','Закрыть');byId('openDiagnostics').focus()}
+byId('openDiagnostics').onclick=()=>{byId('panelHome').hidden=true;byId('diagnosticsPanel').hidden=false;byId('updateTitle').textContent='Диагностика';byId('closeUpdate').textContent='‹';byId('closeUpdate').setAttribute('aria-label','Назад');byId('diagnosticsStatus').textContent='';refreshDiagnostics();diagnosticsExportStatus()};
+byId('diagnosticsEnabled').onchange=byId('diagnosticsOverlay').onchange=configureDiagnostics;
+byId('clearDiagnostics').onclick=()=>{byId('diagnosticsStatus').textContent=NotkaUpdates.diagnosticsClear()?'Отчёт удалён.':'Не удалось удалить отчёт.';refreshDiagnostics()};
+let diagnosticsExportTimer=0;
+function diagnosticsExportStatus(){
+ if(typeof NotkaUpdates.diagnosticsStatus!=='function')return;
+ clearTimeout(diagnosticsExportTimer);diagnosticsExportTimer=0;
+ try{const status=JSON.parse(NotkaUpdates.diagnosticsStatus());byId('diagnosticsStatus').textContent=status.message||'';byId('saveDiagnostics').disabled=status.state==='pending'||!JSON.parse(NotkaUpdates.diagnosticsReport()).format;if(status.state==='pending'&&!document.hidden)diagnosticsExportTimer=setTimeout(diagnosticsExportStatus,500)}catch{byId('diagnosticsStatus').textContent='Не удалось проверить сохранение отчёта.'}
+}
+byId('saveDiagnostics').onclick=()=>{NotkaUpdates.diagnosticsExport();diagnosticsExportStatus()};
+function diagnosticsResume(){if(!document.hidden&&!byId('diagnosticsPanel').hidden){refreshDiagnostics();diagnosticsExportStatus()}}
+document.addEventListener?.('visibilitychange',diagnosticsResume);
+
 let panelOutside=false;updateBox.onpointerdown=e=>{panelOutside=e.target===updateBox};updateBox.onpointercancel=()=>{panelOutside=false};updateBox.onclick=e=>{if(panelOutside&&e.target===updateBox)panelBack();panelOutside=false};
 document.addEventListener?.('keydown',e=>{if(e.key==='Escape'){e.preventDefault();panelBack()}});
 

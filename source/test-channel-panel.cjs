@@ -7,7 +7,7 @@ t.els.editLane.onclick();t.els.addLane.onclick();assert.equal(r('lanes.length'),
 // A tap selects and dismisses the rack; it does not rename.
 let el=name(0);down(el);advance(200);el.onpointerup();el.onclick();assert.equal(r('activeLane'),0);assert(t.els.laneSheet.hidden);assert(t.els.laneRename.hidden);
 t.els.editLane.onclick();el=name(1);down(el);advance(999);assert(t.els.laneRename.hidden);advance(1);assert(!t.els.laneRename.hidden);assert.equal(r('activeLane'),1);el.onpointerup();el.onclick();assert(!t.els.laneSheet.hidden);
-t.els.laneName.oninput({target:{value:'Мелодия'}});r('notkaBack()');assert(t.els.laneRename.hidden);assert(!t.els.laneSheet.hidden);assert.equal(name(1).textContent,'Мелодия');assert.equal(JSON.parse(t.draft).lanes[1].name,'Мелодия');
+t.els.laneName.oninput({target:{value:'Мелодия'}});r('notkaBack()');assert(t.els.laneRename.hidden);assert(!t.els.laneSheet.hidden);assert.equal(name(1).textContent,'Мелодия');assert.equal(JSON.parse((t.run('flushDraft(true)'),t.draft)).lanes[1].name,'Мелодия');
 // Drag, cancellation, closing and backgrounding never leave a pending rename.
 for(const cancel of [el=>el.onpointermove({clientX:50,clientY:75}),el=>el.onpointercancel(),()=>r('closeLane()'),()=>r('suspendEditor()')]){
  t.els.editLane.onclick();el=name(0);down(el);cancel(el);advance(1100);assert(t.els.laneRename.hidden);

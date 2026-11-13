@@ -127,7 +127,7 @@ async function importMusicbox(){
   if(!importHost.commitInstrumentImport())throw Error('Не удалось сохранить инструмент. Проверь свободное место.');
   instrumentCache.set(floeId,bank);builtinPresence.set(floeId,true);pendingBuiltinData.delete(floeId);
   message='Шкатулка импортирована.';
- }catch(e){message=e.message||'Не удалось импортировать инструмент.'}
+ }catch(e){diagnostics.error('instrumentImport',e);message=e.message||'Не удалось импортировать инструмент.'}
  finally{
   importHost.cancelInstrumentImport();importJob=null;fileBusy=false;byId('importProgress').hidden=true;
   renderMissingSounds();renderInstruments();controls();trackActions();

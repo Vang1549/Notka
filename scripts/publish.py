@@ -1,6 +1,8 @@
 """Publish hash-pinned public APKs/assets; never accept unverified replacement assets."""
-import argparse,base64,hashlib,json,os,re,subprocess,tempfile,urllib.request,zipfile,io
+import argparse,base64,hashlib,json,os,re,subprocess,tempfile,urllib.request,zipfile,io,sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parent.parent/'source'))
+from signing_identity import verify_envelope
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -12,21 +14,21 @@ def gh(*args):
 def verified_catalogs(root):
  public=x509.load_der_x509_certificate((root/'source/signing.der').read_bytes()).public_key()
  for path in [root/'dist/channel.json',*sorted((root/'dist/editions').glob('*.json')),*sorted((root/'dist/soundbank').glob('*.json'))]:
-  env=json.loads(path.read_text());public.verify(base64.b64decode(env['signature']),env['record'].encode(),padding.PKCS1v15(),hashes.SHA256())
+  env=json.loads(path.read_text());verify_envelope(env)
   record=json.loads(env['record'])
   if record.get('kind')=='notka.editor.1':
    raw=base64.b64decode(record['body'],validate=True)
    if hashlib.sha256(raw).hexdigest()!=record['sha256']:raise ValueError('Editor hash mismatch')
  bundle_catalog=root/'dist/bundles/catalog.json'
  if bundle_catalog.exists():
-  envelope=json.loads(bundle_catalog.read_text());public.verify(base64.b64decode(envelope['signature']),envelope['record'].encode(),padding.PKCS1v15(),hashes.SHA256())
+  envelope=json.loads(bundle_catalog.read_text());verify_envelope(envelope)
   catalog=json.loads(envelope['record'])
   for entry in catalog['editions']:
    if entry.get('format')!=2:continue
    blob=(bundle_catalog.parent/f"{entry['code']}.zip").read_bytes()
    if hashlib.sha256(blob).hexdigest()!=entry['sha256']:raise ValueError('Bundle archive hash mismatch')
    with zipfile.ZipFile(io.BytesIO(blob)) as archive:
-    env=json.loads(archive.read('manifest.json'));public.verify(base64.b64decode(env['signature']),env['record'].encode(),padding.PKCS1v15(),hashes.SHA256())
+    env=json.loads(archive.read('manifest.json'));verify_envelope(env)
     info=json.loads(env['record'])
     if info['code']!=entry['code'] or info['version']!=entry['version'] or info['kind']!='notka.bundle.1':raise ValueError('Bundle identity mismatch')
     if set(archive.namelist())!=set(info['files'])|{'manifest.json'}:raise ValueError('Bundle file set differs')

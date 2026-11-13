@@ -24,14 +24,23 @@ header,.controls,.tempo{display:flex;align-items:center;gap:8px}#status{font-siz
 header{display:flex;gap:6px}header,.controls,#status,#missingSounds{margin:0 12px}.icon{display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}header .icon{width:40px;height:40px;min-height:40px;padding:0}#prefs{margin-left:auto}#laneOptions .pref-heading .button{width:auto;margin:0}.tempo label{display:grid;justify-items:center}.tempo input{width:3.4ch;padding:0;background:transparent;color:var(--text);border:0;font:inherit;font-weight:bold;text-align:center}.tempo label:focus-within{outline:1px solid var(--accent);border-radius:4px}
 [data-note-depth="true"] .note-block:not(.ghost){background:linear-gradient(to bottom,#ffffff66,transparent 45%,#00000033),var(--accent);box-shadow:inset 0 1px 0 #ffffff88,inset 0 -1px 0 #0007,0 1px 2px #0005}
 #instrumentChoices{display:grid;gap:8px}#instrumentChoices [aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}#instrumentStatus:empty{display:none}.instrument-filters{display:grid;gap:8px;margin-bottom:12px}.instrument-filters input,.instrument-filters select{width:100%;min-width:0;min-height:40px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);padding:8px;font:inherit}.instrument-group{margin:6px 0 0;font-size:12px;color:var(--muted)}
-.instrument-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;align-items:center}.instrument-row .instrument-pick{grid-column:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.instrument-row small{grid-column:2;grid-row:2;text-align:center;margin:0;font-size:11px;letter-spacing:0;color:var(--muted)}.instrument-row .instrument-action{grid-column:2;grid-row:1;padding:0 9px;font-size:12px}.instrument-delete{display:flex;gap:8px;margin-top:10px}.instrument-delete>*{flex:1}.note-block:before{content:attr(data-instrument);position:absolute;bottom:1px;left:2px;font-size:8px;font-weight:650;line-height:10px;white-space:nowrap;pointer-events:none;max-width:calc(100% - 3px);overflow:hidden}.note-block:before,.note-instrument{color:var(--instrument-ink,#000);opacity:.22}.note-block.ghost{--instrument-ink:#000}.note-instrument{position:absolute;bottom:1px;left:2px;width:13px;height:13px;max-width:calc(100% - 3px);max-height:calc(100% - 2px);pointer-events:none}
+.instrument-row{display:grid;grid-template-columns:minmax(0,1fr) 40px auto auto;gap:6px;align-items:center}.instrument-row[data-installed=true]{grid-template-columns:minmax(0,1fr) 40px auto}.instrument-row .instrument-pick{grid-column:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:none;-webkit-touch-callout:none;touch-action:pan-y}.instrument-row small{grid-column:4;grid-row:1;margin:0;font-size:11px;letter-spacing:0;white-space:nowrap;color:var(--muted)}.instrument-row[data-installed=true] small{grid-column:3}.instrument-row small:empty{display:none}.instrument-row .instrument-action{grid-column:3;grid-row:1;padding:0 7px;font-size:12px;min-width:40px;min-height:40px}.instrument-row .instrument-audition{grid-column:2;grid-row:1;padding:0;display:grid;place-items:center;min-width:40px;min-height:40px}.instrument-audition svg{pointer-events:none}.instrument-audition[aria-pressed=true]{background:var(--accent);color:var(--on)}.instrument-audition[aria-busy=true]{opacity:.6}.instrument-row .source-split{grid-column:3 / 5}.instrument-delete{display:flex;gap:8px;margin-top:10px}.instrument-delete>*{flex:1}.note-block:before{content:attr(data-instrument);position:absolute;bottom:1px;left:2px;font-size:8px;font-weight:650;line-height:10px;white-space:nowrap;pointer-events:none;max-width:calc(100% - 3px);overflow:hidden}.note-block:before,.note-instrument{color:var(--instrument-ink,#000);opacity:.22}.note-block.ghost{--instrument-ink:#000}.note-instrument{position:absolute;bottom:1px;left:2px;width:13px;height:13px;max-width:calc(100% - 3px);max-height:calc(100% - 2px);pointer-events:none}
 
-.stage-head{position:absolute;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));display:flex;align-items:center;justify-content:space-between;gap:12px}.stage-actions{display:flex;gap:8px}.stage-head button{display:grid;place-items:center;background:#101b29cc;border:1px solid #b6cce025;border-radius:12px;font:20px system-ui;width:44px;height:44px;padding:0;color:#e0eaf3;backdrop-filter:blur(12px)}#stageLoop{font-size:28px}#stageLoop[aria-pressed=true]{color:#baf8e8;border-color:#62dfc4;background:#183d37}@media(orientation:portrait){.scene-open #stage,.scene-open .scene-settings{inset:auto;left:50%;top:50%;width:100vh;height:100vw;transform:translate(-50%,-50%) rotate(90deg)}}.scene-settings .pref-card{width:min(100%,440px)}#scenePreview{display:block;width:100%;height:130px;border:1px solid var(--border);border-radius:12px;margin:4px 0 10px}.scene-presets{display:flex;gap:6px;margin-bottom:14px}.scene-presets button{flex:1;padding:0 8px;font-size:12px;min-height:34px}.scene-section{border-top:1px solid var(--border);padding:12px 0}.scene-section summary{font-weight:650;cursor:pointer;font-size:14px}.scene-section[open] summary{margin-bottom:8px}.scene-section label{font-size:13px;gap:12px}.scene-section label>span{min-width:0;overflow-wrap:anywhere}.scene-section select{max-width:58%;font-size:12px;padding:6px}.scene-section input[type=number]{width:64px;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text);padding:5px;height:auto;font:inherit}.scene-section input[type=range]{width:100%;height:22px;margin:0;accent-color:var(--accent)}.scene-section input[type=color]{width:46px;height:28px;padding:2px;border:1px solid var(--border);background:var(--panel);border-radius:6px}.scene-section output{color:var(--accent);font-variant-numeric:tabular-nums}.scene-section .scene-hint{font-size:11px;margin:0 0 7px}.scene-subtle{font-size:12px;min-height:32px;padding:0 8px;margin:5px 0}#sceneColors{border-left:2px solid var(--border);padding-left:10px;margin:7px 0}@media(max-height:520px) and (min-width:700px){.scene-settings{justify-items:end;padding:10px 16px}.scene-settings .pref-card{max-height:100%;width:390px}#scenePreview{height:100px}}
+.stage-head{position:absolute;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));display:flex;align-items:center;gap:clamp(10px,2vw,28px);transition:transform .24s ease;will-change:transform}.stage-head[data-hidden=true]{transform:translateY(calc(-100% - 24px - env(safe-area-inset-top)));pointer-events:none}.stage-actions,.stage-player{display:flex;align-items:center;gap:6px}.stage-actions{flex-shrink:0}.stage-player{flex:1;min-width:0;gap:8px}.stage-head button{display:grid;place-items:center;flex:0 0 42px;background:#101b29e0;border:1px solid #b6cce035;border-radius:11px;font:20px system-ui;width:42px;height:42px;padding:0;color:#e0eaf3;backdrop-filter:blur(12px)}.stage-head button:disabled{opacity:.45}.stage-skips button{font-size:13px;font-weight:650;font-variant-numeric:tabular-nums}.stage-timeline{flex:1;min-width:70px;align-self:center;padding:0 4px}.stage-timeline input{display:block;width:100%;height:26px;margin:0;accent-color:#baf8e8;cursor:pointer;touch-action:none}.stage-times{display:flex;justify-content:space-between;color:#e0eaf3;font-size:10px;line-height:12px;font-variant-numeric:tabular-nums;text-shadow:0 1px 3px #000}.stage-times span{pointer-events:none}#stageLoop{font-size:28px}#stageLoop[aria-pressed=true]{color:#baf8e8;border-color:#62dfc4;background:#183d37}#diagnosticsHud{transition:transform .24s ease}.scene-open.scene-hud-hidden #diagnosticsHud{transform:translateY(calc(100% + 24px))}@media(max-width:700px) and (orientation:landscape),(max-height:700px) and (orientation:portrait){.stage-head{gap:8px}.stage-player,.stage-actions{gap:4px}.stage-head button{width:36px;height:40px;flex-basis:36px;border-radius:9px}.stage-timeline{min-width:56px;padding:0}}@media(prefers-reduced-motion:reduce){.stage-head,#diagnosticsHud{transition:none}}@media(orientation:portrait){.scene-open #stage,.scene-open .scene-settings{inset:auto;left:50%;top:50%;width:100vh;height:100vw;transform:translate(-50%,-50%) rotate(90deg)}}.scene-settings .pref-card{width:min(100%,440px)}#scenePreview{display:block;width:100%;height:130px;border:1px solid var(--border);border-radius:12px;margin:4px 0 10px}.scene-presets{display:flex;gap:6px;margin-bottom:14px}.scene-presets button{flex:1;padding:0 8px;font-size:12px;min-height:34px}.scene-section{border-top:1px solid var(--border);padding:12px 0}.scene-section summary{font-weight:650;cursor:pointer;font-size:14px}.scene-section[open] summary{margin-bottom:8px}.scene-section label{font-size:13px;gap:12px}.scene-section label>span{min-width:0;overflow-wrap:anywhere}.scene-section select{max-width:58%;font-size:12px;padding:6px}.scene-section input[type=number]{width:64px;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text);padding:5px;height:auto;font:inherit}.scene-section input[type=range]{width:100%;height:22px;margin:0;accent-color:var(--accent)}.scene-section input[type=color]{width:46px;height:28px;padding:2px;border:1px solid var(--border);background:var(--panel);border-radius:6px}.scene-section output{color:var(--accent);font-variant-numeric:tabular-nums}.scene-section .scene-hint{font-size:11px;margin:0 0 7px}.scene-subtle{font-size:12px;min-height:32px;padding:0 8px;margin:5px 0}#sceneColors{border-left:2px solid var(--border);padding-left:10px;margin:7px 0}@media(max-height:520px) and (min-width:700px){.scene-settings{justify-items:end;padding:10px 16px}.scene-settings .pref-card{max-height:100%;width:390px}#scenePreview{height:100px}}
 .sound-tabs{display:flex;gap:7px;margin:10px 0}.sound-tabs .button{flex:1;padding:8px;font-size:13px}.sound-tabs [aria-pressed=true]{border-color:var(--accent);color:var(--accent)}.current-sound{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:5px;margin:0 0 14px}.current-sound .button{min-width:0;padding:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.current-sound .button:first-child{text-align:left;border-color:var(--accent);color:var(--accent)}#instrumentEditor input[type=number],#soundName{background:var(--panel);border:1px solid var(--border);border-radius:7px;color:var(--text);font:inherit;padding:6px;min-width:0}#soundName{width:65%;min-height:36px}#soundSource{font-size:12px}#soundEnvelope{color:var(--accent)}#soundEnvelope svg{display:block;width:100%;height:72px}.sound-field{display:grid;grid-template-columns:minmax(0,1fr) 90px;align-items:center;gap:5px 8px;margin:10px 0}.sound-field label{font-size:12px}.sound-field input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent);height:24px}.sound-field input[type=number]{width:90px;min-height:32px;font-size:12px}#soundAdvanced fieldset{border:1px solid var(--border);border-radius:9px;margin:10px 0;padding:8px}#soundAdvanced legend{font-size:13px}#soundAdvanced select{max-width:65%;font-size:12px}.song-row{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:7px}.song-row>.button:first-child{text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#songList .song-remove{display:grid;place-items:center;width:44px;min-height:44px;padding:0;text-align:center;font-size:22px;line-height:1;color:#ef6666}:root.light #songList .song-remove{color:#bd2626}
 #missingSounds{padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:12px}#missingSounds p{margin:0 0 6px}.instrument-row .source-split{padding:0}.source-split{display:inline-flex;min-width:174px}.source-split>.button{white-space:nowrap;flex:1;justify-content:center;min-width:0;padding:0 8px;font-size:12px;border-radius:0}.source-split>.button:first-child{border-radius:9px 0 0 9px}.source-split>.button:last-child{border-left:0;border-radius:0 9px 9px 0}.source-split>.button.import-ready{background:var(--accent);color:var(--on)}#importProgress .pref-card{max-width:360px}#importProgress button{width:100%}.source-link{color:var(--text);display:inline-flex;align-items:center;text-decoration:none;font-size:12px;min-height:36px}#instrumentSource p{font-size:12px;color:var(--muted)}
 #selectionBox{position:absolute;pointer-events:none;border:1px solid var(--cursor);background:#ffffff18;z-index:2147483647}#inspector.group{width:min(320px,calc(100vw - 16px))}#inspector.group .ins-head b{white-space:nowrap}#inspector.group .ins-head span{font-size:11px}
 #scenePresetSection>select{width:100%;max-width:100%}#presetNewForm>#saveScenePreset{width:100%}#presetSaveSplit{width:100%;margin-top:10px}#presetSaveSplit>.button{white-space:normal;padding:8px}#presetStatus:empty{display:none}
 #exitSheet{z-index:8}#exitSheet .pref-heading{justify-content:flex-start}#exitSheet .pref-heading button{width:44px;flex-shrink:0;padding:0;font-size:26px}#exitActions,#exitChoices,#exitNameForm{display:grid;gap:8px}#exitStatus:empty{display:none}
+
+#diagnosticsHud{position:fixed;z-index:1000;right:6px;bottom:max(6px,env(safe-area-inset-bottom));max-width:calc(100vw - 12px);padding:5px 8px;border-radius:6px;background:#07100de0;color:#d8ffd7;font:11px/1.5 monospace;white-space:pre-wrap;pointer-events:none}
+
+/* Visual settings: independent previews on the left, scrolling controls on the right. */
+.scene-settings{grid-template-columns:minmax(0,1fr) minmax(260px,46%);grid-template-rows:minmax(0,1fr);gap:12px;padding:12px;align-items:stretch;justify-items:stretch}.scene-settings>.pref-card{grid-column:2;grid-row:1;width:100%;max-height:100%;min-height:0;box-sizing:border-box}.scene-settings #sceneDemos{grid-column:1;grid-row:1;display:flex;flex-direction:column;justify-content:space-between;min-height:0;gap:12px}.scene-demo-box,.scene-overview-box{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#000;position:relative}.scene-demo-box{height:var(--preview-height,calc(50% - 6px));width:var(--preview-width,100%);margin-inline:auto;min-height:0;flex:none;display:flex;flex-direction:column}.scene-overview-box{height:var(--preview-height,calc(50% - 6px));width:var(--preview-width,100%);margin-inline:auto;min-height:0;flex:none}.scene-demo-head{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--bg);color:var(--text);font-size:12px;padding:4px 6px}.scene-demo-head .button{width:34px;min-height:30px;padding:3px;display:grid;place-items:center}.scene-demo-head .button[aria-pressed=false]{opacity:.55}#sceneDemo{display:block;width:100%;height:100%;min-height:0;flex:1}#sceneDemos #scenePreview{width:100%;height:100%;display:block;border:0;border-radius:0;margin:0}#sceneDemoStatus{position:absolute;bottom:0;left:0;right:0;background:#000b;color:#fff;font-size:10px;margin:0;padding:4px}#sceneDemoStatus:empty{display:none}#presetChoice{width:100%;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;line-height:1.25;padding:8px 12px}#presetChoice:after{content:'▾'}#presetList{border:1px solid var(--border);border-radius:10px;padding:4px;max-height:180px;overflow:auto;margin:4px 0}.scene-preset-row{display:flex;gap:4px;margin:3px 0}.scene-preset-row>.button:first-child{flex:1;min-width:0;text-align:left;overflow-wrap:anywhere;white-space:normal}.scene-preset-row [aria-pressed=true]{border-color:var(--accent);color:var(--accent)}.scene-preset-row .preset-trash{width:38px;flex:none;color:#ff7b79;padding:5px}#presetSaveSplit{display:flex;margin:10px 0;width:100%}#presetSaveSplit>.button{min-height:44px;white-space:normal;line-height:1.2;padding:6px}.scene-settings button:disabled{opacity:.4;cursor:default}#presetNewForm{margin:8px 0}#presetConfirm{position:absolute;inset:50% 16px auto;transform:translateY(-50%);background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:16px;z-index:5;box-shadow:0 0 0 100vmax #0009}#sceneColors .scene-color-chip{width:44px;height:30px;border:1px solid var(--border);border-radius:6px}.scene-color-picker{position:absolute;z-index:6;right:20px;top:50%;transform:translateY(-50%);width:min(300px,80%);padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:12px;box-shadow:0 0 0 100vmax #0009}#sceneColorSwatches{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}#sceneColorSwatches button,.scene-color-special>button,.scene-custom-color{height:34px;min-width:0;border:1px solid #888;border-radius:6px}.scene-color-special{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:7px}.scene-custom-color{position:relative;display:grid;place-items:center;background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);color:#fff;font-size:24px;text-shadow:0 1px 3px #000}.scene-custom-color input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}#sceneTransparent,.scene-color-chip[data-transparent=true]{background:repeating-conic-gradient(#ddd 0 25%,#888 0 50%) 0/12px 12px!important}@media(max-width:600px) and (orientation:landscape){.scene-settings{grid-template-columns:minmax(0,1fr) minmax(245px,52%);gap:6px;padding:6px}.scene-settings>.pref-card{padding:10px}.scene-demo-head span{display:none}}@media(orientation:portrait){.scene-open .scene-settings{box-sizing:border-box}}
+
+.scene-demo-head{position:absolute;top:0;left:0;right:0;z-index:1;background:color-mix(in srgb,var(--bg) 88%,transparent)}#sceneDemo{cursor:zoom-in;touch-action:manipulation}#sceneDemo[aria-pressed=true]{cursor:zoom-out}.scene-section .scene-number{display:inline-flex;align-items:center;gap:2px;flex-shrink:0;overflow:visible;border:1px solid var(--border);border-radius:6px;padding:2px 5px;color:var(--accent);font-variant-numeric:tabular-nums}.scene-number:focus-within{border-color:var(--accent)}.pref-card .scene-number input{width:5.2ch;min-width:0;height:27px;padding:0;border:0;outline:0;background:transparent;color:inherit;font:inherit;text-align:right}.scene-number>span{font-size:12px}.scene-demo-head .button{background:var(--panel)}
+
+#scenePreview{touch-action:none;user-select:none;cursor:pointer}#sceneOverviewSeek{position:absolute;top:8px;left:8px;right:8px;pointer-events:none;color:white;font-size:11px;text-align:center;text-shadow:0 1px 3px black}#sceneOverviewTime{display:inline-block;padding:3px 7px;border-radius:5px;background:#000a}.overview-progress{height:3px;background:#ffffff40;margin-top:5px;border-radius:2px;overflow:hidden}.overview-progress i{height:100%;display:block;background:var(--accent)}
 </style><main>
 <header><button class="button icon" id="editLane" aria-haspopup="dialog" aria-label="Дорожки" title="Дорожки"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="4" height="4" rx="1"/><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="3" y="16" width="4" height="4" rx="1"/><path d="M11 6h10M11 12h10M11 18h10"/></svg></button><button class="button icon" id="stepMenu" aria-haspopup="dialog" aria-label="Настройка сетки" title="Настройка сетки"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></button><button class="button icon" id="prefs" aria-label="Меню трека"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="17" cy="16" rx="3" ry="2"/></svg></button><button class="button icon" onclick="notkaBack()" aria-label="Вернуться к выбору версии"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button></header>
 
@@ -41,51 +50,50 @@ header{display:flex;gap:6px}header,.controls,#status,#missingSounds{margin:0 12p
 </main>
 <section id="stage" aria-label="Визуальное пианино" hidden>
 <canvas id="scene" aria-label="Падающие ноты и клавиатура"></canvas>
-<div class="stage-head" id="stageHud"><button id="leaveStage" aria-label="Вернуться в редактор"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><div class="stage-actions"><button id="stageExport" aria-label="Сохранить аудио или видео"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg></button><button id="stageHide" aria-label="Скрыть интерфейс"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 8V3h5m8 0h5v5M3 16v5h5m8 0h5v-5"/></svg></button><button id="stagePrefs" aria-label="Настройки проигрывателя">⚙</button><button id="stageLoop" aria-label="Повторять трек" aria-pressed="false">∞</button><button id="stageTransport" aria-label="Остановить">■</button></div></div></section>
+<div class="stage-head" id="stageHud">
+<div class="stage-actions"><button id="stagePrefs" aria-label="Настройки визуала" title="Настройки визуала"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" d="M6 5v4m5-7v5m6-2v5"/><rect x="2" y="13" width="20" height="9" rx="2"/><path d="M7 13v5m5-5v5m5-5v5"/></svg></button><button id="stageExport" aria-label="Сохранить аудио или видео" title="Скачать"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg></button></div>
+<div class="stage-player"><button id="stageLoop" aria-label="Повторять трек" aria-pressed="false">∞</button><button id="stageTransport" aria-label="Пауза" disabled>Ⅱ</button><div class="stage-timeline"><input id="stageSeek" type="range" min="0" max="1" step="0.001" value="0" aria-label="Позиция в треке" disabled><div class="stage-times"><span id="stagePosition">0:00</span><span id="stageDuration">0:00</span></div></div><div class="stage-actions stage-skips"><button id="stageBack10" aria-label="Назад на 10 секунд">−10</button><button id="stageBack1" aria-label="Назад на 1 секунду">−1</button><button id="stageForward1" aria-label="Вперёд на 1 секунду">+1</button><button id="stageForward10" aria-label="Вперёд на 10 секунд">+10</button></div></div>
+<button id="leaveStage" aria-label="Вернуться в редактор" title="В редактор"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button></div></section>
 <div class="shade" id="preferences" role="dialog" aria-modal="true" aria-label="Меню трека" hidden><article class="pref-card">
 <div class="pref-heading"><h2 id="prefTitle"></h2><button class="button" id="closePrefs" aria-label="Закрыть настройки">✕</button></div>
 <div id="songSave" hidden><label for="songName">Название трека</label><input id="songName" class="song-input" maxlength="80" placeholder="Например, Вечер"><button class="button" id="confirmSave">Сохранить трек</button></div>
 <div id="trackChoices" hidden><button class="button" id="songSearchButton" aria-expanded="false" aria-controls="songQuery">Поиск по названию</button><input class="song-input" id="songQuery" type="search" aria-label="Название для поиска" placeholder="Найти трек…" hidden><div id="songList"></div><div id="songDeleteConfirm" hidden><p id="songDeleteName"></p><div class="sound-tabs"><button class="button" id="confirmSongDelete">Удалить</button><button class="button" id="cancelSongDelete">Отмена</button></div></div><button class="button" id="loadFile">Импортировать старый файл .notka…</button></div>
 <div id="exportOptions" hidden><label for="exportName">Название</label><input class="song-input" id="exportName" maxlength="48"><label><input type="checkbox" id="exportMuted"> Включить выключенные дорожки</label><button class="button" id="exportNotka">Для Нотки · .notka</button><button class="button" id="exportMidi">MIDI · FL Studio / Embers</button><button class="button" id="exportAudio">ZIP · ноты и звук по дорожкам</button><p id="exportStatus" role="status" style="white-space:pre-line;overflow-wrap:anywhere"></p><button class="button" id="cancelExport" hidden>Отмена</button></div><div id="prefHome"><button class="button" id="lastTrack">Загрузить последний трек</button><button class="button" id="saveTrack">Сохранить</button><button class="button" id="saveAs">Сохранить как…</button><button class="button" id="loadTrack">Загрузить</button><button class="button" id="exportTrack">Экспорт…</button></div>
 <p id="trackStatus" role="status"></p><button class="button" id="replaceTrack" hidden>Заменить трек</button><div id="visualOptions" hidden>
-<label>Повторять трек <input id="loop" type="checkbox"></label>
-<canvas id="scenePreview" aria-label="Предпросмотр оформления проигрывателя"></canvas>
-<div class="scene-presets"><button class="button" id="sceneCalm">Спокойный</button><button class="button" id="sceneCinema">Сияние</button><button class="button" id="sceneNeon">Неон</button></div>
-<details class="scene-section" id="scenePresetSection"><summary>Мои пресеты</summary>
-<select id="presetChoice" aria-label="Сохранённый пресет"></select><div class="sound-tabs"><button class="button" id="loadScenePreset">Загрузить</button><button class="button" id="deleteScenePreset">Удалить</button></div>
-<div id="presetNewForm"><input id="presetName" class="song-input" maxlength="48" aria-label="Название пресета" placeholder="Название пресета"><button class="button" id="saveScenePreset">Сохранить пресет</button><button class="button" id="cancelNewPreset" hidden>Отмена</button></div><div class="source-split" id="presetSaveSplit" role="group" aria-label="Сохранение пресета" hidden><button class="button" id="newScenePreset">Сохранить как новый</button><button class="button" id="replaceScenePreset">Заменить выбранный</button></div>
-<div id="presetConfirm" hidden><p id="presetConfirmText"></p><div class="sound-tabs"><button class="button" id="confirmScenePreset">Подтвердить</button><button class="button" id="cancelScenePreset">Отмена</button></div></div><p id="presetStatus" role="status"></p></details>
+<details class="scene-section" id="scenePresetSection" open><summary>Мои пресеты</summary>
+<button class="button" id="presetChoice" aria-label="Выбрать пресет" aria-expanded="false" aria-controls="presetList">Настройки трека</button><div id="presetList" hidden></div>
+<div class="source-split" id="presetSaveSplit" role="group" aria-label="Сохранение пресета"><button class="button" id="newScenePreset">Сохранить как новый</button><button class="button" id="replaceScenePreset">Обновить выбранный</button></div>
+<div id="presetNewForm" hidden><input id="presetName" class="song-input" maxlength="48" aria-label="Название пресета" placeholder="Название пресета"><div class="sound-tabs"><button class="button" id="saveScenePreset">Сохранить</button><button class="button" id="cancelNewPreset">Отмена</button></div></div>
+<div id="presetConfirm" role="alertdialog" aria-modal="true" aria-labelledby="presetConfirmText" hidden><p id="presetConfirmText"></p><div class="sound-tabs"><button class="button" id="confirmScenePreset">Удалить</button><button class="button" id="cancelScenePreset">Отмена</button></div></div><p id="presetStatus" role="status"></p></details>
 <details class="scene-section" open><summary>Клавиатура и диапазон</summary>
 <label>Диапазон <select id="rangeMode"><option value="auto">По музыке</option><option value="manual">Вручную</option></select></label>
 <div id="manualRange"><label>Первая нота <select id="keyStart"></select></label><label>Количество клавиш <input id="keyCount" type="number" min="12" max="88" step="1"></label></div>
-<label>Высота клавиатуры <output id="keyboardHeightValue"></output></label><input aria-label="Высота клавиатуры" id="keyboardHeight" type="range" min="8" max="26" step="1">
+<label>Высота клавиатуры <span class="scene-number"><input id="keyboardHeightValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Высота клавиатуры: значение"><span aria-hidden="true">%</span></span></label><input aria-label="Высота клавиатуры" id="keyboardHeight" type="range" min="8" max="26" step="1">
 <label>Подписи клавиш <select id="keyLabels"><option value="c">Только До</option><option value="all">Все ноты</option><option value="none">Без подписей</option></select></label>
 <label>Линии клавиш <input id="guides" type="checkbox"></label>
 </details>
 <details class="scene-section" open><summary>Движение и форма нот</summary>
-<label>Скорость падения <output id="speedValue"></output></label><input id="speed" aria-label="Скорость падения" type="range" min="0.5" max="3" step="0.1">
-<label>Вертикальный масштаб <output id="stretchValue"></output></label><input id="stretch" aria-label="Вертикальный масштаб нот" type="range" min="0.25" max="2.5" step="0.05">
-<p class="scene-hint">Масштаб меняет длину и путь нот, сохраняя ритм музыки.</p>
-<label>Ширина нот <output id="noteWidthValue"></output></label><input id="noteWidth" aria-label="Ширина нот" type="range" min="40" max="96" step="1">
-<label>Скругление <output id="roundnessValue"></output></label><input id="roundness" aria-label="Скругление нот" type="range" min="0" max="50" step="1">
+<label>Скорость падения <span class="scene-number"><input id="speedValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Скорость падения: значение"><span aria-hidden="true">×</span></span></label><input id="speed" aria-label="Скорость падения" type="range" min="0.1" max="10" step="0.01">
+<label>Ширина нот <span class="scene-number"><input id="noteWidthValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Ширина нот: значение"><span aria-hidden="true">%</span></span></label><input id="noteWidth" aria-label="Ширина нот" type="range" min="40" max="96" step="1">
+<label>Скругление <span class="scene-number"><input id="roundnessValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Скругление нот: значение"><span aria-hidden="true">%</span></span></label><input id="roundness" aria-label="Скругление нот" type="range" min="0" max="50" step="1">
 <label>Стиль нот <select id="noteStyle"><option value="glass">Стекло</option><option value="solid">Матовый</option><option value="neon">Неоновый контур</option></select></label>
 </details>
-<details class="scene-section"><summary>Цвета и фон</summary>
+<details class="scene-section"><summary>Цвета</summary>
 <label>Цвет нот <select id="colorMode"><option value="lane">По дорожкам</option><option value="instrument">По инструментам</option><option value="single">Один цвет</option></select></label>
-<label>Палитра <select id="palette"><option value="aurora">Северное сияние</option><option value="ember">Янтарь</option><option value="ice">Лёд</option><option value="iris">Ирис</option></select></label>
+<label>Палитра <select id="palette"><option value="basic">Базовая</option><option value="aurora">Северное сияние</option><option value="ember">Янтарь</option><option value="ice">Лёд</option><option value="iris">Ирис</option></select></label>
 <div id="sceneColors"></div>
-<button class="button scene-subtle" id="resetSceneColors">Вернуть цвета палитры</button>
+</details><details class="scene-section"><summary>Фон</summary>
 <label>Фон <select id="backdrop"><option value="aurora">Мягкое сияние</option><option value="stars">Звёзды</option><option value="plain">Однотонный</option></select></label>
 <label>Цвет фона <input id="background" type="color"></label>
 </details>
 <details class="scene-section"><summary>Эффекты</summary>
 <label>Свечение <input id="glow" type="checkbox"></label>
-<label>Яркость свечения <output id="glowAmountValue"></output></label><input id="glowAmount" aria-label="Яркость свечения" type="range" min="0" max="100" step="1">
+<label>Яркость свечения <span class="scene-number"><input id="glowAmountValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Яркость свечения: значение"><span aria-hidden="true">%</span></span></label><input id="glowAmount" aria-label="Яркость свечения" type="range" min="0" max="100" step="1">
 <label>Искры <input id="sparks" type="checkbox"></label>
-<label>Количество искр <output id="sparkAmountValue"></output></label><input id="sparkAmount" aria-label="Количество искр" type="range" min="0" max="100" step="1">
-<label>Световые лучи <output id="raysValue"></output></label><input id="rays" aria-label="Световые лучи" type="range" min="0" max="100" step="1">
-<label>Кольца касания <output id="ringsValue"></output></label><input id="rings" aria-label="Кольца касания" type="range" min="0" max="100" step="1">
-<label>Световой след <output id="trailsValue"></output></label><input id="trails" aria-label="Световой след" type="range" min="0" max="100" step="1">
+<label>Количество искр <span class="scene-number"><input id="sparkAmountValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Количество искр: значение"><span aria-hidden="true">%</span></span></label><input id="sparkAmount" aria-label="Количество искр" type="range" min="0" max="100" step="1">
+<label>Световые лучи <span class="scene-number"><input id="raysValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Световые лучи: значение"><span aria-hidden="true">%</span></span></label><input id="rays" aria-label="Световые лучи" type="range" min="0" max="100" step="1">
+<label>Кольца касания <span class="scene-number"><input id="ringsValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Кольца касания: значение"><span aria-hidden="true">%</span></span></label><input id="rings" aria-label="Кольца касания" type="range" min="0" max="100" step="1">
+<label>Световой след <span class="scene-number"><input id="trailsValue" type="text" inputmode="decimal" autocomplete="off" aria-label="Световой след: значение"><span aria-hidden="true">%</span></span></label><input id="trails" aria-label="Световой след" type="range" min="0" max="100" step="1">
 <label>Подсветка клавиш <input id="keyLights" type="checkbox"></label>
 </details>
 <details class="scene-section"><summary>Качество</summary>
@@ -93,11 +101,13 @@ header{display:flex;gap:6px}header,.controls,#status,#missingSounds{margin:0 12p
 <label>Чёткость <select id="quality"><option value="1">Экономная</option><option value="1.5">Сбалансированная</option><option value="2">Высокая</option></select></label>
 </details>
 </div>
-</article></div>
+</article><aside id="sceneDemos" hidden aria-label="Предпросмотр визуала"><section class="scene-demo-box"><div class="scene-demo-head"><button class="button" id="replaySceneDemo" aria-label="Пауза предпросмотра">Ⅱ</button><span>Предпросмотр</span><button class="button" id="sceneDemoSound"></button></div><canvas id="sceneDemo" role="button" tabindex="0" aria-label="Приблизить ноты предпросмотра" aria-pressed="false"></canvas><p id="sceneDemoStatus" role="status"></p></section><section class="scene-overview-box"><canvas id="scenePreview" role="button" tabindex="0" aria-label="Кадр трека: нажми для случайного момента, удерживай для перемотки"></canvas><div id="sceneOverviewSeek" hidden><output id="sceneOverviewTime"></output><div class="overview-progress"><i id="sceneOverviewProgress"></i></div></div></section></aside>
+<section id="sceneColorPicker" class="scene-color-picker" role="dialog" aria-modal="true" aria-labelledby="sceneColorTitle" hidden><div class="pref-heading"><b id="sceneColorTitle"></b><button class="button" id="closeSceneColor" aria-label="Закрыть выбор цвета">✕</button></div><div id="sceneColorSwatches"></div><div class="scene-color-special"><button id="sceneTransparent" aria-label="Прозрачный" title="Прозрачный"></button><button id="scenePaletteColor" aria-label="Цвет палитры" title="Цвет палитры"></button><label class="scene-custom-color" title="Свой цвет"><span aria-hidden="true">＋</span><input id="sceneCustomColor" type="color" aria-label="Свой цвет"></label></div></section>
+</div>
 <div class="shade" id="stepSheet" hidden role="dialog" aria-modal="true" aria-labelledby="stepTitle"><article class="pref-card"><div class="pref-heading"><h2 id="stepTitle">Сетка</h2><button class="button" id="closeStep">Готово</button></div><div id="gridPreview" role="img"></div>
 
 <fieldset><legend>Вид сетки</legend><label>Деление сетки <select id="gridDivision"><option value="0">Как привязка</option><option value="1">1 удар</option><option value="2">1/2</option><option value="3">1/3</option><option value="4">1/4</option><option value="6">1/6</option><option value="8">1/8</option><option value="12">1/12</option><option value="16">1/16</option></select></label></fieldset><fieldset><legend>Размер нот</legend><label>Длина новой ноты <select id="noteSize"><option value="0">По сетке</option><option value="1">1 удар</option><option value="2">1/2</option><option value="3">1/3</option><option value="4">1/4</option><option value="6">1/6</option><option value="8">1/8</option><option value="12">1/12</option><option value="16">1/16</option></select></label><label>Привязка <select id="snap" aria-label="Привязка в долях удара"><option value="1">1 удар</option><option value="2">1/2</option><option value="3">1/3</option><option value="4" selected>1/4</option><option value="6">1/6</option><option value="8">1/8</option><option value="12">1/12</option><option value="16">1/16</option><option value="0">Свободно</option></select></label></fieldset></article></div>
-<div class="shade" id="laneSheet" hidden role="dialog" aria-modal="true" aria-labelledby="laneTitle"><article class="pref-card" id="laneOptions"><div class="pref-heading"><h2 id="laneTitle">Дорожки</h2><button class="button" id="closeLane" aria-label="Закрыть настройки дорожки">Готово</button></div><div id="laneList"><div class="lane-flags flag-head"><span></span><span>Дорожка</span><span>Фон</span><span>Звук</span></div><div id="ghostChoices"></div><button class="button" id="addLane" aria-label="Добавить дорожку">＋</button></div><div id="laneRename" hidden><label for="laneName">Название дорожки</label><input type="text" maxlength="48" id="laneName" aria-label="Название дорожки" autocomplete="off"><div class="sound-tabs"><button class="button" id="finishLaneRename">Готово</button><button class="button" id="deleteLane" aria-label="Удалить дорожку"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg></button></div></div><div id="laneDeleteConfirm" hidden><p id="laneDeleteName"></p><div class="sound-tabs"><button class="button" id="confirmLane">Удалить</button><button class="button" id="cancelLaneDelete">Отмена</button></div></div></article></div><div class="shade" id="instrumentSheet" hidden role="dialog" aria-modal="true" aria-labelledby="instrumentTitle"><article class="pref-card"><div class="pref-heading"><h2 id="instrumentTitle">Инструмент</h2><button class="button" id="closeInstrument">Готово</button></div><div id="currentInstrument"></div><div id="instrumentEditor" hidden><label>Название <input id="soundName" maxlength="48"></label><p id="soundSource"></p><div class="sound-tabs"><button class="button" id="soundBasicTab">Базовые</button><button class="button" id="soundAdvancedTab">Advanced</button></div><div id="soundEnvelope"></div><div id="sound-basic"></div><div id="soundAdvanced" hidden><fieldset id="sound-envelope"><legend>Огибающая громкости</legend></fieldset><fieldset id="sound-tuning"><legend>Высота</legend></fieldset><fieldset id="sound-filter"><legend>Фильтр</legend><label>Тип <select id="sound-filterType"><option value="off">Выключен</option><option value="lowpass">Низкие частоты · LP</option><option value="highpass">Высокие частоты · HP</option><option value="bandpass">Полоса · BP</option></select></label></fieldset><fieldset id="sound-sample"><legend>Сэмпл</legend><label>Петля <select id="sound-loop"><option value="original">Из инструмента</option><option value="off">Выключена</option></select></label><label>Реверс <input id="sound-reverse" type="checkbox"></label></fieldset></div><div class="sound-tabs"><button class="button" id="soundPreview">▶ Послушать</button><button class="button" id="soundReset">Сбросить параметры</button></div></div><div id="instrumentLibrary" hidden><div class="instrument-filters"><input id="instrumentSearch" type="search" placeholder="Найти инструмент" aria-label="Поиск инструментов" autocomplete="off"><select id="instrumentCategory" aria-label="Раздел инструментов"><option value="all">Все инструменты</option><option value="installed">Загруженные</option></select></div><div id="instrumentChoices"></div><p id="instrumentEmpty" role="status" hidden>Ничего не найдено</p></div><div id="instrumentSource" hidden></div><p id="instrumentStatus" role="status"></p><div id="instrumentDeleteConfirm" hidden><p id="instrumentDeleteText"></p><div class="instrument-delete"><button class="button" id="confirmInstrumentDelete">Удалить</button><button class="button" id="cancelInstrumentDelete">Отмена</button></div></div></article></div><div class="shade" id="importProgress" role="dialog" aria-modal="true" aria-labelledby="importTitle" hidden><article class="pref-card"><h2 id="importTitle">Импорт шкатулки</h2><p id="importStatus" role="status"></p><button class="button" id="cancelInstrumentImport">Отмена</button></article></div><div class="shade" id="exitSheet" role="dialog" aria-modal="true" aria-labelledby="exitTitle" hidden><article class="pref-card"><div class="pref-heading"><button class="button" id="cancelExit" aria-label="Вернуться в редактор">‹</button><h2 id="exitTitle">Сохранить трек перед выходом?</h2></div><div id="exitActions"><button class="button" id="exitSave">Сохранить и выйти</button><button class="button" id="exitDiscard">Выйти без сохранения</button></div><div id="exitChoices" hidden><button class="button" id="exitOverwrite">Заменить существующий</button><button class="button" id="exitNew">Сохранить как новый</button></div><div id="exitNameForm" hidden><label for="exitName">Название трека</label><input class="song-input" id="exitName" maxlength="80"><button class="button" id="exitConfirm">Сохранить и выйти</button></div><p>Без сохранения трек можно восстановить через «Загрузить последний трек».</p><p id="exitStatus" role="status"></p></article></div><script>
+<div class="shade" id="laneSheet" hidden role="dialog" aria-modal="true" aria-labelledby="laneTitle"><article class="pref-card" id="laneOptions"><div class="pref-heading"><h2 id="laneTitle">Дорожки</h2><button class="button" id="closeLane" aria-label="Закрыть настройки дорожки">Готово</button></div><div id="laneList"><div class="lane-flags flag-head"><span></span><span>Дорожка</span><span>Фон</span><span>Звук</span></div><div id="ghostChoices"></div><button class="button" id="addLane" aria-label="Добавить дорожку">＋</button></div><div id="laneRename" hidden><label for="laneName">Название дорожки</label><input type="text" maxlength="48" id="laneName" aria-label="Название дорожки" autocomplete="off"><div class="sound-tabs"><button class="button" id="finishLaneRename">Готово</button><button class="button" id="deleteLane" aria-label="Удалить дорожку"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg></button></div></div><div id="laneDeleteConfirm" hidden><p id="laneDeleteName"></p><div class="sound-tabs"><button class="button" id="confirmLane">Удалить</button><button class="button" id="cancelLaneDelete">Отмена</button></div></div></article></div><div class="shade" id="instrumentSheet" hidden role="dialog" aria-modal="true" aria-labelledby="instrumentTitle"><article class="pref-card"><div class="pref-heading"><h2 id="instrumentTitle">Инструмент</h2><button class="button" id="closeInstrument">Готово</button></div><div id="currentInstrument"></div><div id="instrumentEditor" hidden><label>Название <input id="soundName" maxlength="48"></label><p id="soundSource"></p><div class="sound-tabs"><button class="button" id="soundBasicTab">Базовые</button><button class="button" id="soundAdvancedTab">Advanced</button></div><div id="soundEnvelope"></div><div id="sound-basic"></div><div id="soundAdvanced" hidden><fieldset id="sound-envelope"><legend>Огибающая громкости</legend></fieldset><fieldset id="sound-tuning"><legend>Высота</legend></fieldset><fieldset id="sound-filter"><legend>Фильтр</legend><label>Тип <select id="sound-filterType"><option value="off">Выключен</option><option value="lowpass">Низкие частоты · LP</option><option value="highpass">Высокие частоты · HP</option><option value="bandpass">Полоса · BP</option></select></label></fieldset><fieldset id="sound-sample"><legend>Сэмпл</legend><label>Петля <select id="sound-loop"><option value="original">Из инструмента</option><option value="off">Выключена</option></select></label><label>Реверс <input id="sound-reverse" type="checkbox"></label></fieldset></div><div class="sound-tabs"><button class="button" id="soundPreview">▶ Послушать</button><button class="button" id="soundReset">Сбросить параметры</button></div></div><div id="instrumentLibrary" hidden><div class="instrument-filters"><input id="instrumentSearch" type="search" placeholder="Найти инструмент" aria-label="Поиск инструментов" autocomplete="off"><select id="instrumentCategory" aria-label="Раздел инструментов"><option value="all">Все инструменты</option><option value="installed">Загруженные</option></select></div><div id="instrumentChoices"></div><p id="instrumentEmpty" role="status" hidden>Ничего не найдено</p></div><div id="instrumentSource" hidden></div><p id="instrumentStatus" role="status"></p><div id="instrumentDeleteConfirm" hidden><p id="instrumentDeleteText"></p><div class="instrument-delete"><button class="button" id="confirmInstrumentDelete">Удалить</button><button class="button" id="cancelInstrumentDelete">Отмена</button></div></div></article></div><div class="shade" id="importProgress" role="dialog" aria-modal="true" aria-labelledby="importTitle" hidden><article class="pref-card"><h2 id="importTitle">Импорт шкатулки</h2><p id="importStatus" role="status"></p><button class="button" id="cancelInstrumentImport">Отмена</button></article></div><div class="shade" id="exitSheet" role="dialog" aria-modal="true" aria-labelledby="exitTitle" hidden><article class="pref-card"><div class="pref-heading"><button class="button" id="cancelExit" aria-label="Вернуться в редактор">‹</button><h2 id="exitTitle">Сохранить трек перед выходом?</h2></div><div id="exitActions"><button class="button" id="exitSave">Сохранить и выйти</button><button class="button" id="exitDiscard">Выйти без сохранения</button></div><div id="exitChoices" hidden><button class="button" id="exitOverwrite">Заменить существующий</button><button class="button" id="exitNew">Сохранить как новый</button></div><div id="exitNameForm" hidden><label for="exitName">Название трека</label><input class="song-input" id="exitName" maxlength="80"><button class="button" id="exitConfirm">Сохранить и выйти</button></div><p>Без сохранения трек можно восстановить через «Загрузить последний трек».</p><p id="exitStatus" role="status"></p></article></div><output id="diagnosticsHud" aria-label="Показатели производительности" hidden></output><script>
 'use strict';
 const byId=id=>document.getElementById(id);
 const names=['До','До♯','Ре','Ре♯','Ми','Фа','Фа♯','Соль','Соль♯','Ля','Ля♯','Си'];
@@ -226,7 +236,7 @@ async function importMusicbox(){
   if(!importHost.commitInstrumentImport())throw Error('Не удалось сохранить инструмент. Проверь свободное место.');
   instrumentCache.set(floeId,bank);builtinPresence.set(floeId,true);pendingBuiltinData.delete(floeId);
   message='Шкатулка импортирована.';
- }catch(e){message=e.message||'Не удалось импортировать инструмент.'}
+ }catch(e){diagnostics.error('instrumentImport',e);message=e.message||'Не удалось импортировать инструмент.'}
  finally{
   importHost.cancelInstrumentImport();importJob=null;fileBusy=false;byId('importProgress').hidden=true;
   renderMissingSounds();renderInstruments();controls();trackActions();
@@ -339,6 +349,54 @@ byId('confirmLane').onclick=()=>{
  lanes.splice(removing,1);if(activeLane>removing)activeLane--;
  closeLane();renderLanes();controls();trackChanged();
 };
+// Opt-in diagnostics: bounded metadata only, never note data or track names.
+const diagnostics=(()=>{
+ let enabled=false,overlay=false,frame=0,last=0,epoch=0,frames=0,slow=0,maxFrame=0,renderFrames=0,renderMs=0,renderMax=0,lastPersist=0;
+ const now=()=>typeof performance!=='undefined'&&performance.now?performance.now():Date.now();
+ const report={format:'notka.diagnostics.1',editor:'0.81',startedAt:null,updatedAt:null,samples:[],errors:[],operations:{},summary:{frames:0,slowFrames:0,maxFrameMs:0}};
+ const host=typeof NotkaPlayer!=='undefined'?NotkaPlayer:null;
+ const round=n=>Math.round(n*100)/100;
+ function operation(name,ms){if(!enabled)return;const o=report.operations[name]||(report.operations[name]={count:0,totalMs:0,maxMs:0});o.count++;o.totalMs=round(o.totalMs+ms);o.maxMs=round(Math.max(o.maxMs,ms))}
+ function error(kind,value){
+  if(!enabled)return;
+  report.errors.push({at:new Date().toISOString(),kind,message:String(value?.message||value||'Неизвестная ошибка').slice(0,400),stack:String(value?.stack||'').slice(0,1800)});
+  if(report.errors.length>50)report.errors.shift();
+  if(now()-lastPersist>=5000)persist();
+ }
+ function persist(){
+  if(!enabled)return;
+  report.updatedAt=new Date().toISOString();lastPersist=now();
+  try{return host?.diagnosticsStore?.(JSON.stringify(report))===true}catch{return false}
+ }
+ function sample(ms){
+  let audioBytes=0;for(const bank of instrumentCache.values())for(const s of bank.samples)audioBytes+=(s.buffer.length||0)*(s.buffer.numberOfChannels||1)*4;
+  const jsHeap=typeof performance!=='undefined'&&performance.memory?.usedJSHeapSize;
+  const row={at:Date.now(),mode:running?(playback?.visual?'player':'playback'):'editor',fps:round(frames*1000/ms),slowFrames:slow,maxFrameMs:round(maxFrame),drawFps:round(renderFrames*1000/ms),drawMeanMs:renderFrames?round(renderMs/renderFrames):0,drawMaxMs:round(renderMax),notes:lanes.reduce((n,l)=>n+l.notes.length,0),lanes:lanes.length,voices:voices.size,audioBytes,...(Number.isFinite(jsHeap)?{jsHeapBytes:jsHeap}:{})};
+  report.samples.push(row);if(report.samples.length>600)report.samples.shift();
+  if(overlay){const el=byId('diagnosticsHud');el.hidden=false;el.textContent=(row.mode==='player'?'Плеер '+row.drawFps+' FPS · отрисовка '+row.drawMaxMs:'Экран '+row.fps+' FPS · кадр '+row.maxFrameMs)+' мс\nЗвук '+(audioBytes/1048576).toFixed(1)+' МБ · голосов '+row.voices+(Number.isFinite(jsHeap)?' · JS '+(jsHeap/1048576).toFixed(1)+' МБ':'')}
+  frames=slow=maxFrame=renderFrames=renderMs=renderMax=0;
+ }
+ function tick(ms){
+  if(!enabled)return;
+  if(!document.hidden){
+   if(last){const dt=ms-last;frames++;report.summary.frames++;if(dt>50){slow++;report.summary.slowFrames++}maxFrame=Math.max(maxFrame,dt);report.summary.maxFrameMs=round(Math.max(report.summary.maxFrameMs,dt))}
+   last=ms;if(!epoch)epoch=ms;
+   if(ms-epoch>=1000){sample(ms-epoch);epoch=ms;if(now()-lastPersist>=30000)persist()}
+  }else{last=epoch=0;frames=slow=maxFrame=renderFrames=renderMs=renderMax=0}
+  frame=requestAnimationFrame(tick);
+ }
+ function start(){
+  try{const config=JSON.parse(host?.diagnosticsConfig?.()||'{}');enabled=config.enabled===true;overlay=enabled&&config.overlay===true}catch{}
+  if(!enabled)return;
+  if(typeof performance!=='undefined'&&performance.now)operation('webViewReady',performance.now());
+  report.startedAt=new Date().toISOString();report.userAgent=typeof navigator!=='undefined'?navigator.userAgent:'';
+  report.screen={width:window.innerWidth||0,height:window.innerHeight||0,dpr:window.devicePixelRatio||1};
+  window.addEventListener('error',e=>error('javascript',e.error||e.message));
+  window.addEventListener('unhandledrejection',e=>error('promise',e.reason));
+  persist();frame=requestAnimationFrame(tick);
+ }
+ return {start,now,persist,error,operation,suspend(){last=epoch=0;frames=slow=maxFrame=renderFrames=renderMs=renderMax=0;persist()},get enabled(){return enabled},draw(ms){if(enabled){renderFrames++;renderMs+=ms;renderMax=Math.max(renderMax,ms)}}};
+})();
 let bpm=100,current=-1,running=false,audio,master,timer,generation=0;
 async function unlock(){
  if(!audio){
@@ -361,8 +419,8 @@ async function prepareInstrument(id){
  if(!def)throw Error('Инструмент отсутствует в каталоге. Подключись к интернету и открой редактор заново.');
  if(!def.asset||!sampleHost)throw instrumentError();
  const pending=(async()=>{
-  const data=readInstrumentData(def);checkBank(data,def);
-  const bank=await decodeInstrumentBank(data,def);
+  const started=diagnostics.enabled?diagnostics.now():0;const data=readInstrumentData(def);checkBank(data,def);
+  const bank=await decodeInstrumentBank(data,def);if(diagnostics.enabled)diagnostics.operation('instrumentLoad',diagnostics.now()-started);
   instrumentCache.set(id,bank);trimInstrumentCache(id);return bank;
  })();
  instrumentLoads.set(id,pending);
@@ -416,12 +474,28 @@ function envelopePlan(bank,s,length,volume){
  const value=t=>t<=length?before(t):Math.max(0,offLevel*(1-(t-length)/release));
  return {stops,value,release};
 }
+// Banks are immutable after decode. Keep variant groups and nearest-root results
+// outside the audio callback; WeakMap entries disappear with evicted banks.
+const bankLookups=new WeakMap(),preparedVoiceSettings=new WeakSet();
+function prepareVoiceSettings(raw){const s=Object.freeze(soundSettings(raw));preparedVoiceSettings.add(s);return s}
+function nearestSample(bank,pitch,variant){
+ let index=bankLookups.get(bank);
+ if(!index||index.samples!==bank.samples||index.length!==bank.samples.length||index.variants!==(bank.roundRobins||1)){
+  const pools=Array.from({length:bank.roundRobins||1},()=>[]);
+  for(const sample of bank.samples)if(pools[sample.rr||0])pools[sample.rr||0].push(sample);
+  index={samples:bank.samples,length:bank.samples.length,variants:bank.roundRobins||1,pools,nearest:pools.map(()=>new Map())};bankLookups.set(bank,index);
+ }
+ const group=variant%index.variants,cache=index.nearest[group];
+ if(cache.has(pitch))return cache.get(pitch);
+ const pool=index.pools[group];let sample=pool[0]||bank.samples[0];
+ for(const candidate of pool)if(Math.abs(candidate.root-pitch)<Math.abs(sample.root-pitch))sample=candidate;
+ cache.set(pitch,sample);return sample;
+}
 function createInstrumentVoice(context,destination,bank,rawSettings,pitch,when,length,volume,elapsed=0,variant=0){
- const s=soundSettings(rawSettings);if(!volume||!s.volume)return;
+ const s=preparedVoiceSettings.has(rawSettings)?rawSettings:soundSettings(rawSettings);if(!volume||!s.volume)return;
  if(s.filter!=='off'&&!context.createBiquadFilter)throw Error('Для фильтра обнови Android System WebView.');
  if(s.pan!==0&&!context.createStereoPanner)throw Error('Для панорамы обнови Android System WebView.');
- const tuned=pitch+s.transpose,group=variant%(bank.roundRobins||1),pool=bank.samples.filter(sample=>(sample.rr||0)===group);let sample=pool[0]||bank.samples[0];
- for(const candidate of pool)if(Math.abs(candidate.root-tuned)<Math.abs(sample.root-tuned))sample=candidate;
+ const tuned=pitch+s.transpose,sample=nearestSample(bank,tuned,variant);
  const buffer=s.reverse?reverseBuffer(context,sample.buffer):sample.buffer,rate=Math.pow(2,(tuned-sample.root+(sample.tune+s.fine)/100)/12),low=buffer.duration*s.start/100,high=buffer.duration*s.end/100;
  let loopLow=0,loopHigh=0;
  if(sample.loop&&s.loop==='original'){
@@ -461,7 +535,7 @@ async function preview(pitch,volume=100){
  try{
   await unlock();await prepareInstrument(id);
   if(token===previewSerial&&epoch===generation&&lane===lanes[activeLane]&&id===(lane.instrument||'vsco-piano-1')&&!running&&!document.hidden)instrumentNote(id,pitch,audio.currentTime+.006,.48,volume,laneInstrument(lane).settings);
- }catch(e){if(token===previewSerial&&epoch===generation){byId('status').textContent=e.message||'Звук недоступен.'}}
+ }catch(e){diagnostics.error('preview',e);if(token===previewSerial&&epoch===generation){byId('status').textContent=e.message||'Звук недоступен.'}}
 }
 const catalogHost=sampleHost&&['soundRead','soundWrite','soundDelete','soundExists','soundDownload','soundStatus','soundText','soundHash','soundValid','soundDiscard'].every(key=>typeof sampleHost[key]==='function')?sampleHost:null;
 const downloadedInstruments=new Set();
@@ -485,7 +559,9 @@ function parseSoundCatalog(raw){
     !Number.isInteger(d.revision)||d.revision<1||d.revision>65535||!Number.isInteger(d.bytes)||d.bytes<100||d.bytes>=8388608||
     typeof d.sha256!=='string'||!/^[A-Za-z0-9+/]{43}=$/.test(d.sha256))throw Error('Некорректный инструмент в каталоге.');
   seen.add(d.id);assets.add(d.asset);
-  return {id:d.id,name:d.name.trim(),short:d.short,asset:d.asset,gm:d.gm,demo:d.demo,revision:d.revision,bytes:d.bytes,sha256:d.sha256,remote:true};
+  const p=d.preview;
+  if(p!==undefined&&(!p||typeof p.asset!=='string'||!/^preview-[a-z0-9-]{1,39}$/.test(p.asset)||!Number.isInteger(p.bytes)||p.bytes<100||p.bytes>262144||typeof p.sha256!=='string'||!/^[A-Za-z0-9+/]{43}=$/.test(p.sha256)))throw Error('Некорректное предпрослушивание.');
+  return {id:d.id,name:d.name.trim(),short:d.short,asset:d.asset,gm:d.gm,demo:d.demo,revision:d.revision,bytes:d.bytes,sha256:d.sha256,preview:p?{asset:p.asset,bytes:p.bytes,sha256:p.sha256}:null,remote:true};
  });
  for(const old of instruments.filter(d=>d.remote)){
   const next=entries.find(d=>d.id===old.id);
@@ -498,24 +574,25 @@ function mergeSoundCatalog(entries){
   remoteAlternatives.set(entry.id,entry);
   const index=instruments.findIndex(d=>d.id===entry.id);
   if(index<0)instruments.push(entry);else if(instruments[index].remote)instruments[index]=entry;
+  if(entry.id!=='lib-musicbox-1')visibleInstrumentIds.add(entry.id);
   if(catalogHost.soundExists(entry.asset))downloadedInstruments.add(entry.id);
  }
  renderLanes();paintSoon();if(!byId('instrumentSheet').hidden)renderInstruments();
 }
-const shippedSoundCatalog="{\"record\":\"{\\\"kind\\\":\\\"notka.instruments.1\\\",\\\"version\\\":6,\\\"instruments\\\":[{\\\"id\\\":\\\"lib-vsco-trumpet-1\\\",\\\"asset\\\":\\\"bank-trumpet-1\\\",\\\"name\\\":\\\"\\\\u0422\\\\u0440\\\\u0443\\\\u0431\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0422\\\\u0440\\\",\\\"gm\\\":56,\\\"demo\\\":67,\\\"revision\\\":1,\\\"bytes\\\":1435112,\\\"sha256\\\":\\\"hiZHM1m3Psfki5KTh75oWLijGoOW3FbWZ1IRnPJtwpY=\\\"},{\\\"id\\\":\\\"lib-vsco-violin-1\\\",\\\"asset\\\":\\\"bank-violin-1\\\",\\\"name\\\":\\\"\\\\u0421\\\\u043a\\\\u0440\\\\u0438\\\\u043f\\\\u043a\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0421\\\\u043a\\\",\\\"gm\\\":40,\\\"demo\\\":69,\\\"revision\\\":1,\\\"bytes\\\":1913241,\\\"sha256\\\":\\\"l4HKyRDDBJBeMZ2ORrlKEorxIrqG2tj9AXS9DrzhPWc=\\\"},{\\\"id\\\":\\\"lib-vsco-flute-1\\\",\\\"asset\\\":\\\"bank-flute-1\\\",\\\"name\\\":\\\"\\\\u0424\\\\u043b\\\\u0435\\\\u0439\\\\u0442\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0424\\\",\\\"gm\\\":73,\\\"demo\\\":72,\\\"revision\\\":1,\\\"bytes\\\":1674175,\\\"sha256\\\":\\\"JTvrMkDiYffQaLoQRNUDRl5deFq+RSRVi4TyvDGzKzQ=\\\"},{\\\"id\\\":\\\"lib-vsco-bass-1\\\",\\\"asset\\\":\\\"bank-bass-1\\\",\\\"name\\\":\\\"\\\\u041a\\\\u043e\\\\u043d\\\\u0442\\\\u0440\\\\u0430\\\\u0431\\\\u0430\\\\u0441\\\",\\\"short\\\":\\\"\\\\u041a\\\\u0431\\\",\\\"gm\\\":32,\\\"demo\\\":40,\\\"revision\\\":1,\\\"bytes\\\":1449224,\\\"sha256\\\":\\\"c04tJ6rlL2VWSpRaEaUbWk1IAmypj0KDdeTdu7HcnTY=\\\"},{\\\"id\\\":\\\"lib-musicbox-1\\\",\\\"asset\\\":\\\"bank-musicbox-1\\\",\\\"name\\\":\\\"\\\\u041c\\\\u0443\\\\u0437\\\\u044b\\\\u043a\\\\u0430\\\\u043b\\\\u044c\\\\u043d\\\\u0430\\\\u044f \\\\u0448\\\\u043a\\\\u0430\\\\u0442\\\\u0443\\\\u043b\\\\u043a\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0428\\\\u043a\\\",\\\"gm\\\":10,\\\"demo\\\":84,\\\"revision\\\":1,\\\"bytes\\\":585417,\\\"sha256\\\":\\\"txioejeQCS+r8LqjYRWgUZ0/qcNjtmrHbwfXM/gTd08=\\\"},{\\\"id\\\":\\\"lib-mda-grand-1\\\",\\\"asset\\\":\\\"bank-mda-grand-1\\\",\\\"name\\\":\\\"Grand Piano \\\\u00b7 MDA\\\",\\\"short\\\":\\\"\\\\u0413\\\\u041f\\\",\\\"gm\\\":0,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":7684380,\\\"sha256\\\":\\\"/RndDOlwu2e7ulj/hDyvbBkm2/qRpZLcTQHRBrfgKNs=\\\"}]}\",\"signature\":\"S4iE4v8J6kndco2PuaZzwB0ngSzA2+pS/zddDFWT1adpNCFeDM/ukGPehYtqux3FOUsgXR1N/HBOJv1DK7vAGTvYJeUE8bNtfiA/js3n7Z2RbL3H4TrtHyfx+vk71qKARu4E/yKXBKbScE+IBjR1QmbxwbjKdEAYHeberw9rVet8P+HpSCHvnj/H670ptVGRe/rDFj8eIhUt0NvAeJ4vIq4bZnGTc0ITa0V58knD36iSJFYZTppjT3GCxj74nJsPSh76bAiiQxObpw1HzREv4YPM8S/OSLrEGLMCq7GVWlLWiCCxIhc/3YiJWAZJ+XL+CrhcNFBjv4NLFzFb4yNhs9eOALovr34RZwm4S7bIDmWaxqGKTc9nrm/mu4+FqN5wMilBpizdyF00EzBRR0/sx8YW/Pi5W9kV9qghrWWUJUnUlS9u/BnAjNHM03uAGMVVLoINjR7kR5lpQj6MEgCGCRUabGVeqORfUV/M17YjPD+gXs8nNQf1DPmj4kaf3FCj\"}";
+const shippedSoundCatalog="{\"record\":\"{\\\"kind\\\":\\\"notka.instruments.1\\\",\\\"version\\\":7,\\\"instruments\\\":[{\\\"id\\\":\\\"lib-vsco-trumpet-1\\\",\\\"asset\\\":\\\"bank-trumpet-1\\\",\\\"name\\\":\\\"\\\\u0422\\\\u0440\\\\u0443\\\\u0431\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0422\\\\u0440\\\",\\\"gm\\\":56,\\\"demo\\\":67,\\\"revision\\\":1,\\\"bytes\\\":1435112,\\\"sha256\\\":\\\"hiZHM1m3Psfki5KTh75oWLijGoOW3FbWZ1IRnPJtwpY=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-trumpet-1\\\",\\\"bytes\\\":49674,\\\"sha256\\\":\\\"CbcrOgjQTJCRpwn+2DhrassgP8pvIND8EmA9Pgh5wPs=\\\"}},{\\\"id\\\":\\\"lib-vsco-violin-1\\\",\\\"asset\\\":\\\"bank-violin-1\\\",\\\"name\\\":\\\"\\\\u0421\\\\u043a\\\\u0440\\\\u0438\\\\u043f\\\\u043a\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0421\\\\u043a\\\",\\\"gm\\\":40,\\\"demo\\\":69,\\\"revision\\\":1,\\\"bytes\\\":1913241,\\\"sha256\\\":\\\"l4HKyRDDBJBeMZ2ORrlKEorxIrqG2tj9AXS9DrzhPWc=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-violin-1\\\",\\\"bytes\\\":49673,\\\"sha256\\\":\\\"chKkVxyvMZMoBF/bTH9ajxWa3vkOe8RgA7Xh621O5Fg=\\\"}},{\\\"id\\\":\\\"lib-vsco-flute-1\\\",\\\"asset\\\":\\\"bank-flute-1\\\",\\\"name\\\":\\\"\\\\u0424\\\\u043b\\\\u0435\\\\u0439\\\\u0442\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0424\\\",\\\"gm\\\":73,\\\"demo\\\":72,\\\"revision\\\":1,\\\"bytes\\\":1674175,\\\"sha256\\\":\\\"JTvrMkDiYffQaLoQRNUDRl5deFq+RSRVi4TyvDGzKzQ=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-flute-1\\\",\\\"bytes\\\":49672,\\\"sha256\\\":\\\"i9rgpwnwVqvUQrDXNPtMuEat0kcnrs+Fp+LybgxVUOs=\\\"}},{\\\"id\\\":\\\"lib-vsco-bass-1\\\",\\\"asset\\\":\\\"bank-bass-1\\\",\\\"name\\\":\\\"\\\\u041a\\\\u043e\\\\u043d\\\\u0442\\\\u0440\\\\u0430\\\\u0431\\\\u0430\\\\u0441\\\",\\\"short\\\":\\\"\\\\u041a\\\\u0431\\\",\\\"gm\\\":32,\\\"demo\\\":40,\\\"revision\\\":1,\\\"bytes\\\":1449224,\\\"sha256\\\":\\\"c04tJ6rlL2VWSpRaEaUbWk1IAmypj0KDdeTdu7HcnTY=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-bass-1\\\",\\\"bytes\\\":49671,\\\"sha256\\\":\\\"fD6Nw9pjb3j7T+aGDcm2JCEfUBOowqSH8ELmIvZkoWE=\\\"}},{\\\"id\\\":\\\"lib-musicbox-1\\\",\\\"asset\\\":\\\"bank-musicbox-1\\\",\\\"name\\\":\\\"\\\\u041c\\\\u0443\\\\u0437\\\\u044b\\\\u043a\\\\u0430\\\\u043b\\\\u044c\\\\u043d\\\\u0430\\\\u044f \\\\u0448\\\\u043a\\\\u0430\\\\u0442\\\\u0443\\\\u043b\\\\u043a\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0428\\\\u043a\\\",\\\"gm\\\":10,\\\"demo\\\":84,\\\"revision\\\":1,\\\"bytes\\\":585417,\\\"sha256\\\":\\\"txioejeQCS+r8LqjYRWgUZ0/qcNjtmrHbwfXM/gTd08=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-musicbox-1\\\",\\\"bytes\\\":49675,\\\"sha256\\\":\\\"8dEm8hhvTPyy5QQJ76rWfL1hwRgtenMv3lFuNosHHIY=\\\"}},{\\\"id\\\":\\\"lib-mda-grand-1\\\",\\\"asset\\\":\\\"bank-mda-grand-1\\\",\\\"name\\\":\\\"Grand Piano \\\\u00b7 MDA\\\",\\\"short\\\":\\\"\\\\u0413\\\\u041f\\\",\\\"gm\\\":0,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":7684380,\\\"sha256\\\":\\\"/RndDOlwu2e7ulj/hDyvbBkm2/qRpZLcTQHRBrfgKNs=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-mda-grand-1\\\",\\\"bytes\\\":49676,\\\"sha256\\\":\\\"MakpsR6aeH5OptfsqEzWmCg+E+wtg2V7wzD67LLn0Zc=\\\"}},{\\\"id\\\":\\\"lib-gu-epiano-1\\\",\\\"asset\\\":\\\"bank-gu-epiano-1\\\",\\\"name\\\":\\\"\\\\u042d\\\\u043b\\\\u0435\\\\u043a\\\\u0442\\\\u0440\\\\u043e\\\\u043f\\\\u0438\\\\u0430\\\\u043d\\\\u0438\\\\u043d\\\\u043e\\\",\\\"short\\\":\\\"\\\\u042d\\\\u041f\\\",\\\"gm\\\":4,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":3290160,\\\"sha256\\\":\\\"qZruWLo/eXx7bAYzZGnePStvM2fSGDRcDlcsuDctW3Q=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-epiano-1\\\",\\\"bytes\\\":49676,\\\"sha256\\\":\\\"qAygsEYGaA1G3IXGE3xJTSqp03cobwGzd3Nz/UVeiNM=\\\"}},{\\\"id\\\":\\\"lib-gu-clavinet-1\\\",\\\"asset\\\":\\\"bank-gu-clavinet-1\\\",\\\"name\\\":\\\"\\\\u041a\\\\u043b\\\\u0430\\\\u0432\\\\u0438\\\\u043d\\\\u0435\\\\u0442\\\",\\\"short\\\":\\\"\\\\u041a\\\\u0432\\\",\\\"gm\\\":7,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":3290120,\\\"sha256\\\":\\\"NEjC2Uhyk8VEPwiG4qt3jfgrE4EcKe1PhYIUcFxE0xQ=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-clavinet-1\\\",\\\"bytes\\\":49678,\\\"sha256\\\":\\\"gM3H5PBa/2vesyuukXW32zHyetlPSMIWl9bk3rTlT1g=\\\"}},{\\\"id\\\":\\\"lib-gu-celesta-1\\\",\\\"asset\\\":\\\"bank-gu-celesta-1\\\",\\\"name\\\":\\\"\\\\u0427\\\\u0435\\\\u043b\\\\u0435\\\\u0441\\\\u0442\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0427\\\\u043b\\\",\\\"gm\\\":8,\\\"demo\\\":72,\\\"revision\\\":1,\\\"bytes\\\":3290112,\\\"sha256\\\":\\\"9bxyIQtCcOD0ucFiLPp0W1870+ibj0MzYw1gAex8B+w=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-celesta-1\\\",\\\"bytes\\\":49677,\\\"sha256\\\":\\\"UrMfg3rAwrP5MOOAhFazjYWSXzjwfP7HzxDMsySTWiU=\\\"}},{\\\"id\\\":\\\"lib-gu-glockenspiel-1\\\",\\\"asset\\\":\\\"bank-gu-glockenspiel-1\\\",\\\"name\\\":\\\"\\\\u0413\\\\u043b\\\\u043e\\\\u043a\\\\u0435\\\\u043d\\\\u0448\\\\u043f\\\\u0438\\\\u043b\\\\u044c\\\",\\\"short\\\":\\\"\\\\u0413\\\\u043b\\\",\\\"gm\\\":9,\\\"demo\\\":72,\\\"revision\\\":1,\\\"bytes\\\":3290145,\\\"sha256\\\":\\\"rHWYfMP+BNNCAGf/Z8L18ohLB1DTHGrheprdWpxevJs=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-glockenspiel-1\\\",\\\"bytes\\\":49682,\\\"sha256\\\":\\\"3rY09f2WHwPZednpofbi16F61NmUH4CxvlY80YGAghk=\\\"}},{\\\"id\\\":\\\"lib-gu-marimba-1\\\",\\\"asset\\\":\\\"bank-gu-marimba-1\\\",\\\"name\\\":\\\"\\\\u041c\\\\u0430\\\\u0440\\\\u0438\\\\u043c\\\\u0431\\\\u0430\\\",\\\"short\\\":\\\"\\\\u041c\\\\u0440\\\",\\\"gm\\\":12,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":3290113,\\\"sha256\\\":\\\"/42GyYAuuccg3uW3M+Rx9lefDoYt+ARqIIYb0GtzVDg=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-marimba-1\\\",\\\"bytes\\\":49677,\\\"sha256\\\":\\\"DII+rRrzD3SgCGrLTIIrFMNp/1K6V80PXwvdw7KqBG8=\\\"}},{\\\"id\\\":\\\"lib-gu-xylophone-1\\\",\\\"asset\\\":\\\"bank-gu-xylophone-1\\\",\\\"name\\\":\\\"\\\\u041a\\\\u0441\\\\u0438\\\\u043b\\\\u043e\\\\u0444\\\\u043e\\\\u043d\\\",\\\"short\\\":\\\"\\\\u041a\\\\u0441\\\",\\\"gm\\\":13,\\\"demo\\\":72,\\\"revision\\\":1,\\\"bytes\\\":3290122,\\\"sha256\\\":\\\"akhfKYh928w4QUMgrlOUwkv5BliLbQ9yjYZgjxb9pk4=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-xylophone-1\\\",\\\"bytes\\\":49679,\\\"sha256\\\":\\\"JqTzCIgPwBxTwWcoetPRbronZKEYdbv5ZIVf83JmJqE=\\\"}},{\\\"id\\\":\\\"lib-gu-organ-1\\\",\\\"asset\\\":\\\"bank-gu-organ-1\\\",\\\"name\\\":\\\"\\\\u042d\\\\u043b\\\\u0435\\\\u043a\\\\u0442\\\\u0440\\\\u043e\\\\u043e\\\\u0440\\\\u0433\\\\u0430\\\\u043d\\\",\\\"short\\\":\\\"\\\\u041e\\\\u0440\\\",\\\"gm\\\":16,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199561,\\\"sha256\\\":\\\"CD3tq4C+0v1NlzeyUdVZ7/lxq6hYpc17fnn/o38h4lU=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-organ-1\\\",\\\"bytes\\\":49675,\\\"sha256\\\":\\\"Vximn8OPzzx3ZLy9dYTaSJA9xf9RutEAz13x997ILNs=\\\"}},{\\\"id\\\":\\\"lib-gu-percussive-organ-1\\\",\\\"asset\\\":\\\"bank-gu-percussive-organ-1\\\",\\\"name\\\":\\\"\\\\u0423\\\\u0434\\\\u0430\\\\u0440\\\\u043d\\\\u044b\\\\u0439 \\\\u043e\\\\u0440\\\\u0433\\\\u0430\\\\u043d\\\",\\\"short\\\":\\\"\\\\u0423\\\\u043e\\\",\\\"gm\\\":17,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199573,\\\"sha256\\\":\\\"DrhtizAtIpN33iAg22BcWJQ3rkFKVe3LA0cZRC6Tmg8=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-percussive-organ-1\\\",\\\"bytes\\\":49686,\\\"sha256\\\":\\\"gDFoFdu60+uk1miK9ZtPzPYVmnaXSgu2SaQDFnN2Sj0=\\\"}},{\\\"id\\\":\\\"lib-gu-church-organ-1\\\",\\\"asset\\\":\\\"bank-gu-church-organ-1\\\",\\\"name\\\":\\\"\\\\u0426\\\\u0435\\\\u0440\\\\u043a\\\\u043e\\\\u0432\\\\u043d\\\\u044b\\\\u0439 \\\\u043e\\\\u0440\\\\u0433\\\\u0430\\\\u043d\\\",\\\"short\\\":\\\"\\\\u0426\\\\u043e\\\",\\\"gm\\\":19,\\\"demo\\\":48,\\\"revision\\\":1,\\\"bytes\\\":1199583,\\\"sha256\\\":\\\"m2D14aFeCdElS9dTI2Jym/r7h0nFklUZE/cZSfOGHM4=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-church-organ-1\\\",\\\"bytes\\\":49682,\\\"sha256\\\":\\\"rXyW2NJvXYaBQ5q85fR+ZOvoD9s5eJ/RwxR6WxYEFW0=\\\"}},{\\\"id\\\":\\\"lib-gu-accordion-1\\\",\\\"asset\\\":\\\"bank-gu-accordion-1\\\",\\\"name\\\":\\\"\\\\u0410\\\\u043a\\\\u043a\\\\u043e\\\\u0440\\\\u0434\\\\u0435\\\\u043e\\\\u043d\\\",\\\"short\\\":\\\"\\\\u0410\\\\u043a\\\",\\\"gm\\\":21,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199544,\\\"sha256\\\":\\\"XqVVVjgXautixZPHYpoqZTDRDJIm9Wsn1P2yL/84K+I=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-accordion-1\\\",\\\"bytes\\\":49679,\\\"sha256\\\":\\\"xCRMx06eJlvxkGMtUd5KX0SNVm3QtSwR2JF5LDVeXHc=\\\"}},{\\\"id\\\":\\\"lib-gu-harmonica-1\\\",\\\"asset\\\":\\\"bank-gu-harmonica-1\\\",\\\"name\\\":\\\"\\\\u0413\\\\u0443\\\\u0431\\\\u043d\\\\u0430\\\\u044f \\\\u0433\\\\u0430\\\\u0440\\\\u043c\\\\u043e\\\\u043d\\\\u0438\\\\u043a\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0413\\\\u0433\\\",\\\"gm\\\":22,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199587,\\\"sha256\\\":\\\"IXLoBKzniOGxHruLz581sTXjUTzDEm9N4Lz2y2EPilI=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-harmonica-1\\\",\\\"bytes\\\":49679,\\\"sha256\\\":\\\"hIPqskkezylj6yaOhCloaulRMx/ysbQV1zJILCrUVwU=\\\"}},{\\\"id\\\":\\\"lib-gu-nylon-guitar-1\\\",\\\"asset\\\":\\\"bank-gu-nylon-guitar-1\\\",\\\"name\\\":\\\"\\\\u0413\\\\u0438\\\\u0442\\\\u0430\\\\u0440\\\\u0430 \\\\u00b7 \\\\u043d\\\\u0435\\\\u0439\\\\u043b\\\\u043e\\\\u043d\\\",\\\"short\\\":\\\"\\\\u0413\\\\u043d\\\",\\\"gm\\\":24,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":3290162,\\\"sha256\\\":\\\"JMY8198vCq+Yxp25xGVwpz350VtXXI8dzOClSq5fXrE=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-nylon-guitar-1\\\",\\\"bytes\\\":49682,\\\"sha256\\\":\\\"kGoReHShg+QcQjwRV/ivezNJwEunHKNBHLcopHpmmvg=\\\"}},{\\\"id\\\":\\\"lib-gu-overdrive-1\\\",\\\"asset\\\":\\\"bank-gu-overdrive-1\\\",\\\"name\\\":\\\"\\\\u0413\\\\u0438\\\\u0442\\\\u0430\\\\u0440\\\\u0430 \\\\u00b7 \\\\u043e\\\\u0432\\\\u0435\\\\u0440\\\\u0434\\\\u0440\\\\u0430\\\\u0439\\\\u0432\\\",\\\"short\\\":\\\"\\\\u041e\\\\u0432\\\",\\\"gm\\\":29,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199595,\\\"sha256\\\":\\\"2bMFdsbg+aoLM9PEps4a/LLq6d6cYNc14wcHp8b/jtI=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-overdrive-1\\\",\\\"bytes\\\":49679,\\\"sha256\\\":\\\"fdKqDW8H3QSfD4CM87g4K+lhU9WkDpPsr6B1TISAi38=\\\"}},{\\\"id\\\":\\\"lib-gu-distortion-1\\\",\\\"asset\\\":\\\"bank-gu-distortion-1\\\",\\\"name\\\":\\\"\\\\u0413\\\\u0438\\\\u0442\\\\u0430\\\\u0440\\\\u0430 \\\\u00b7 \\\\u0434\\\\u0438\\\\u0441\\\\u0442\\\\u043e\\\\u0440\\\\u0448\\\\u043d\\\",\\\"short\\\":\\\"\\\\u0414\\\\u0441\\\",\\\"gm\\\":30,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199589,\\\"sha256\\\":\\\"4CsNf0tsoByqlqoSiNL0z/IMyzC9OQ7Zf9kVR2gxUhU=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-distortion-1\\\",\\\"bytes\\\":49680,\\\"sha256\\\":\\\"GzqLOcvWp6gRGZy2bV1q0khM4Y8Qamr52gBricv+xp0=\\\"}},{\\\"id\\\":\\\"lib-gu-fretless-bass-1\\\",\\\"asset\\\":\\\"bank-gu-fretless-bass-1\\\",\\\"name\\\":\\\"\\\\u0411\\\\u0435\\\\u0437\\\\u043b\\\\u0430\\\\u0434\\\\u043e\\\\u0432\\\\u044b\\\\u0439 \\\\u0431\\\\u0430\\\\u0441\\\",\\\"short\\\":\\\"\\\\u0411\\\\u0431\\\",\\\"gm\\\":35,\\\"demo\\\":48,\\\"revision\\\":1,\\\"bytes\\\":1199577,\\\"sha256\\\":\\\"Dv3SQfyh6uXMD20CHwlr74jgaRjZLl15NMwKpkIaJlo=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-fretless-bass-1\\\",\\\"bytes\\\":49683,\\\"sha256\\\":\\\"a7g7luhD5Lk+2zwr83wmSZLOFS4IO0VRV0ep6Zohd1U=\\\"}},{\\\"id\\\":\\\"lib-gu-synth-bass-1\\\",\\\"asset\\\":\\\"bank-gu-synth-bass-1\\\",\\\"name\\\":\\\"\\\\u0421\\\\u0438\\\\u043d\\\\u0442\\\\u0435\\\\u0437\\\\u0430\\\\u0442\\\\u043e\\\\u0440\\\\u043d\\\\u044b\\\\u0439 \\\\u0431\\\\u0430\\\\u0441\\\",\\\"short\\\":\\\"\\\\u0421\\\\u0431\\\",\\\"gm\\\":38,\\\"demo\\\":48,\\\"revision\\\":1,\\\"bytes\\\":1199595,\\\"sha256\\\":\\\"ZTttFwMfhsv9CGJU7pzj6KHGcH0GDe8oWefqL1/zeyo=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-synth-bass-1\\\",\\\"bytes\\\":49680,\\\"sha256\\\":\\\"o+QtwGlvEDXMi1lkZKAmz7YPMzsZTz/13jlyZR6JmIk=\\\"}},{\\\"id\\\":\\\"lib-gu-cello-1\\\",\\\"asset\\\":\\\"bank-gu-cello-1\\\",\\\"name\\\":\\\"\\\\u0412\\\\u0438\\\\u043e\\\\u043b\\\\u043e\\\\u043d\\\\u0447\\\\u0435\\\\u043b\\\\u044c\\\",\\\"short\\\":\\\"\\\\u0412\\\\u0447\\\",\\\"gm\\\":42,\\\"demo\\\":48,\\\"revision\\\":1,\\\"bytes\\\":1199547,\\\"sha256\\\":\\\"qFC/HDWvpmkfdxWjxq4C81mlhwq911MQb3CC7kG2774=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-cello-1\\\",\\\"bytes\\\":49675,\\\"sha256\\\":\\\"BwHEiavt0alYEW6oF1XVEM0M+imjkm92E5iMfiJcka8=\\\"}},{\\\"id\\\":\\\"lib-gu-pizzicato-1\\\",\\\"asset\\\":\\\"bank-gu-pizzicato-1\\\",\\\"name\\\":\\\"\\\\u0421\\\\u0442\\\\u0440\\\\u0443\\\\u043d\\\\u043d\\\\u044b\\\\u0435 \\\\u00b7 \\\\u043f\\\\u0438\\\\u0446\\\\u0446\\\\u0438\\\\u043a\\\\u0430\\\\u0442\\\\u043e\\\",\\\"short\\\":\\\"\\\\u041f\\\\u0446\\\",\\\"gm\\\":45,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":3290194,\\\"sha256\\\":\\\"qjuIpw2nxYXiYpxtttOIBS9I9elF7D9RG01BFNWj9oM=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-pizzicato-1\\\",\\\"bytes\\\":49679,\\\"sha256\\\":\\\"nEnjS+sV8aKmcf0HH7ffBQKoXKgrGO/bcA24O0VPPDA=\\\"}},{\\\"id\\\":\\\"lib-gu-harp-1\\\",\\\"asset\\\":\\\"bank-gu-harp-1\\\",\\\"name\\\":\\\"\\\\u0410\\\\u0440\\\\u0444\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0410\\\\u0440\\\",\\\"gm\\\":46,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":3290089,\\\"sha256\\\":\\\"9LRPECvQrwIp/skKt8ukRGeGSnDE79MQVD5vsgpq9oI=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-harp-1\\\",\\\"bytes\\\":49674,\\\"sha256\\\":\\\"vIsgTVPP6wo7106tLxa/4EBPn/KPgQyplQIZEf2nyaU=\\\"}},{\\\"id\\\":\\\"lib-gu-strings-1\\\",\\\"asset\\\":\\\"bank-gu-strings-1\\\",\\\"name\\\":\\\"\\\\u0421\\\\u0442\\\\u0440\\\\u0443\\\\u043d\\\\u043d\\\\u044b\\\\u0439 \\\\u0430\\\\u043d\\\\u0441\\\\u0430\\\\u043c\\\\u0431\\\\u043b\\\\u044c\\\",\\\"short\\\":\\\"\\\\u0421\\\\u0430\\\",\\\"gm\\\":48,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199592,\\\"sha256\\\":\\\"o72GgSCVNm/6n6GMYDkuF0pu5byWtORdXGrLIcCwJps=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-strings-1\\\",\\\"bytes\\\":49677,\\\"sha256\\\":\\\"GqvgXmfQ2hVMcCGl8dhatYOU0VJbOg1YfwtBkDnqXkI=\\\"}},{\\\"id\\\":\\\"lib-gu-choir-1\\\",\\\"asset\\\":\\\"bank-gu-choir-1\\\",\\\"name\\\":\\\"\\\\u0425\\\\u043e\\\\u0440 \\\\u00b7 \\\\u0410-\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0425\\\\u0440\\\",\\\"gm\\\":52,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199522,\\\"sha256\\\":\\\"CjoS7AlRofmUSh8xSP2urmQCPF7if6KMv/2jy8cXKwQ=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-choir-1\\\",\\\"bytes\\\":49675,\\\"sha256\\\":\\\"0v1L4FwodtsV81MghyL4olZY3qo29VzAgmF1ffxwY7M=\\\"}},{\\\"id\\\":\\\"lib-gu-trombone-1\\\",\\\"asset\\\":\\\"bank-gu-trombone-1\\\",\\\"name\\\":\\\"\\\\u0422\\\\u0440\\\\u043e\\\\u043c\\\\u0431\\\\u043e\\\\u043d\\\",\\\"short\\\":\\\"\\\\u0422\\\\u0431\\\",\\\"gm\\\":57,\\\"demo\\\":48,\\\"revision\\\":1,\\\"bytes\\\":1199529,\\\"sha256\\\":\\\"axjUibZz8lOg/n2gpqz6gKvOl4gQ9LoCWJF9fWBeV/8=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-trombone-1\\\",\\\"bytes\\\":49678,\\\"sha256\\\":\\\"2EdpgV8tpY8wrckFRF6ORUtN0Onva4mq+Lnqb+GppcU=\\\"}},{\\\"id\\\":\\\"lib-gu-horn-1\\\",\\\"asset\\\":\\\"bank-gu-horn-1\\\",\\\"name\\\":\\\"\\\\u0412\\\\u0430\\\\u043b\\\\u0442\\\\u043e\\\\u0440\\\\u043d\\\\u0430\\\",\\\"short\\\":\\\"\\\\u0412\\\\u043b\\\",\\\"gm\\\":60,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199532,\\\"sha256\\\":\\\"X4bNQDJAs138I1T8qkiQHGfLuTBTmH/TJYZFQhgfLmU=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-horn-1\\\",\\\"bytes\\\":49674,\\\"sha256\\\":\\\"KclxumrM0JEco5xXSblhjnOTaoV5vG8wG2nrUDQdZvY=\\\"}},{\\\"id\\\":\\\"lib-gu-alto-sax-1\\\",\\\"asset\\\":\\\"bank-gu-alto-sax-1\\\",\\\"name\\\":\\\"\\\\u0410\\\\u043b\\\\u044c\\\\u0442-\\\\u0441\\\\u0430\\\\u043a\\\\u0441\\\\u043e\\\\u0444\\\\u043e\\\\u043d\\\",\\\"short\\\":\\\"\\\\u0421\\\\u043a\\\",\\\"gm\\\":65,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199565,\\\"sha256\\\":\\\"L6dLfe8A8Yd9JtzT3t3hIxFV1iKt6XLvGp9eqPL8xbg=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-alto-sax-1\\\",\\\"bytes\\\":49678,\\\"sha256\\\":\\\"bggaMixzBjq1a/StkGAo37jY28zQI4cv6sMl+ByyHk4=\\\"}},{\\\"id\\\":\\\"lib-gu-oboe-1\\\",\\\"asset\\\":\\\"bank-gu-oboe-1\\\",\\\"name\\\":\\\"\\\\u0413\\\\u043e\\\\u0431\\\\u043e\\\\u0439\\\",\\\"short\\\":\\\"\\\\u0413\\\\u0431\\\",\\\"gm\\\":68,\\\"demo\\\":72,\\\"revision\\\":1,\\\"bytes\\\":1199511,\\\"sha256\\\":\\\"3g8dG+jfZYiAiaw9Lo/iujW8CMkQMfbOTgiXNcfjksM=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-oboe-1\\\",\\\"bytes\\\":49674,\\\"sha256\\\":\\\"+Ha4FLdDm6OZS5C6jZ2S5LtBkSLisGDzc/FwhhWHpVc=\\\"}},{\\\"id\\\":\\\"lib-gu-clarinet-1\\\",\\\"asset\\\":\\\"bank-gu-clarinet-1\\\",\\\"name\\\":\\\"\\\\u041a\\\\u043b\\\\u0430\\\\u0440\\\\u043d\\\\u0435\\\\u0442\\\",\\\"short\\\":\\\"\\\\u041a\\\\u0440\\\",\\\"gm\\\":71,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199529,\\\"sha256\\\":\\\"NhNbQh2xvw4LYkRKplwKB9J2pMDyvCrw0mX68r4IAs8=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-clarinet-1\\\",\\\"bytes\\\":49678,\\\"sha256\\\":\\\"woH6mqUC1tn1jcs5FIcdVmV2yh7VU5FiwccSQzRWDx4=\\\"}},{\\\"id\\\":\\\"lib-gu-pan-flute-1\\\",\\\"asset\\\":\\\"bank-gu-pan-flute-1\\\",\\\"name\\\":\\\"\\\\u041f\\\\u0430\\\\u043d-\\\\u0444\\\\u043b\\\\u0435\\\\u0439\\\\u0442\\\\u0430\\\",\\\"short\\\":\\\"\\\\u041f\\\\u0444\\\",\\\"gm\\\":75,\\\"demo\\\":72,\\\"revision\\\":1,\\\"bytes\\\":1199545,\\\"sha256\\\":\\\"OFKpN2uebMhtJrWm9/UCDBrby76NaOB2t8C+PxpcXfw=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-pan-flute-1\\\",\\\"bytes\\\":49679,\\\"sha256\\\":\\\"a9eAehdqgiFBrj7bqQ9v1WQmCCIFnyX1l+Stve1dtHQ=\\\"}},{\\\"id\\\":\\\"lib-gu-square-lead-1\\\",\\\"asset\\\":\\\"bank-gu-square-lead-1\\\",\\\"name\\\":\\\"\\\\u041b\\\\u0438\\\\u0434 \\\\u00b7 \\\\u043f\\\\u0440\\\\u044f\\\\u043c\\\\u043e\\\\u0443\\\\u0433\\\\u043e\\\\u043b\\\\u044c\\\\u043d\\\\u0438\\\\u043a\\\",\\\"short\\\":\\\"\\\\u041b\\\\u043f\\\",\\\"gm\\\":80,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199604,\\\"sha256\\\":\\\"PwaLUJQQssL8a866ge2Gpuk09nlAPNexSi35V+4Jx4o=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-square-lead-1\\\",\\\"bytes\\\":49681,\\\"sha256\\\":\\\"x8vtVo4CnBssL8k9AUfIN51PBG9HZf5jcFjh4GGYbEk=\\\"}},{\\\"id\\\":\\\"lib-gu-saw-lead-1\\\",\\\"asset\\\":\\\"bank-gu-saw-lead-1\\\",\\\"name\\\":\\\"\\\\u041b\\\\u0438\\\\u0434 \\\\u00b7 \\\\u043f\\\\u0438\\\\u043b\\\\u0430\\\",\\\"short\\\":\\\"\\\\u041b\\\\u0441\\\",\\\"gm\\\":81,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199538,\\\"sha256\\\":\\\"l4zKUkDfEqmDQHse/sqvFKdBuDpVEWDS2LcM0mQfM8o=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-saw-lead-1\\\",\\\"bytes\\\":49678,\\\"sha256\\\":\\\"3Yy42fMaGr1q8jd9CXCNsrBJGXF69rYnpL2ejtsvH5A=\\\"}},{\\\"id\\\":\\\"lib-gu-fantasia-1\\\",\\\"asset\\\":\\\"bank-gu-fantasia-1\\\",\\\"name\\\":\\\"\\\\u041f\\\\u044d\\\\u0434 \\\\u00b7 \\\\u0444\\\\u0430\\\\u043d\\\\u0442\\\\u0430\\\\u0437\\\\u0438\\\\u044f\\\",\\\"short\\\":\\\"\\\\u041f\\\\u0434\\\",\\\"gm\\\":88,\\\"demo\\\":60,\\\"revision\\\":1,\\\"bytes\\\":1199566,\\\"sha256\\\":\\\"NPd06z+07brAh1FIDvDLzlxKgI0OQJfWJSGFEee8zvg=\\\",\\\"preview\\\":{\\\"asset\\\":\\\"preview-gu-fantasia-1\\\",\\\"bytes\\\":49678,\\\"sha256\\\":\\\"qIcLN/sYMbFWaAAwIfmBRiQN/1IGjJjybd+uy1GQUls=\\\"}}]}\",\"signature\":\"Mit8xdQkw/XCjA/ENZ6bpHBmWeQ7JVCt9qlRCgd6RT5BTgmtNkrPQcoPlnl4FS4ceyPv1Fi1c35PjhnvVFBpUt5Kr1uC5MT6N2mD1obE5Pbxk2u3wLJe0TM3v+t0YhoKJFJJr53PZmGcoEul7C2w5cc37iLQRuK62kA7VsSSOvAZd4W4q0462VTkG3fJ47L1KMsDYwWF5mmiZZxAYdd37g1A4zdBNEUkYTVuzIeyFguRwCRwGaq0Qe9NzqqSeAnFyVC7iA1twyx1lwK47vDKK/TNdggjpLGhTzgollgn4zhM+wTYQqkN/2Ox58TRmdgAoT0vJOko931uhwWXmkg4P71WvHYMT8pvhocxSC+zdzoRe//VoGgfshIRCWpbLHf7EjuWa6UO4E6F2pF8WzZMoxA4GOUpUhbkC+qWTrJRUBWHKMbiwu/C/2JsBhk4y1ntv3vHTUAfhJhKiloCWb8hRdKhCko6o3AppiqNPlkJ/VojtACmMX5OAc1yak/guHdq\"}";
 function restoreSoundCatalog(){
  if(!catalogHost)return;
  try{mergeSoundCatalog(parseSoundCatalog(shippedSoundCatalog))}catch{}
- for(const kind of ['pending-catalog','pending-bank']){
+ for(const kind of ['pending-catalog','pending-bank','pending-preview']){
   try{const id=catalogHost.soundRead(kind);if(/^\d+$/.test(id||''))catalogHost.soundDiscard(id);catalogHost.soundDelete(kind)}catch{}
  }
  try{const raw=catalogHost.soundRead(catalogKey);if(raw)mergeSoundCatalog(parseSoundCatalog(raw))}catch{}
 }
 function soundMessage(message){byId('instrumentStatus').textContent=message}
-async function fetchSound(asset,job,timeout){
+async function fetchSound(asset,job,timeout,kind='bank'){
  const id=catalogHost.soundDownload(asset);
  if(!id||!/^\d+$/.test(id))throw Error('Не удалось начать загрузку.');
- job.id=id;const pending=asset===catalogKey?'pending-catalog':'pending-bank';
+ job.id=id;const pending=asset===catalogKey?'pending-catalog':kind==='preview'?'pending-preview':'pending-bank';
  if(!catalogHost.soundWrite(pending,id)){catalogHost.soundDiscard(id);throw Error('Недостаточно места для загрузки.')}
  const until=Date.now()+timeout;
  try{
@@ -527,7 +604,7 @@ async function fetchSound(asset,job,timeout){
    if(Date.now()>until)throw Error('Загрузка заняла слишком много времени. Попробуй ещё раз.');
    await new Promise(resolve=>setTimeout(resolve,450));
   }
- }finally{catalogHost.soundDiscard(id);catalogHost.soundDelete(pending)}
+ }finally{catalogHost.soundDiscard(id);if(catalogHost.soundRead(pending)===id)catalogHost.soundDelete(pending)}
 }
 async function checkSoundCatalog(){
  if(!catalogHost||catalogStarted)return;
@@ -580,11 +657,15 @@ async function downloadInstrument(id){
 function cancelInstrumentDownload(){if(bankJob){bankJob.cancelled=true;if(bankJob.id)catalogHost.soundDiscard(bankJob.id)}}
 function askInstrumentDelete(id){
  const def=downloadableInstrument(id);
- if((!def?.remote&&!(id===floeId&&importedMusicbox()))||sourceUsed(id)||instrumentLoads.has(id)||importJob)return;
+ if(!def)return;
+ if(!def.remote&&!(id===floeId&&importedMusicbox())){soundMessage('Этот инструмент входит в APK.');return}
+ if(sourceUsed(id)){soundMessage('Инструмент используется в треке.');return}
+ if(instrumentLoads.has(id)||importJob)return;
  pendingInstrumentDelete=id;byId('instrumentDeleteText').textContent='Удалить «'+def.name+'» с телефона?';byId('instrumentDeleteConfirm').hidden=false;
 }
 function cancelInstrumentDelete(){pendingInstrumentDelete=null;byId('instrumentDeleteConfirm').hidden=true}
 function deleteInstrument(){
+ stopLibraryAudition();
  const id=pendingInstrumentDelete,def=downloadableInstrument(id);
  if((!def?.remote&&!(id===floeId&&importedMusicbox()))||!catalogHost||sourceUsed(id)||instrumentLoads.has(id)||importJob){cancelInstrumentDelete();return}
  if(id===floeId&&importedMusicbox()?importHost.deleteImportedInstrument():catalogHost.soundDelete(def.asset)){downloadedInstruments.delete(id);instrumentCache.delete(id);builtinPresence.delete(id);pendingBuiltinData.delete(id);renderMissingSounds();soundMessage('Инструмент удалён. Его можно скачать снова.')}
@@ -616,7 +697,7 @@ function renderInstruments(){
  const sourceBox=byId('instrumentSource');sourceBox.replaceChildren();
  const missingBox=instrumentById('lib-floe-musicbox-1');sourceBox.hidden=availableInstrument(missingBox);
  if(!sourceBox.hidden&&!importHost){const hint=document.createElement('p');hint.textContent='Для импорта установи APK 0.51.';sourceBox.append(hint)}
- const list=byId('instrumentChoices');list.replaceChildren();
+ cancelInstrumentHold();auditionButtons.clear();const list=byId('instrumentChoices');list.replaceChildren();
  const categories=byId('instrumentCategory');categories.replaceChildren();
  for(const [value,label] of [['all','Все инструменты'],['installed','Загруженные'],...instrumentGroups.filter(([id])=>instruments.some(def=>visibleInstrumentIds.has(def.id)&&instrumentGroup(def)===id))]){
   const option=document.createElement('option');option.value=value;option.textContent=label;categories.append(option);
@@ -628,30 +709,33 @@ function renderInstruments(){
   const group=instrumentGroup(def);
   if(group!==previousGroup){const heading=document.createElement('h3');heading.className='instrument-group';heading.textContent=instrumentGroups.find(g=>g[0]===group)[1];list.append(heading);previousGroup=group}
   const row=document.createElement('div'),button=document.createElement('button'),meta=document.createElement('small');row.className='instrument-row';
-  const builtin=!def.remote&&builtinAvailable(def),installed=builtin||downloadedInstruments.has(def.id),used=sourceUsed(def.id);
+  const builtin=!def.remote&&builtinAvailable(def),installed=builtin||downloadedInstruments.has(def.id);
   button.className='button instrument-pick';button.textContent=def.name;
   button.setAttribute('aria-pressed',String((lanes[activeLane].instrument||'vsco-piano-1')===def.id));
   button.disabled=!installed||running||isBackground(lanes[activeLane]);button.setAttribute('aria-label','Добавить в проект · '+def.name);
-  button.onclick=()=>selectInstrument(def.id);row.append(button);
-  meta.textContent=((def.id===floeId&&importedMusicbox()?Number(importHost.importedBytes?.())||def.bytes:def.bytes||0)/1048576).toFixed(1).replace('.',',')+' МБ';row.append(meta);
-  {
-   const action=document.createElement('button');action.className='button instrument-action';
+  button.onclick=()=>selectInstrument(def.id);if(installed)bindInstrumentHold(button,def);row.append(button);row.setAttribute('data-installed',String(installed));
+  meta.textContent='('+((def.id===floeId&&importedMusicbox()?Number(importHost.importedBytes?.())||def.bytes:def.bytes||0)/1048576).toFixed(1).replace('.',',')+' МБ)';row.append(meta);
+  const listen=document.createElement('button');listen.type='button';listen.className='button instrument-audition';listen.innerHTML=earIcon;
+  listen.disabled=running||(!installed&&!(remoteAlternatives.get(def.id)||def).preview);
+  listen.onclick=()=>auditionInstrument(def.id);auditionButtons.set(def.id,listen);row.append(listen);
+  if(!installed){
+   const action=document.createElement('button');action.type='button';action.className='button instrument-action';
    const loading=bankJob?.def.id===def.id;
-   action.textContent=loading?'Отмена':installed?'Удалить…':'Скачать';
-   action.setAttribute('aria-label',(loading?'Отменить загрузку':installed?'Удалить':'Скачать')+' · '+def.name);
-   action.disabled=loading?bankJob.cancelled:installed?(used||instrumentLoads.has(def.id)):!!bankJob;
-   action.onclick=()=>loading?cancelInstrumentDownload():installed?askInstrumentDelete(def.id):downloadInstrument(def.id);
-   if(builtin&&!(def.id===floeId&&importedMusicbox())){action.textContent='Удалить';action.disabled=true;action.title='Входит в APK'}
-   if(!installed&&instrumentSources.has(def.id)){const link=authorLink(def.id);link.className+=' instrument-action';row.append(link);meta.textContent='';}else row.append(action);
+   action.textContent=loading?'Отмена':'Скачать';
+   action.setAttribute('aria-label',(loading?'Отменить загрузку':'Скачать')+' · '+def.name);
+   action.disabled=loading?bankJob.cancelled:!!bankJob;
+   action.onclick=()=>loading?cancelInstrumentDownload():downloadInstrument(def.id);
+   if(instrumentSources.has(def.id)){const link=authorLink(def.id);link.className+=' instrument-action';row.append(link);meta.textContent='';}else row.append(action);
   }
   list.append(row);
  }
+ syncLibraryAudition();
 
 }
 async function selectInstrument(id){
  const def=instrumentById(id),lane=lanes[activeLane];
  if(!def||running||isBackground(lane)||byId('instrumentSheet').hidden)return;
- const token=++instrumentRequest;cancelInstrumentDelete();
+ stopLibraryAudition();const token=++instrumentRequest;cancelInstrumentDelete();
  soundMessage(def.asset&&!instrumentCache.has(id)?'Загрузка звуков…':'');
  try{
   await unlock();await prepareInstrument(id);
@@ -662,6 +746,7 @@ async function selectInstrument(id){
  }catch(e){if(token===instrumentRequest)soundMessage(e.message||'Не удалось загрузить звук.')}
 }
 function closeInstrument(){
+ stopLibraryAudition();cancelInstrumentHold();
  flushDraft();instrumentRequest++;previewSerial++;cancelInstrumentDelete();byId('instrumentSheet').hidden=true;if(!byId('laneSheet').hidden)syncLaneSheet();byId('closeLane').focus?.();
  if(!running)for(const sources of voices)silenceVoice(sources);
 }
@@ -676,6 +761,7 @@ byId('confirmInstrumentDelete').onclick=deleteInstrument;
 
 let editingInstrument=null,instrumentView='library';
 function showInstrumentView(view){
+ if(view!=='library'){stopLibraryAudition();cancelInstrumentHold()}
  instrumentView=view;byId('currentInstrument').hidden=view==='edit';byId('instrumentLibrary').hidden=view!=='library';byId('instrumentEditor').hidden=view!=='edit';
  byId('instrumentTitle').textContent=view==='edit'?'Настройка инструмента':'Инструменты';
  renderCurrentInstrument();
@@ -735,6 +821,93 @@ byId('soundPreview').onclick=async()=>{
  }catch(e){if(token===instrumentRequest)soundMessage(e.message)}
 };
 
+// Library auditions own their download and voice, never the track or its rack.
+let libraryAuditionSerial=0,libraryAuditionId=null,libraryAuditionJob=null,libraryAuditionVoice=null;
+let instrumentHoldTimer=null,instrumentHoldPointer=null;
+const auditionButtons=new Map();
+const earIcon='<svg width="23" height="23" viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 0 1 14 0c0 4-4 4-5 7s-2 4-4 4a3 3 0 0 1-3-3M7 10a3 3 0 0 1 6 0c0 2-3 2-3 4M20 8a7 7 0 0 1 0 8M23 4a12 12 0 0 1 0 16"/></svg>';
+function syncLibraryAudition(){
+ for(const [id,button] of auditionButtons){
+  const active=id===libraryAuditionId;
+  button.setAttribute('aria-pressed',String(active));
+  button.setAttribute('aria-busy',String(active&&!!libraryAuditionJob));
+  button.setAttribute('aria-label',(active?'Остановить предпрослушивание':'Послушать')+' · '+instrumentById(id).name);
+  button.title=active?'Остановить предпрослушивание':'Послушать';
+ }
+}
+function stopLibraryAudition(){
+ libraryAuditionSerial++;libraryAuditionId=null;
+ if(libraryAuditionJob){libraryAuditionJob.cancelled=true;libraryAuditionJob=null}
+ const voice=libraryAuditionVoice;libraryAuditionVoice=null;
+ if(voice)silenceVoice(voice);
+ syncLibraryAudition();
+}
+function readAudition(raw,meta){
+ if(typeof raw!=='string'||raw.length!==meta.bytes)throw Error('Повреждено предпрослушивание.');
+ const data=verifySound(raw);
+ if(data.format!=='notka.preview.1'||data.id!==meta.asset||data.mime!=='audio/mpeg'||!Number.isFinite(data.duration)||data.duration<=0||data.duration>10||typeof data.data!=='string'||data.data.length>240000||!/^[A-Za-z0-9+/]+={0,2}$/.test(data.data))throw Error('Повреждено предпрослушивание.');
+ return data;
+}
+function cacheAudition(meta,raw){
+ // A small persistent LRU stores at most five short files; full banks are separate.
+ let ids=[];try{ids=JSON.parse(catalogHost.soundRead('preview-cache')||'[]')}catch{}
+ if(!Array.isArray(ids))ids=[];
+ ids=ids.filter(x=>typeof x==='string'&&/^preview-[a-z0-9-]{1,39}$/.test(x)&&x!==meta.asset);
+ if(!catalogHost.soundWrite(meta.asset,raw))return;
+ ids.push(meta.asset);while(ids.length>5)catalogHost.soundDelete(ids.shift());
+ catalogHost.soundWrite('preview-cache',JSON.stringify(ids));
+}
+async function auditionInstrument(id){
+ const def=instrumentById(id);if(!def||running||document.hidden||byId('instrumentSheet').hidden)return;
+ if(libraryAuditionId===id){stopLibraryAudition();soundMessage('');return}
+ instrumentRequest++;previewSerial++;for(const voice of voices)silenceVoice(voice);
+ stopLibraryAudition();const token=libraryAuditionSerial,epoch=generation;
+ const valid=()=>token===libraryAuditionSerial&&epoch===generation&&!running&&!document.hidden&&!byId('instrumentSheet').hidden;
+ libraryAuditionId=id;syncLibraryAudition();soundMessage('');
+ try{
+  await unlock();if(!valid())return;
+  let sources;
+  if(availableInstrument(def)){
+   const bank=await prepareInstrument(id);if(!valid())return;
+   sources=createInstrumentVoice(audio,master,bank,{},def.demo||60,audio.currentTime+.006,1.8,80);
+  }else{
+   const meta=(remoteAlternatives.get(id)||def).preview;
+   if(!catalogHost||!meta)throw Error('Предпрослушивание доступно после установки этого инструмента.');
+   let raw=catalogHost.soundRead(meta.asset),data;
+   try{data=readAudition(raw,meta)}catch{if(raw)catalogHost.soundDelete(meta.asset)}
+   if(!data){
+    const job={cancelled:false};libraryAuditionJob=job;syncLibraryAudition();soundMessage('Загружаем предпрослушивание…');
+    const result=await fetchSound(meta.asset,job,30000,'preview');if(!valid())return;
+    if(result.hash!==meta.sha256)throw Error('Повреждено предпрослушивание.');
+    raw=result.raw;data=readAudition(raw,meta);
+   }
+   if(!valid())return;cacheAudition(meta,raw);
+   const binary=atob(data.data),bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+   const buffer=await new Promise((resolve,reject)=>audio.decodeAudioData(bytes.buffer,resolve,reject));if(!valid())return;
+   if(!Number.isFinite(buffer.duration)||buffer.duration>10)throw Error('Повреждено предпрослушивание.');
+   const source=audio.createBufferSource();source.buffer=buffer;source.connect(master);source.start();source.stop(audio.currentTime+buffer.duration);
+   sources=[source];sources.dispose=()=>source.disconnect();
+  }
+  libraryAuditionJob=null;libraryAuditionVoice=sources;syncLibraryAudition();soundMessage('');
+  if(sources)sources[0].onended=()=>{if(libraryAuditionVoice!==sources)return;sources.dispose?.();libraryAuditionVoice=null;libraryAuditionId=null;syncLibraryAudition()};
+  else{libraryAuditionId=null;syncLibraryAudition()}
+ }catch(e){if(valid()){stopLibraryAudition();soundMessage(e.message||'Не удалось послушать инструмент.')}}
+}
+function cancelInstrumentHold(){clearTimeout(instrumentHoldTimer);instrumentHoldTimer=null;instrumentHoldPointer=null}
+function bindInstrumentHold(button,def){
+ let skip=false;
+ button.title=def.name+' · удерживай для удаления';
+ button.onclick=()=>{if(skip){skip=false;return}selectInstrument(def.id)};
+ button.onpointerdown=e=>{
+  if(e.button!==undefined&&e.button!==0)return;
+  cancelInstrumentHold();skip=false;instrumentHoldPointer={id:e.pointerId,x:e.clientX,y:e.clientY};
+  instrumentHoldTimer=setTimeout(()=>{cancelInstrumentHold();skip=true;stopLibraryAudition();askInstrumentDelete(def.id)},550);
+ };
+ button.onpointermove=e=>{const p=instrumentHoldPointer;if(p&&p.id===e.pointerId&&Math.hypot(e.clientX-p.x,e.clientY-p.y)>8)cancelInstrumentHold()};
+ button.onpointerup=button.onpointercancel=button.onlostpointercapture=()=>cancelInstrumentHold();
+ button.oncontextmenu=e=>{e.preventDefault();cancelInstrumentHold();skip=true;stopLibraryAudition();askInstrumentDelete(def.id)};
+ button.onkeydown=e=>{if(e.key==='Delete'){e.preventDefault();stopLibraryAudition();askInstrumentDelete(def.id)}};
+}
 const roll=byId('roll'),keys=byId('keys'),notes=byId('notes'),ruler=byId('ruler');
 const keyWidth=32,rulerHeight=32;
 const lowestPitch=24,highestPitch=119; // До1 (C1) — Си8 (H8).
@@ -1152,128 +1325,164 @@ function cancelContact(e){
 roll.onpointercancel=cancelContact;
 roll.onlostpointercapture=e=>{if(e.target===roll)cancelContact(e)};
 roll.addEventListener('wheel',e=>{e.preventDefault();if(!running)x=Math.max(0,x+(e.shiftKey?e.deltaY:e.deltaX));if(!e.shiftKey)y=clampY(y+e.deltaY);paintSoon()},{passive:false});
-const sceneDefaults={loop:false,palette:'aurora',rangeMode:'auto',keyStart:48,keyCount:49,keyboardHeight:16,keyLabels:'c',guides:true,speed:1,stretch:1.25,noteWidth:78,roundness:22,noteStyle:'glass',colorMode:'lane',backdrop:'aurora',background:'#080e19',glow:true,glowAmount:40,sparks:true,sparkAmount:30,rays:28,rings:20,trails:15,keyLights:true,fps:30,quality:1.5};
-const palettes={aurora:['#62dfc4','#a898ff','#ffbc79','#74bfff','#f794bc','#d9e59b'],ember:['#ffbc79','#ff7e76','#efcf8b','#f596b2'],ice:['#76d9ff','#8cabff','#8ff0dc','#bdc9ff'],iris:['#bca1ff','#f597d0','#81b5ff','#dcadff']};
-const sceneBounds={keyStart:[0,116],keyCount:[12,88],keyboardHeight:[8,26],speed:[.5,3],stretch:[.25,2.5],noteWidth:[40,96],roundness:[0,50],glowAmount:[0,100],sparkAmount:[0,100],rays:[0,100],rings:[0,100],trails:[0,100]};
+const legacySceneDefaults={loop:false,palette:'aurora',rangeMode:'auto',keyStart:48,keyCount:49,keyboardHeight:16,keyLabels:'c',guides:true,speed:1,stretch:1.25,noteWidth:78,roundness:22,noteStyle:'glass',colorMode:'lane',backdrop:'aurora',background:'#080e19',glow:true,glowAmount:40,sparks:true,sparkAmount:30,rays:28,rings:20,trails:15,keyLights:true,fps:30,quality:1.5};
+const sceneDefaults={...legacySceneDefaults,palette:'basic',keyboardHeight:18,keyLabels:'none',guides:false,speed:1,noteWidth:80,roundness:25,noteStyle:'solid',backdrop:'plain',background:'#000000',glowAmount:20,sparkAmount:16,rays:0,rings:0,trails:0,fps:60};
+delete sceneDefaults.stretch;
+const palettes={basic:['#00ff00','#0000ff'],aurora:['#62dfc4','#a898ff','#ffbc79','#74bfff','#f794bc','#d9e59b'],ember:['#ffbc79','#ff7e76','#efcf8b','#f596b2'],ice:['#76d9ff','#8cabff','#8ff0dc','#bdc9ff'],iris:['#bca1ff','#f597d0','#81b5ff','#dcadff']};
+const sceneBounds={keyStart:[0,116],keyCount:[12,88],keyboardHeight:[8,26],speed:[.1,10],noteWidth:[40,96],roundness:[0,50],glowAmount:[0,100],sparkAmount:[0,100],rays:[0,100],rings:[0,100],trails:[0,100]};
 const sceneChoices={palette:Object.keys(palettes),rangeMode:['auto','manual'],keyLabels:['c','all','none'],noteStyle:['glass','solid','neon'],colorMode:['lane','instrument','single'],backdrop:['aurora','stars','plain'],fps:[30,60],quality:[1,1.5,2]};
+const validSceneColor=v=>v==='transparent'||/^#[\da-f]{6}$/i.test(v);
 function cleanSceneOptions(saved){
- const result={...sceneDefaults,colors:{}};
- if(!saved||typeof saved!=='object')return result;
+ const legacy=saved&&typeof saved==='object'&&saved.schema!==2;
+ const result={...(legacy?legacySceneDefaults:sceneDefaults),schema:2,octaveRange:!legacy,colorSeed:1,presetName:'',colors:{}};delete result.stretch;
+ if(!saved||typeof saved!=='object'){result.colorSeed=Math.floor(Math.random()*2147483646)+1;result.presetName='@basic';return result}
  for(const k of Object.keys(sceneDefaults)){
   const value=saved[k];
-  if(sceneBounds[k]&&typeof value==='number'&&Number.isFinite(value)){const [lo,hi]=sceneBounds[k];result[k]=Math.max(lo,Math.min(hi,value));if(!['speed','stretch'].includes(k))result[k]=Math.round(result[k])}
+  if(sceneBounds[k]&&typeof value==='number'&&Number.isFinite(value)){const [lo,hi]=sceneBounds[k];result[k]=Math.max(lo,Math.min(hi,value));if(k!=='speed')result[k]=Math.round(result[k])}
   else if(sceneChoices[k]?.includes(value))result[k]=value;
   else if(typeof sceneDefaults[k]==='boolean'&&typeof value==='boolean')result[k]=value;
   else if(k==='background'&&/^#[\da-f]{6}$/i.test(value))result[k]=value;
  }
- if(saved.speed===undefined&&[1.3,2.4,4].includes(saved.fall))result.speed=Math.max(.5,Math.min(3,3.6/saved.fall));
+ if(legacy){const speed=Number.isFinite(saved.speed)?Math.max(.5,Math.min(3,saved.speed)):[1.3,2.4,4].includes(saved.fall)?3.6/saved.fall:1;const stretch=Number.isFinite(saved.stretch)?Math.max(.25,Math.min(2.5,saved.stretch)):1.25;result.speed=speed*stretch}
+ if(typeof saved.octaveRange==='boolean')result.octaveRange=saved.octaveRange;
+ if(Number.isSafeInteger(saved.colorSeed)&&saved.colorSeed>0&&saved.colorSeed<=2147483647)result.colorSeed=saved.colorSeed;
+ if(typeof saved.presetName==='string'&&saved.presetName.length<=48)result.presetName=saved.presetName;
  result.keyCount=Math.min(result.keyCount,128-result.keyStart);
- if(saved.colors&&typeof saved.colors==='object')for(const [k,v] of Object.entries(saved.colors).slice(0,250))if(/^(lane-\d{1,4}|instrument-[a-z0-9-]{1,48}|single)$/.test(k)&&/^#[\da-f]{6}$/i.test(v))result.colors[k]=v;
+ if(saved.colors&&typeof saved.colors==='object')for(const [k,v] of Object.entries(saved.colors).slice(0,250))if(/^(lane-\d{1,4}|instrument-[a-z0-9-]{1,48}|single)$/.test(k)&&validSceneColor(v))result.colors[k]=v;
  return result;
 }
 let options=cleanSceneOptions(null);
 let scene=null,sceneFrame=0,prefReturn,scenePreviewLayout=null,playback=null;
-const sceneTravel=()=>3.6/(options.speed*options.stretch);
-function saveSceneOptions(){
- trackChanged();
-}
+const sceneTravel=()=>3.6/options.speed;
+function saveSceneOptions(){trackChanged()}
 function sceneColorKey(n){return options.colorMode==='single'?'single':options.colorMode==='instrument'?'instrument-'+(n.instrumentId||n.instrument):'lane-'+(n.lane||0)}
-function sceneColor(n){
- const key=sceneColorKey(n);if(options.colors[key])return options.colors[key];
- const list=palettes[options.palette];
- const index=options.colorMode==='instrument'?Math.max(0,n.instrumentId?projectInstruments.findIndex(d=>d.id===n.instrumentId):instruments.findIndex(d=>d.id===n.instrument)):options.colorMode==='single'?0:n.lane||0;
- return list[index%list.length];
+function paletteSceneColor(n){
+ const list=palettes[options.palette],index=options.colorMode==='instrument'?Math.max(0,n.instrumentId?projectInstruments.findIndex(d=>d.id===n.instrumentId):instruments.findIndex(d=>d.id===n.instrument)):options.colorMode==='single'?0:n.lane||0;
+ if(options.palette!=='basic'||index<2)return list[index%list.length];
+ let seed=(Math.imul(index+1,2654435761)^options.colorSeed)>>>0;seed^=seed>>>16;
+ const hue=(seed>>>0)%360,c=.85,x=c*(1-Math.abs(hue/60%2-1)),m=.1;
+ const rgb=hue<60?[c,x,0]:hue<120?[x,c,0]:hue<180?[0,c,x]:hue<240?[0,x,c]:hue<300?[x,0,c]:[c,0,x];
+ return '#'+rgb.map(v=>Math.round((v+m)*255).toString(16).padStart(2,'0')).join('');
 }
+function sceneColor(n){return options.colors[sceneColorKey(n)]||paletteSceneColor(n)}
+let sceneColorTarget=null;
+function closeSceneColor(){byId('sceneColorPicker').hidden=true;sceneColorTarget=null}
+function setSceneColor(value){
+ if(!sceneColorTarget)return;const key=sceneColorKey(sceneColorTarget);
+ if(value===null)delete options.colors[key];else if(validSceneColor(value))options.colors[key]=value;else return;
+ renderSceneColors();saveSceneOptions();refreshScenePreview();
+}
+function openSceneColor(n,name){
+ sceneColorTarget=n;byId('sceneColorTitle').textContent=name;byId('sceneColorPicker').hidden=false;
+ byId('scenePaletteColor').style.background=paletteSceneColor(n);
+ byId('sceneCustomColor').value=sceneColor(n)==='transparent'?paletteSceneColor(n):sceneColor(n);
+ const list=byId('sceneColorSwatches');list.replaceChildren();
+ for(const color of ['#ff4040','#ff9f32','#ffff00','#00ff00','#00d9bd','#00cfff','#0000ff','#883bff','#ff42d0','#ffffff','#888888','#000000']){
+  const b=document.createElement('button');b.type='button';b.style.background=color;b.setAttribute('aria-label',color);b.onclick=()=>setSceneColor(color);list.append(b);
+ }
+}
+byId('closeSceneColor').onclick=closeSceneColor;
+byId('sceneTransparent').onclick=()=>setSceneColor('transparent');
+byId('scenePaletteColor').onclick=()=>setSceneColor(null);
+byId('sceneCustomColor').oninput=()=>setSceneColor(byId('sceneCustomColor').value);
 function renderSceneColors(){
  const list=byId('sceneColors');list.replaceChildren();const seen=new Set();
  lanes.forEach((lane,i)=>{
   const n={lane:i,instrument:lane.instrument||'vsco-piano-1',instrumentId:laneInstrument(lane).id},key=sceneColorKey(n);if(seen.has(key))return;seen.add(key);
-  const label=document.createElement('label'),name=document.createElement('span'),input=document.createElement('input');
+  const label=document.createElement('label'),name=document.createElement('span'),button=document.createElement('button');
   name.textContent=options.colorMode==='single'?'Все ноты':options.colorMode==='lane'?lane.name:laneInstrument(lane).name;
-  input.type='color';input.value=sceneColor(n);input.setAttribute('aria-label','Цвет · '+name.textContent);
-  input.oninput=()=>{if(/^#[\da-f]{6}$/i.test(input.value)){options.colors[key]=input.value;refreshScenePreview()}};
-  input.onchange=saveSceneOptions;label.append(name,input);list.append(label);
+  button.type='button';button.className='scene-color-chip';button.style.background=sceneColor(n)==='transparent'?'':sceneColor(n);button.dataset.transparent=String(sceneColor(n)==='transparent');button.setAttribute('aria-label','Цвет · '+name.textContent);
+  button.onclick=()=>openSceneColor(n,name.textContent);label.append(name,button);list.append(label);
  });
 }
 function syncSceneControls(){
  for(const [k,defaultValue] of Object.entries(sceneDefaults)){
-  const el=byId(k);if(typeof defaultValue==='boolean')el.checked=options[k];else el.value=String(options[k]);
-  if(sceneBounds[k]&&!['keyStart','keyCount'].includes(k))byId(k+'Value').textContent=['speed','stretch'].includes(k)?Number(options[k].toFixed(2))+'×':options[k]+'%';
+  const el=byId(k);if(!el)continue;if(typeof defaultValue==='boolean')el.checked=options[k];else el.value=String(options[k]);
+  if(sceneBounds[k]&&!['keyStart','keyCount'].includes(k)){const field=byId(k+'Value');if(document.activeElement!==field)field.value=String(Number(options[k].toFixed(3)))}
  }
  byId('manualRange').hidden=options.rangeMode!=='manual';byId('keyCount').max=String(Math.min(88,128-options.keyStart));
  syncLoopButton();renderSceneColors();
 }
-function refreshScenePreview(){if(scene)drawScene();drawScenePreview()}
+function refreshScenePreview(){if(scene)drawScene();drawScenePreview();if(!byId('preferences').hidden&&!byId('visualOptions').hidden)refreshSceneDemo()}
 let scenePresets=[],presetReady=false,presetAction=null,presetNaming=false;
-function presetIndex(){const value=byId('presetChoice').value;return value===''?-1:Number(value)}
-function presetSnapshot(name){return {name,scene:cleanSceneOptions(options),rack:projectInstruments.map(i=>({source:i.source,color:options.colors['instrument-'+i.id]||options.colors['instrument-'+i.source]||null}))}}
+function presetIndex(){const value=byId('presetChoice').value;return /^\d+$/.test(value)?Number(value):-1}
+function presetSnapshot(name){return {name,scene:cleanSceneOptions({...options,presetName:''}),rack:projectInstruments.map(i=>({source:i.source,color:options.colors['instrument-'+i.id]||options.colors['instrument-'+i.source]||null}))}}
 function presetMessage(text){byId('presetStatus').textContent=text}
 function cancelPresetAction(){presetAction=null;byId('presetConfirm').hidden=true}
+function closePresetList(){byId('presetList').hidden=true;byId('presetChoice').setAttribute('aria-expanded','false')}
 function renderScenePresets(selected=''){
- const list=byId('presetChoice');list.replaceChildren();
- const empty=document.createElement('option');empty.value='';empty.textContent=scenePresets.length?'Выбери пресет':'Нет сохранённых пресетов';list.append(empty);
- scenePresets.forEach((p,i)=>{const el=document.createElement('option');el.value=String(i);el.textContent=p.name;list.append(el)});
- presetNaming=false;list.value=String(selected);presetButtons();
+ const choice=byId('presetChoice'),list=byId('presetList');list.replaceChildren();choice.value=String(selected);
+ choice.textContent=selected==='basic'?'Базовый':scenePresets[Number(selected)]&&selected!==''?scenePresets[Number(selected)].name:options.presetName?'Из трека · '+options.presetName:'Настройки трека';
+ function row(name,value,remove){
+  const line=document.createElement('div'),button=document.createElement('button');line.className='scene-preset-row';button.className='button';button.textContent=name;button.type='button';button.setAttribute('aria-pressed',String(String(value)===String(selected)));button.onclick=()=>selectScenePreset(value);line.append(button);
+  if(remove){const trash=document.createElement('button');trash.type='button';trash.className='button preset-trash';trash.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7m4-7v7"/></svg>';trash.setAttribute('aria-label','Удалить пресет '+name);trash.onclick=e=>{e?.stopPropagation?.();remove()};line.append(trash)}list.append(line);
+ }
+ row('Базовый','basic');scenePresets.forEach((p,i)=>row(p.name,i,()=>confirmPresetAction('Удалить пресет «'+p.name+'»?',()=>{
+  const selectedName=options.presetName,next=scenePresets.filter(q=>q!==p),at=next.findIndex(q=>q.name===selectedName);
+  if(writeScenePresets(next,at<0?selectedName==='@basic'?'basic':'':at)&&selectedName===p.name){options.presetName='';renderScenePresets('');saveSceneOptions()}
+ })));
+ presetNaming=false;closePresetList();presetButtons();
 }
 function presetButtons(){
  const chosen=!!scenePresets[presetIndex()];
- byId('presetSaveSplit').hidden=!chosen||presetNaming;byId('presetNewForm').hidden=chosen&&!presetNaming;byId('cancelNewPreset').hidden=!chosen;
- byId('replaceScenePreset').disabled=!chosen||!presetReady;byId('newScenePreset').disabled=!presetReady;
- byId('loadScenePreset').disabled=byId('deleteScenePreset').disabled=!chosen;
- byId('saveScenePreset').disabled=!presetReady;
+ byId('presetSaveSplit').hidden=false;byId('presetNewForm').hidden=!presetNaming;
+ byId('replaceScenePreset').disabled=!chosen||!presetReady||presetNaming;byId('newScenePreset').disabled=!presetReady||scenePresets.length>=50||presetNaming;
+ byId('saveScenePreset').disabled=!presetReady;byId('cancelNewPreset').hidden=false;
 }
+function presetOptions(preset){
+ const result=cleanSceneOptions(preset.scene);
+ for(const key of Object.keys(result.colors))if(key.startsWith('instrument-'))delete result.colors[key];
+ const used=new Map();for(const i of projectInstruments){const at=used.get(i.source)||0,color=preset.rack.filter(p=>p.source===i.source)[at]?.color;used.set(i.source,at+1);if(color)result.colors['instrument-'+i.id]=color}return result;
+}
+function sceneFingerprint(value){const q=cleanSceneOptions(value);delete q.presetName;const sort=o=>Object.fromEntries(Object.keys(o).sort().map(k=>[k,o[k]&&typeof o[k]==='object'?sort(o[k]):o[k]]));return JSON.stringify(sort(q))}
 function readScenePresets(){
- const selected=scenePresets[presetIndex()]?.name;
  cancelPresetAction();presetMessage('');
  try{
   const raw=typeof NotkaPlayer!=='undefined'&&NotkaPlayer.soundRead?NotkaPlayer.soundRead('scene-presets'):localStorage.getItem('notka.scene-presets');
   const saved=JSON.parse(raw||'[]');if(!Array.isArray(saved)||saved.length>50)throw Error();
-  scenePresets=saved.filter(p=>p&&typeof p.name==='string'&&p.name.trim()&&p.name.length<=48).map(p=>({name:p.name,scene:cleanSceneOptions(p.scene),rack:Array.isArray(p.rack)?p.rack.slice(0,128).filter(i=>i&&typeof i.source==='string'&&/^[a-z0-9-]{1,48}$/.test(i.source)).map(i=>({source:i.source,color:/^#[\da-f]{6}$/i.test(i.color)?i.color:null})):[]}));presetReady=true;
+  scenePresets=saved.filter(p=>p&&typeof p.name==='string'&&p.name.trim()&&p.name.length<=48).map(p=>({name:p.name,scene:cleanSceneOptions(p.scene),rack:Array.isArray(p.rack)?p.rack.slice(0,128).filter(i=>i&&typeof i.source==='string'&&/^[a-z0-9-]{1,48}$/.test(i.source)).map(i=>({source:i.source,color:validSceneColor(i.color)?i.color:null})):[]}));presetReady=true;
  }catch{scenePresets=[];presetReady=false;presetMessage('Не удалось прочитать пресеты.')}
- const index=scenePresets.findIndex(p=>p.name===selected);renderScenePresets(index<0?'':index);
+ let index=scenePresets.findIndex(p=>p.name===options.presetName);
+ if(index<0&&!options.presetName)index=scenePresets.findIndex(p=>sceneFingerprint(presetOptions(p))===sceneFingerprint(options));
+ if(index>=0)options.presetName=scenePresets[index].name;
+ renderScenePresets(index<0?options.presetName==='@basic'?'basic':'':index);
 }
 function writeScenePresets(next,selected=''){
  try{
   const raw=JSON.stringify(next);
   if(typeof NotkaPlayer!=='undefined'&&NotkaPlayer.soundWrite){if(!NotkaPlayer.soundWrite('scene-presets',raw))throw Error()}
   else localStorage.setItem('notka.scene-presets',raw);
-  scenePresets=next;renderScenePresets(selected);presetMessage('Готово.');
- }catch{presetMessage('Не удалось сохранить пресеты. Проверь свободное место.')}
+  scenePresets=next;renderScenePresets(selected);presetMessage('Готово.');return true;
+ }catch{presetMessage('Не удалось сохранить пресеты. Проверь свободное место.');return false}
 }
 function confirmPresetAction(text,action){presetAction=action;byId('presetConfirmText').textContent=text;byId('presetConfirm').hidden=false}
 byId('confirmScenePreset').onclick=()=>{const action=presetAction;cancelPresetAction();action?.()};
 byId('cancelScenePreset').onclick=cancelPresetAction;
-byId('presetChoice').onchange=()=>{cancelPresetAction();presetNaming=false;presetMessage('');presetButtons()};
-byId('newScenePreset').onclick=()=>{cancelPresetAction();presetNaming=true;byId('presetName').value='';presetMessage('');presetButtons();byId('presetName').focus?.()};
+byId('presetChoice').onclick=()=>{const open=byId('presetList').hidden;byId('presetList').hidden=!open;byId('presetChoice').setAttribute('aria-expanded',String(open))};
+byId('presetChoice').onchange=()=>selectScenePreset(byId('presetChoice').value);
+byId('newScenePreset').onclick=()=>{if(!presetReady||scenePresets.length>=50)return;cancelPresetAction();closePresetList();presetNaming=true;byId('presetName').value='';presetMessage('');presetButtons();byId('presetName').focus?.()};
 byId('cancelNewPreset').onclick=()=>{presetNaming=false;cancelPresetAction();presetMessage('');presetButtons()};
 byId('presetName').oninput=cancelPresetAction;
 byId('saveScenePreset').onclick=()=>{
  if(!presetReady||byId('presetNewForm').hidden)return;cancelPresetAction();
  const name=byId('presetName').value.trim();
  if(!name||name.length>48||/[\u0000-\u001f\u007f]/.test(name)){presetMessage('Введи название до 48 символов.');return}
- const index=scenePresets.findIndex(p=>p.name.toLowerCase()===name.toLowerCase());
- if(index>=0){presetMessage('Имя уже занято. Введи другое название.');return}
+ if(scenePresets.some(p=>p.name.toLowerCase()===name.toLowerCase())||name==='@basic'){presetMessage('Имя уже занято. Введи другое название.');return}
  if(scenePresets.length>=50){presetMessage('Сохранено 50 пресетов. Удали ненужный.');return}
- writeScenePresets([...scenePresets,presetSnapshot(name)],scenePresets.length);
+ if(writeScenePresets([...scenePresets,presetSnapshot(name)],scenePresets.length)){options.presetName=name;saveSceneOptions()}
 };
 byId('replaceScenePreset').onclick=()=>{
- const index=presetIndex(),preset=scenePresets[index];if(!presetReady||!preset)return;
- const replacement=presetSnapshot(preset.name);
- confirmPresetAction('Заменить пресет «'+preset.name+'»?',()=>{const next=scenePresets.slice();next[index]=replacement;writeScenePresets(next,index)});
+ const index=presetIndex(),preset=scenePresets[index];if(!presetReady||!preset||presetNaming)return;cancelPresetAction();
+ const next=scenePresets.slice();next[index]=presetSnapshot(preset.name);
+ if(writeScenePresets(next,index)){options.presetName=preset.name;saveSceneOptions()}
 };
-byId('deleteScenePreset').onclick=()=>{
- const index=presetIndex(),preset=scenePresets[index];if(!preset)return;
- confirmPresetAction('Удалить пресет «'+preset.name+'»?',()=>writeScenePresets(scenePresets.filter((_,i)=>i!==index)));
-};
-byId('loadScenePreset').onclick=()=>{
- cancelPresetAction();const preset=scenePresets[presetIndex()];if(!preset)return;
- presetNaming=false;presetButtons();
- options=cleanSceneOptions(preset.scene);
- for(const key of Object.keys(options.colors))if(key.startsWith('instrument-'))delete options.colors[key];
- const used=new Map();for(const i of projectInstruments){const at=used.get(i.source)||0,color=preset.rack.filter(p=>p.source===i.source)[at]?.color;used.set(i.source,at+1);if(color)options.colors['instrument-'+i.id]=color}
- scenePreviewLayout=null;if(scene)Object.assign(scene,keyLayout(scene.events));applySceneLoop();syncSceneControls();saveSceneOptions();refreshScenePreview();
- byId('presetName').value=preset.name;presetMessage('Применён: '+preset.name);
-};
+function selectScenePreset(value){
+ cancelPresetAction();closeSceneColor();const preset=scenePresets[Number(value)];
+ if(value!=='basic'&&(!/^\d+$/.test(String(value))||!preset))return;
+ options=value==='basic'?cleanSceneOptions(null):presetOptions(preset);options.presetName=value==='basic'?'@basic':preset.name;
+ renderScenePresets(value);scenePreviewLayout=null;if(scene)Object.assign(scene,keyLayout(scene.events));applySceneLoop();syncSceneControls();saveSceneOptions();refreshScenePreview();
+ presetMessage('');
+}
 
 function showPrefs(visual,opener){
  cancelSongDelete();
@@ -1284,32 +1493,39 @@ function showPrefs(visual,opener){
  byId('preferences').hidden=false;byId('visualOptions').hidden=!visual;byId('prefHome').hidden=visual;
  byId('preferences').classList.toggle('scene-settings',visual);
  byId('prefTitle').textContent=visual?'Оформление сцены':'';byId('preferences').setAttribute('aria-label',visual?'Оформление сцены':'Меню трека');
- if(visual){readScenePresets();scenePreviewLayout=null;syncSceneControls();drawScenePreview()}
+ if(visual){readScenePresets();scenePreviewLayout=null;syncSceneControls();byId('sceneDemos').hidden=false;startSceneOverview();queueSceneDemo()}else{byId('sceneDemos').hidden=true;stopSceneDemo();stopSceneOverview()}
  byId('closePrefs').focus?.();
 }
-function closePrefs(){if(!byId('visualOptions').hidden)saveSceneOptions();flushDraft();cancelPresetAction();pendingTrack=null;byId('replaceTrack').hidden=true;byId('preferences').hidden=true;prefReturn?.focus?.()}
+function closePrefs(){stopSceneDemo();stopSceneOverview();closeSceneColor();closePresetList();byId('sceneDemos').hidden=true;if(!byId('visualOptions').hidden)saveSceneOptions();flushDraft();cancelPresetAction();pendingTrack=null;byId('replaceTrack').hidden=true;byId('preferences').hidden=true;prefReturn?.focus?.()}
 byId('prefs').onclick=()=>showPrefs(false,byId('prefs'));
 byId('stagePrefs').onclick=()=>showPrefs(true,byId('stagePrefs'));
 byId('closePrefs').onclick=closePrefs;
 for(let p=0;p<=116;p++){const item=document.createElement('option');item.value=String(p);item.textContent=pitchName(p);byId('keyStart').append(item)}
 for(const [k,defaultValue] of Object.entries(sceneDefaults)){
- const el=byId(k),check=typeof defaultValue==='boolean';
+ const el=byId(k),check=typeof defaultValue==='boolean';if(!el||k==='loop')continue;
  const update=commit=>{
   const value=check?el.checked:typeof defaultValue==='number'?Number(el.value):el.value;
   if(!check&&typeof defaultValue==='number'&&el.value==='')return;
   options=cleanSceneOptions({...options,[k]:value});syncSceneControls();
   if(['rangeMode','keyStart','keyCount'].includes(k)){scenePreviewLayout=null;if(scene)Object.assign(scene,keyLayout(scene.events))}
-  if(k==='loop')applySceneLoop();refreshScenePreview();if(commit)saveSceneOptions();
+  refreshScenePreview();if(commit)saveSceneOptions();
  };
  el.oninput=()=>{if(k!=='keyCount')update(false)};el.onchange=()=>update(true);
 }
-const sceneLooks={
- sceneCalm:{palette:'aurora',noteStyle:'solid',roundness:18,glow:true,glowAmount:15,sparks:false,sparkAmount:20,rays:0,rings:0,trails:0,backdrop:'plain'},
- sceneCinema:{palette:'aurora',noteStyle:'glass',roundness:22,glow:true,glowAmount:40,sparks:true,sparkAmount:30,rays:28,rings:20,trails:15,backdrop:'aurora'},
- sceneNeon:{palette:'iris',noteStyle:'neon',roundness:32,glow:true,glowAmount:65,sparks:true,sparkAmount:55,rays:45,rings:45,trails:30,backdrop:'stars'}
-};
-for(const [id,look] of Object.entries(sceneLooks))byId(id).onclick=()=>{options=cleanSceneOptions({...options,...look});syncSceneControls();saveSceneOptions();refreshScenePreview()};
-byId('resetSceneColors').onclick=()=>{options.colors={};renderSceneColors();saveSceneOptions();refreshScenePreview()};
+// Commit on blur/Enter, so intermediate input (such as 0,05) is not clamped while typing.
+function commitSceneNumber(key,field){
+ const raw=field.value.trim().replace(',', '.'),value=raw===''?NaN:Number(raw),[lo,hi]=sceneBounds[key];
+ if(Number.isNaN(value)){field.value=String(options[key]);return}
+ const clamped=Math.max(lo,Math.min(hi,value)),next=key==='speed'?Math.round(clamped*1000)/1000:Math.round(clamped);
+ field.value=String(next);
+ if(next===options[key])return;
+ options=cleanSceneOptions({...options,[key]:next});syncSceneControls();saveSceneOptions();refreshScenePreview();
+}
+for(const key of Object.keys(sceneBounds).filter(k=>!['keyStart','keyCount'].includes(k))){
+ const field=byId(key+'Value');
+ field.onfocus=()=>field.select?.();field.onchange=field.onblur=()=>commitSceneNumber(key,field);
+ field.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();commitSceneNumber(key,field);field.blur?.()}else if(e.key==='Escape'){e.preventDefault();e.stopPropagation?.();field.value=String(options[key]);field.blur?.()}};
+}
 syncSceneControls();
 const sharp=p=>[1,3,6,8,10].includes(p%12);
 function keyLayout(events){
@@ -1317,8 +1533,10 @@ function keyLayout(events){
  if(options.rangeMode==='auto'){
   let first=127,last=0;for(const n of events){first=Math.min(first,n.pitch);last=Math.max(last,n.pitch)}
   if(!events.length){first=48;last=83}
+  if(options.octaveRange){lo=Math.floor(first/12)*12;hi=Math.min(127,Math.floor(last/12)*12+11)}else{
   lo=Math.max(0,Math.floor((first-2)/12)*12);hi=Math.min(127,Math.ceil((last+3)/12)*12-1);
   if(hi-lo+1<48){const extra=48-(hi-lo+1);lo=Math.max(0,lo-Math.floor(extra/24)*12);hi=Math.min(127,lo+47);lo=Math.max(0,hi-47)}
+  }
  }
  const keys=new Map();let whites=0;
  for(let p=lo;p<=hi;p++){const black=sharp(p);keys.set(p,{black,center:whites+(black?0:.5),width:black?.6:1});if(!black)whites++}
@@ -1353,12 +1571,13 @@ function sceneLocalTime(s,now){
  const period=s.last*s.sec;
  return now<0||!period?now:now-Math.min(s.loopUntil??0,Math.floor(now/period))*period;
 }
-function syncLoopButton(){byId('stageLoop').setAttribute('aria-pressed',String(options.loop));byId('loop').checked=options.loop}
+function syncLoopButton(){byId('stageLoop').setAttribute('aria-pressed',String(options.loop))}
 function applySceneLoop(){
  syncLoopButton();
  if(!playback?.visual)return;
- const p=playback,cycle=Math.max(0,Math.floor((audio.currentTime-p.start)/(p.last*p.sec)));
+ const p=playback,cycle=Math.max(0,Math.floor((scene?.still?scene.frozenTime:audio.currentTime-p.start)/(p.last*p.sec)));
  p.loopUntil=options.loop?Infinity:cycle;
+ if(p.paused){if(scene){scene.loopUntil=p.ended?0:options.loop?Infinity:0;resetSceneAt(p.position)}syncStageTimeline();return;}
  if(!options.loop){
   for(const voice of voices)if(voice.playback===p&&voice.cycle>cycle)silenceVoice(voice);
   if(p.cycle>cycle){p.cycle=cycle+1;p.next=0}
@@ -1371,19 +1590,29 @@ function endScene(){
  if(sceneFrame)cancelAnimationFrame(sceneFrame);sceneFrame=0;
  if(!scene&&!running)return;
  if(!byId('stage').hidden){
-  if(scene){scene.frozenTime=audio.currentTime-scene.start;scene.still=true;drawScene()}
-  byId('stageTransport').textContent='▶';byId('stageTransport').setAttribute('aria-label','Играть с начала');
+  if(scene){if(!scene.still)scene.frozenTime=audio.currentTime-scene.start;scene.still=true;drawScene()}
+  syncStageTransport();
+ }
+}
+function animateScene(ms){
+ if(!scene||scene.still)return;
+ const interval=1000/options.fps,elapsed=ms-scene.stamp;
+ if(elapsed>=interval-.5){const remainder=elapsed%interval;scene.stamp=Number.isFinite(remainder)&&remainder<interval-.5?ms-remainder:ms;drawScene()}
+ sceneFrame=requestAnimationFrame(animateScene);
+}
+function resetSceneAt(seconds){
+ if(!scene)return;
+ scene.next=0;scene.cycle=0;scene.visible=[];
+ const limit=seconds+sceneTravel();
+ while(scene.next<scene.events.length){
+  const n=scene.events[scene.next];if(n.start*scene.sec>limit)break;
+  scene.next++;if((n.start+n.len)*scene.sec>seconds||n.start*scene.sec>seconds-.9)scene.visible.push(n);
  }
 }
 function beginScene(events,start,sec,last,loopUntil=0){
+ if(sceneFrame)cancelAnimationFrame(sceneFrame);
  scene={events,start,sec,last,loopUntil,...keyLayout(events),next:0,visible:[],still:false,stamp:-Infinity};
- function animate(ms){
-  if(!scene||scene.still)return;
-  const interval=1000/options.fps,elapsed=ms-scene.stamp;
-  if(elapsed>=interval-.5){const remainder=elapsed%interval;scene.stamp=Number.isFinite(remainder)&&remainder<interval-.5?ms-remainder:ms;drawScene()}
-  sceneFrame=requestAnimationFrame(animate);
- }
- drawScene();sceneFrame=requestAnimationFrame(animate);
+ resetSceneAt(audio.currentTime-start);drawScene();sceneFrame=requestAnimationFrame(animateScene);
 }
 // Rendering is loaded from this exact signed edition only when first needed.
 function renderScene(canvas,state,time,mini=false){
@@ -1396,32 +1625,18 @@ function renderScene(canvas,state,time,mini=false){
  return window.NotkaSceneRenderer(canvas,state,time,mini);
 }
 function drawScene(){
- if(!scene)return;const now=scene.still?scene.frozenTime:audio.currentTime-scene.start;renderScene(byId('scene'),scene,now);
-}
-function drawScenePreview(){
- if(byId('visualOptions').hidden)return;
- const layout=scenePreviewLayout||(scenePreviewLayout=keyLayout(lanes.flatMap(l=>l.notes))),pitches=[...layout.keys.keys()].filter(p=>!sharp(p)),base=Math.max(0,Math.floor(pitches.length/2)-5),events=[];
- for(let i=0;i<12;i++){const lane=i%Math.min(3,lanes.length),pitch=pitches[Math.min(pitches.length-1,base+[0,4,2,7,4,9][i%6])];events.push({start:Math.floor(i/3)*.8+.1*(i%3),len:.6+(i%3)*.3,pitch,volume:80,lane,instrument:lanes[lane].instrument||'vsco-piano-1',instrumentId:laneInstrument(lanes[lane]).id})}
- events.sort((a,b)=>a.start-b.start);renderScene(byId('scenePreview'),{...layout,events,sec:1,last:5,next:0,visible:[]},1.2,true);
+ if(!scene)return;const begin=diagnostics.enabled?diagnostics.now():0,now=scene.still?scene.frozenTime:audio.currentTime-scene.start;renderScene(byId('scene'),scene,now);if(diagnostics.enabled&&!scene.still)diagnostics.draw(diagnostics.now()-begin);
 }
 function sceneMode(open){
  document.documentElement.classList.toggle('scene-open',open);
  try{if(typeof NotkaPlayer!=='undefined')NotkaPlayer.setSceneMode?.(open)}catch(e){}
 }
-function setSceneHud(show){
- byId('stageHud').hidden=!show;byId('scene').tabIndex=show?-1:0;
- (show?byId('stageHide'):byId('scene')).focus?.();drawScene();
-}
-byId('stageHide').onclick=()=>setSceneHud(false);
-byId('scene').onclick=()=>{if(byId('stageHud').hidden)setSceneHud(true)};
-byId('scene').onkeydown=e=>{if(byId('stageHud').hidden&&(e.key==='Enter'||e.key===' ')){e.preventDefault();setSceneHud(true)}};
 function leaveStage(){
- stop();scene=null;byId('stage').hidden=true;sceneMode(false);byId('visualPlay').focus?.();
+ stageScrub=null;stop();scene=null;byId('stage').hidden=true;sceneMode(false);setSceneHud(true);byId('visualPlay').focus?.();
 }
 byId('visualPlay').onclick=()=>play('visual');
-byId('stageTransport').onclick=()=>play('visual');
 byId('leaveStage').onclick=leaveStage;
-window.addEventListener('resize',()=>{if(scene)drawScene()});
+window.addEventListener('resize',()=>{if(scene)drawScene();if(!byId('preferences').hidden&&!byId('visualOptions').hidden){layoutScenePreviews();drawScenePreview();refreshSceneDemo()}});
 // The native host calls this global entry point; each invocation closes one layer.
 function notkaBack(){
  document.activeElement?.blur?.();
@@ -1438,7 +1653,9 @@ function notkaBack(){
  if(!byId('laneSheet').hidden){if(!byId('laneDeleteConfirm').hidden)cancelLaneDelete();else if(!byId('laneRename').hidden)closeLaneRename();else closeLane();return}
  if(!byId('stepSheet').hidden){closeStep();return}
  if(!byId('preferences').hidden){
+  if(!byId('sceneColorPicker').hidden){closeSceneColor();return}
   if(!byId('presetConfirm').hidden)cancelPresetAction();
+  else if(!byId('presetList').hidden)closePresetList();
   else if(!byId('songDeleteConfirm').hidden)cancelSongDelete();
   else if(!byId('replaceTrack').hidden){pendingTrack=null;byId('replaceTrack').hidden=true;trackMessage('')}
   else if(!byId('visualOptions').hidden&&presetNaming)byId('cancelNewPreset').onclick();
@@ -1464,7 +1681,7 @@ function askExit(){
  byId('exitChoices').hidden=byId('exitNameForm').hidden=true;byId('exitStatus').textContent='';byId('cancelExit').focus?.();
 }
 function finishExit(saved=false){
- finishGesture();draftPending=true;flushDraft();
+ finishGesture();draftPending=true;flushDraft(true);diagnostics.persist();
  if(draftPending&&!saved){byId('exitStatus').textContent='Не удалось записать автокопию. Сохрани трек или попробуй снова.';return}
  try{NotkaPlayer.leave()}catch(e){byId('exitStatus').textContent='Не удалось выйти. Попробуй снова.'}
 }
@@ -1480,38 +1697,209 @@ byId('exitOverwrite').onclick=()=>writeSong(songFile,true,true);
 byId('exitConfirm').onclick=()=>{try{writeSong(songNameFile(byId('exitName').value),false,true)}catch(e){byId('exitStatus').textContent=e.message}};
 byId('exitName').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();byId('exitConfirm').onclick()}};
 
+// Audition owns its clock and voices; it never changes the song transport.
+let sceneDemo=null,sceneDemoFrame=0,sceneDemoTimer=0,sceneDemoSerial=0,sceneDemoMuted=false,sceneDemoZoom=false,sceneDemoChord=0,sceneDemoPaused=false;
+const sceneDemoVoices=new Set();
+const sceneDemoNow=()=>typeof performance!=='undefined'?performance.now():Date.now();
+function silenceSceneDemo(){for(const voice of sceneDemoVoices){for(const source of voice){try{source.stop()}catch{}}voice.dispose?.()}sceneDemoVoices.clear()}
+function stopSceneDemo(){sceneDemoSerial++;clearTimeout(sceneDemoTimer);sceneDemoTimer=0;if(sceneDemoFrame)cancelAnimationFrame(sceneDemoFrame);sceneDemoFrame=0;sceneDemo=null;silenceSceneDemo()}
+// A fixed progression varies the harmony without consecutive repeats or dissonant seconds.
+const demoChords=[[0,4,7,12],[1,5,8,13],[9,12,16,21],[3,7,10,15],[5,9,12,17],[6,9,13,18],[7,11,14,19],[8,12,15,20],[2,5,9,14],[10,14,17,22],[4,7,11,16],[11,14,18,23]];
+function fitPreviewPitches(tones,layout){
+ const center=(layout.lo+layout.hi)/2,candidates=[];
+ for(let octave=-1;octave<=10;octave++){
+  const pitches=tones.map(p=>p+octave*12),lo=Math.min(...pitches),hi=Math.max(...pitches);
+  if(lo>=layout.lo&&hi<=layout.hi)candidates.push({pitches,score:Math.abs((lo+hi)/2-center)+(lo<layout.lo+2||hi>layout.hi-2?128:0)});
+ }
+ if(candidates.length)return candidates.sort((a,b)=>a.score-b.score)[0].pitches;
+ // One-octave ranges need an inversion. Preserve pitch classes instead of clamping notes.
+ const folded=tones.map(tone=>[...layout.keys.keys()].filter(p=>p%12===tone%12).sort((a,b)=>Math.abs(a-center)-Math.abs(b-center))[0]);
+ if(folded.every(Number.isFinite))return folded;
+ // The final MIDI octave ends at G; unavailable harmonies use an in-range triad.
+ return tones.map((_,i)=>layout.lo+[0,tones[0]%2?3:4,7,0][i]);
+}
+function sceneDemoEvents(step=null){
+ if(step===null){step=sceneDemoChord;sceneDemoChord+=Math.ceil(lanes.length/4)}
+ const events=[],layout=demoLayout();
+ for(let offset=0;offset<lanes.length;offset+=4){
+  const group=lanes.slice(offset,offset+4),chord=demoChords[(step+offset/4)%demoChords.length];
+  const tones=group.length===1?chord.slice(0,3):group.length===2?[chord[0],chord[(step+offset/4)%2?2:1]]:chord.slice(0,group.length);
+  const pitches=fitPreviewPitches(tones,layout);
+  pitches.forEach((pitch,j)=>{const index=offset+j%group.length,lane=lanes[index];events.push({pitch,start:1.1+offset/4*1.65,len:.8,volume:80,lane:index,instrument:lane.instrument||'vsco-piano-1',instrumentId:laneInstrument(lane).id,settings:prepareVoiceSettings(laneInstrument(lane).settings)})});
+ }
+ return events;
+}
+function demoLayout(){return keyLayout(scene?.events||lanes.flatMap(l=>l.notes))}
+function frameSceneDemo(demo,now){
+ if(!sceneDemoZoom){demo.lensRange=null;return}
+ const at=(demo.events.find(n=>n.start+Math.max(n.len,.85)>now)||demo.events.at(-1)).start,group=demo.events.filter(n=>n.start===at);
+ demo.lensRange=[Math.max(demo.lo,Math.min(...group.map(n=>n.pitch))-2),Math.min(demo.hi,Math.max(...group.map(n=>n.pitch))+2)];
+}
+function renderSceneDemo(demo,now){frameSceneDemo(demo,now);renderScene(byId('sceneDemo'),demo,now,true)}
+function queueSceneDemo(){
+ if(byId('visualOptions').hidden||byId('preferences').hidden||document.hidden)return;
+ const position=sceneDemo?.paused?sceneDemo.position:0;stopSceneDemo();sceneDemoTimer=setTimeout(()=>{sceneDemoTimer=0;startSceneDemo(position)},120);
+}
+async function startSceneDemo(position=0){
+ stopSceneDemo();syncSceneDemoPlayback();if(byId('visualOptions').hidden||byId('preferences').hidden||document.hidden)return;
+ const token=sceneDemoSerial,events=sceneDemoEvents();if(!events.length)return;position=Math.min(position,events.at(-1).start+1.7);
+ byId('sceneDemoStatus').textContent='';
+ if(!sceneDemoMuted&&!sceneDemoPaused){
+  try{await unlock();await Promise.all([...new Set(events.map(n=>n.instrument))].map(id=>prepareInstrument(id)))}
+  catch(e){if(token===sceneDemoSerial){byId('sceneDemoStatus').textContent='Предпросмотр без звука: инструмент недоступен.';diagnostics.error('scenePreview',e)}}
+ }
+ if(token!==sceneDemoSerial||byId('preferences').hidden||document.hidden)return;
+ sceneDemo={...demoLayout(),audition:true,events,sec:1,last:events.at(-1).start+1.7,next:0,visible:[],started:sceneDemoNow()-position*1000,audioStart:(audio?.currentTime??0)-position,audioClock:!sceneDemoMuted&&audio?.state==='running',nextSound:0,stamp:-Infinity,paused:sceneDemoPaused,position};
+ syncSceneDemoPlayback();if(sceneDemo.paused)renderSceneDemo(sceneDemo,position);else animateSceneDemo(sceneDemoNow());
+}
+function animateSceneDemo(ms){
+ const demo=sceneDemo;if(!demo||demo.paused)return;
+ if(document.hidden||byId('preferences').hidden||byId('visualOptions').hidden){stopSceneDemo();return}
+ const now=demo.audioClock?audio.currentTime-demo.audioStart:(ms-demo.started)/1000;
+ while(demo.nextSound<demo.events.length&&demo.events[demo.nextSound].start<=now+.08){
+  const n=demo.events[demo.nextSound++];
+  if(sceneDemoMuted||n.start+n.len<=now||!audio||!instrumentCache.has(n.instrument))continue;
+  try{
+   const voice=createInstrumentVoice(audio,master,instrumentCache.get(n.instrument),n.settings,n.pitch,audio.currentTime+Math.max(0,n.start-now),n.len,n.volume,Math.max(0,now-n.start),n.lane);
+   if(voice){sceneDemoVoices.add(voice);voice[0].onended=()=>{voice.dispose?.();sceneDemoVoices.delete(voice)}}
+  }catch(e){diagnostics.error('scenePreview',e)}
+ }
+ if(ms-demo.stamp>=1000/options.fps-.5){demo.stamp=ms;renderSceneDemo(demo,now)}
+ if(now<demo.last)sceneDemoFrame=requestAnimationFrame(animateSceneDemo);else{sceneDemoFrame=0;startSceneDemo()}
+}
+function refreshSceneDemo(){
+ if(!sceneDemo){queueSceneDemo();return}
+ const layout=demoLayout();if(layout.lo!==sceneDemo.lo||layout.hi!==sceneDemo.hi){queueSceneDemo();return}
+ const now=sceneDemoTime();
+ renderSceneDemo(sceneDemo,now);
+}
+function sceneDemoTime(){return !sceneDemo?0:sceneDemo.paused?sceneDemo.position:sceneDemo.audioClock?audio.currentTime-sceneDemo.audioStart:(sceneDemoNow()-sceneDemo.started)/1000}
+function syncSceneDemoPlayback(){
+ const button=byId('replaySceneDemo');button.textContent=sceneDemoPaused?'▶':'Ⅱ';button.setAttribute('aria-label',sceneDemoPaused?'Продолжить предпросмотр':'Пауза предпросмотра');button.setAttribute('aria-pressed',String(!sceneDemoPaused));
+}
+function pauseSceneDemo(){
+ sceneDemoPaused=true;sceneDemoSerial++;
+ if(sceneDemo){sceneDemo.position=Math.max(0,Math.min(sceneDemo.last,sceneDemoTime()));sceneDemo.paused=true;sceneDemo.loading=false}
+ if(sceneDemoFrame)cancelAnimationFrame(sceneDemoFrame);sceneDemoFrame=0;silenceSceneDemo();syncSceneDemoPlayback();if(sceneDemo)renderSceneDemo(sceneDemo,sceneDemo.position);
+}
+async function resumeSceneDemo(){
+ sceneDemoPaused=false;syncSceneDemoPlayback();const demo=sceneDemo;if(!demo){queueSceneDemo();return}
+ if(demo.loading)return;demo.loading=true;const token=++sceneDemoSerial;
+ try{
+  if(!sceneDemoMuted){await unlock();await Promise.all([...new Set(demo.events.map(n=>n.instrument))].map(prepareInstrument))}
+  if(token!==sceneDemoSerial||sceneDemo!==demo||byId('preferences').hidden||document.hidden)return;
+  const position=demo.position>=demo.last?0:demo.position;
+  demo.started=sceneDemoNow()-position*1000;demo.audioStart=(audio?.currentTime??0)-position;demo.audioClock=!sceneDemoMuted&&audio?.state==='running';demo.paused=false;demo.loading=false;demo.nextSound=0;demo.next=0;demo.visible=[];demo.stamp=-Infinity;animateSceneDemo(sceneDemoNow());
+ }catch(e){if(token===sceneDemoSerial){demo.loading=false;sceneDemoPaused=true;syncSceneDemoPlayback();byId('sceneDemoStatus').textContent='Не удалось включить звук предпросмотра.';diagnostics.error('scenePreview',e)}}
+}
+function syncSceneDemoSound(){
+ const button=byId('sceneDemoSound');button.setAttribute('aria-label',sceneDemoMuted?'Включить звук предпросмотра':'Выключить звук предпросмотра');button.setAttribute('aria-pressed',String(!sceneDemoMuted));
+ button.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z"/>'+ (sceneDemoMuted?'<path d="m16 9 6 6m0-6-6 6"/>':'<path d="M16 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>')+'</svg>';
+}
+byId('sceneDemoSound').onclick=()=>{sceneDemoMuted=!sceneDemoMuted;syncSceneDemoSound();if(sceneDemoMuted)silenceSceneDemo();else if(!sceneDemoPaused){if(sceneDemo)pauseSceneDemo();resumeSceneDemo()}};
+byId('replaySceneDemo').onclick=()=>sceneDemoPaused?resumeSceneDemo():pauseSceneDemo();
+syncSceneDemoSound();
+
+function toggleSceneDemoZoom(){
+ sceneDemoZoom=!sceneDemoZoom;const canvas=byId('sceneDemo');canvas.setAttribute('aria-pressed',String(sceneDemoZoom));canvas.setAttribute('aria-label',sceneDemoZoom?'Отдалить ноты предпросмотра':'Приблизить ноты предпросмотра');
+ if(sceneDemo){const now=sceneDemoTime();renderSceneDemo(sceneDemo,Math.min(now,sceneDemo.last));}
+}
+byId('sceneDemo').onclick=toggleSceneDemoZoom;
+byId('sceneDemo').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleSceneDemoZoom()}};
+
+// A silent snapshot of the actual track, independent of its playback cursor.
+let sceneOverview=null,sceneOverviewTrack=null,sceneOverviewPosition=0,overviewGesture=null,overviewHold=0;
+function overviewTrack(){
+ const events=scene?.events||lanes.flatMap((lane,index)=>lane.muted?[]:lane.notes.map(n=>({...n,lane:index,instrument:lane.instrument||'vsco-piano-1',instrumentId:laneInstrument(lane).id}))).sort((a,b)=>a.start-b.start),sec=scene?.sec||60/bpm/PPQ;
+ const last=events.reduce((value,n)=>Math.max(value,n.start+n.len),0);return {events,sec,last,duration:last*sec};
+}
+function randomSceneOverview(){
+ if(!sceneOverviewTrack)sceneOverviewTrack=overviewTrack();const track=sceneOverviewTrack;
+ if(track.events.length){const n=track.events[Math.floor(Math.random()*track.events.length)],candidate=(n.start+n.len*(.2+Math.random()*.5))*track.sec;
+  sceneOverviewPosition=Math.min(track.duration,candidate);if(Math.abs(sceneOverviewPosition-(sceneOverview?.position??-1))<.01&&track.duration>.02)sceneOverviewPosition=(sceneOverviewPosition+track.duration*.381966)%track.duration;
+ }else sceneOverviewPosition=0;
+ drawScenePreview();
+}
+function drawScenePreview(){
+ if(byId('visualOptions').hidden||byId('preferences').hidden)return;
+ if(!sceneOverviewTrack)sceneOverviewTrack=overviewTrack();const track=sceneOverviewTrack,layout=scenePreviewLayout||(scenePreviewLayout=demoLayout());
+ sceneOverviewPosition=Math.max(0,Math.min(track.duration,sceneOverviewPosition));
+ const position=sceneOverviewPosition,visible=[];let next=0;
+ for(;next<track.events.length;next++){const n=track.events[next];if(n.start*track.sec>position+sceneTravel())break;if((n.start+n.len)*track.sec>position||n.start*track.sec>position-.9)visible.push(n)}
+ sceneOverview={...layout,events:track.events,sec:track.sec,last:track.last,next,visible,position};
+ renderScene(byId('scenePreview'),sceneOverview,position,true);
+ byId('sceneOverviewTime').textContent=track.events.length?stageClock(position)+' / '+stageClock(track.duration):'В треке пока нет нот';
+ byId('sceneOverviewProgress').style.width=(track.duration?100*position/track.duration:0)+'%';
+ byId('sceneOverviewSeek').hidden=!!track.events.length&&!overviewGesture?.scrubbing;
+}
+function seekSceneOverview(seconds){if(!sceneOverviewTrack||!Number.isFinite(seconds))return;sceneOverviewPosition=Math.max(0,Math.min(sceneOverviewTrack.duration,seconds));drawScenePreview()}
+function cancelOverviewGesture(){clearTimeout(overviewHold);overviewHold=0;overviewGesture=null;if(sceneOverviewTrack)byId('sceneOverviewSeek').hidden=!!sceneOverviewTrack.events.length}
+function stopSceneOverview(){cancelOverviewGesture();sceneOverview=null;sceneOverviewTrack=null}
+function previewBoxSize(width,height,ratio){const h=Math.max(0,Math.min((height-12)/2,(width-2)/ratio+2));return {width:Math.min(width,Math.max(0,(h-2)*ratio+2)),height:h}}
+function layoutScenePreviews(){
+ const host=byId('sceneDemos'),canvas=byId('scene'),ratio=canvas.clientWidth>0&&canvas.clientHeight>0?canvas.clientWidth/canvas.clientHeight:16/9,box=previewBoxSize(host.clientWidth,host.clientHeight,ratio);
+ host.style.setProperty('--preview-width',box.width+'px');host.style.setProperty('--preview-height',box.height+'px');
+}
+function startSceneOverview(){layoutScenePreviews();if(!sceneOverviewTrack)sceneOverviewTrack=overviewTrack();randomSceneOverview()}
+function overviewPointerFraction(e){
+ const r=byId('scenePreview').getBoundingClientRect(),rotated=window.matchMedia?.('(orientation:portrait)').matches;
+ return Math.max(0,Math.min(1,rotated?(e.clientY-r.top)/r.height:(e.clientX-r.left)/r.width));
+}
+const overviewCanvas=byId('scenePreview');
+overviewCanvas.onpointerdown=e=>{
+ if(overviewGesture||e.button>0)return;e.preventDefault();overviewCanvas.setPointerCapture?.(e.pointerId);
+ overviewGesture={id:e.pointerId,x:e.clientX,y:e.clientY,fraction:overviewPointerFraction(e),moved:false,scrubbing:false};
+ overviewHold=setTimeout(()=>{overviewHold=0;if(!overviewGesture)return;overviewGesture.scrubbing=true;seekSceneOverview(overviewGesture.fraction*(sceneOverviewTrack?.duration||0))},350);
+};
+overviewCanvas.onpointermove=e=>{
+ const gesture=overviewGesture;if(!gesture||gesture.id!==e.pointerId)return;e.preventDefault();gesture.fraction=overviewPointerFraction(e);
+ if(Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)>8){gesture.moved=true;if(!gesture.scrubbing){clearTimeout(overviewHold);overviewHold=0}}
+ if(gesture.scrubbing)seekSceneOverview(gesture.fraction*(sceneOverviewTrack?.duration||0));
+};
+overviewCanvas.onpointerup=e=>{const gesture=overviewGesture;if(!gesture||gesture.id!==e.pointerId)return;e.preventDefault();const tap=!gesture.scrubbing&&!gesture.moved;if(gesture.scrubbing)seekSceneOverview(overviewPointerFraction(e)*(sceneOverviewTrack?.duration||0));cancelOverviewGesture();if(tap)randomSceneOverview()};
+overviewCanvas.onpointercancel=overviewCanvas.onlostpointercapture=cancelOverviewGesture;
+overviewCanvas.oncontextmenu=e=>e.preventDefault();
+overviewCanvas.onkeydown=e=>{if(['Enter',' ','ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();if(e.key==='Enter'||e.key===' ')randomSceneOverview();else seekSceneOverview(e.key==='Home'?0:e.key==='End'?sceneOverviewTrack?.duration:sceneOverviewPosition+(e.key==='ArrowLeft'?-1:1))}};
 function stop(mute=true){
+ stopLibraryAudition();cancelInstrumentHold();
  generation++;clearInterval(timer);endScene();playback=null;running=false;current=-1;
  if(mute)for(const sources of voices)silenceVoice(sources);
- controls();paintSoon();
+ controls();paintSoon();syncStageTransport();
 }
 async function play(mode='visible'){
  if(importJob)return;
  if(running){stop();return}
  finishGesture();clearSelection();
  const visual=mode==='visual',origin=mode==='visible'?ticks(x):0;
- const events=[];
+ const preparation=diagnostics.enabled?diagnostics.now():0,events=[];
  for(const [laneIndex,lane] of lanes.entries())if(!lane.muted){
-  for(const [variant,note] of lane.notes.entries())if(note.start+note.len>origin)events.push({...note,variant,lane:laneIndex,instrument:lane.instrument||'vsco-piano-1',instrumentId:laneInstrument(lane).id,settings:{...laneInstrument(lane).settings}});
+  const instrument=laneInstrument(lane),settings=prepareVoiceSettings(instrument.settings);
+  for(const [variant,note] of lane.notes.entries())if(note.start+note.len>origin)events.push({...note,variant,lane:laneIndex,instrument:lane.instrument||'vsco-piano-1',instrumentId:instrument.id,settings});
  }
- events.sort((a,b)=>a.start-b.start);
+ events.sort((a,b)=>a.start-b.start);if(diagnostics.enabled)diagnostics.operation('playPreparation',diagnostics.now()-preparation);
  if(!events.length){byId('status').textContent='От левого края сетки дальше нет звучащих нот. Нажми |▶, чтобы сыграть с начала.';return}
  byId('status').textContent='';
  const token=++generation;running=true;controls();paintSoon();
- if(visual){byId('stage').hidden=false;byId('stageHud').hidden=false;byId('scene').tabIndex=-1;sceneMode(true);byId('stageTransport').textContent='■';byId('stageTransport').setAttribute('aria-label','Остановить');byId('leaveStage').focus?.()}
+ if(visual){byId('stage').hidden=false;setSceneHud(true);sceneMode(true);syncStageTransport();byId('leaveStage').focus?.()}
  try{
   await unlock();
   await Promise.all([...new Set(events.map(n=>n.instrument))].map(prepareInstrument));
   if(token!==generation)return;
   const sec=60/bpm/PPQ,start=audio.currentTime+(visual?sceneTravel():.045),last=events.reduce((end,n)=>Math.max(end,n.start+n.len),0);
-  const p=playback={start,sec,last,visual,cycle:0,next:0,loopUntil:visual&&options.loop?Infinity:0};
-  if(visual)beginScene(events,start,sec,last,p.loopUntil);
-  function pulse(){
-   const now=audio.currentTime,period=last*sec;
+  const p=playback={events,origin,start,sec,last,visual,paused:false,position:0,cycle:0,next:0,loopUntil:visual&&options.loop?Infinity:0};
+  if(visual){beginScene(events,start,sec,last,p.loopUntil);syncStageTransport();syncStageTimeline()}
+  startPlaybackTimer(p);
+
+ }catch(e){diagnostics.error('playback',e);if(token===generation){audioFail();byId('status').textContent=e.message||'Звук недоступен.'}}
+}
+function pulsePlayback(p){
+ if(playback!==p||!running||p.paused)return;
+ const {origin,start,sec,last,visual}=p;
+   const pulseStart=diagnostics.enabled?diagnostics.now():0,now=audio.currentTime,period=last*sec;
    if(visual&&p.cycle<Math.floor((now-start)/period)){p.cycle=Math.min(p.loopUntil,Math.max(0,Math.floor((now-start)/period)));p.next=0}
-   let scheduled=0;
+   let events=p.cycle===0&&p.seekEvents?p.seekEvents:p.events,scheduled=0;
    while(scheduled<512){
-    if(p.next>=events.length){if(p.cycle>=p.loopUntil)break;p.cycle++;p.next=0}
+    if(p.next>=events.length){if(p.cycle>=p.loopUntil)break;p.cycle++;p.next=0;events=p.events}
     if(p.cycle>p.loopUntil)break;
     const n=events[p.next],on=Math.max(n.start,origin),when=start+p.cycle*period+(on-origin)*sec,off=start+p.cycle*period+(n.start+n.len-origin)*sec;
     if(when>now+.12)break;
@@ -1522,13 +1910,109 @@ async function play(mode='visible'){
    }
    const elapsed=Math.max(0,(now-start)/sec),cycle=visual?Math.min(p.loopUntil,Math.floor(elapsed/last)):0;
    current=origin+elapsed-cycle*last;
-   if(elapsed>=(p.loopUntil+1)*last-origin){stop(false);return}
-   if(visual)return;
+   if(elapsed>=(p.loopUntil+1)*last-origin){if(visual)pauseStage(true);else stop(false);return}
+   if(diagnostics.enabled)diagnostics.operation('audioScheduler',diagnostics.now()-pulseStart);
+   if(visual){syncStageTimeline();return;}
    if(pixels(current)<x||pixels(current)>=x+w){x=pixels(current);paintSoon()}else paintCursor();
-  }
-  timer=setInterval(pulse,32);pulse();
- }catch(e){if(token===generation){audioFail();byId('status').textContent=e.message||'Звук недоступен.'}}
 }
+function startPlaybackTimer(p){clearInterval(timer);timer=setInterval(()=>pulsePlayback(p),32);pulsePlayback(p)}
+// Audio, drawing and the scrubber share one clock; pausing retains the score.
+let stageScrub=null;
+const stageDuration=()=>scene?scene.last*scene.sec:0;
+function stageTime(){
+ if(!scene)return 0;
+ return sceneLocalTime(scene,scene.still?scene.frozenTime:audio.currentTime-scene.start);
+}
+function stageClock(seconds){
+ const whole=Math.floor(Math.max(0,seconds));
+ return Math.floor(whole/60)+':'+String(whole%60).padStart(2,'0');
+}
+function syncStageTimeline(){
+ const duration=stageDuration(),position=Math.max(0,Math.min(duration,stageTime())),range=byId('stageSeek');
+ range.max=String(duration||1);
+ if(!stageScrub)range.value=String(position);
+ range.setAttribute('aria-valuetext',stageClock(position)+' из '+stageClock(duration));
+ byId('stagePosition').textContent=stageClock(position);byId('stageDuration').textContent=stageClock(duration);
+}
+function syncStageTransport(){
+ const p=playback,ready=!!p?.visual&&!p.loading,active=ready&&running&&!p.paused;
+ const button=byId('stageTransport');button.textContent=active?'Ⅱ':'▶';
+ button.setAttribute('aria-label',active?'Пауза':p?.ended?'Играть с начала':'Продолжить');
+ for(const id of ['stageTransport','stageSeek','stageBack10','stageBack1','stageForward1','stageForward10'])byId(id).disabled=!ready;
+}
+function pauseStage(ended=false){
+ const p=playback;if(!p?.visual)return;
+ generation++;clearInterval(timer);p.loading=false;
+ if(!p.paused){p.position=ended?p.last*p.sec:stageTime();p.paused=true;p.ended=ended}
+ running=false;current=Math.max(0,p.position/p.sec);
+ if(!ended)for(const voice of voices)silenceVoice(voice);
+ if(scene){scene.frozenTime=p.position;scene.still=true;scene.cycle=0;scene.next=0;scene.visible=[];scene.loopUntil=p.ended?0:options.loop?Infinity:0}
+ if(sceneFrame)cancelAnimationFrame(sceneFrame);sceneFrame=0;
+ resetSceneAt(p.position);controls();syncStageTransport();syncStageTimeline();drawScene();
+}
+async function resumeStage(){
+ const p=playback;if(!p?.visual||p.loading||!p.paused)return;
+ const token=++generation;p.loading=true;syncStageTransport();
+ try{
+  await unlock();if(token!==generation||playback!==p)return;
+  if(p.position>=p.last*p.sec)p.position=0;
+  p.seekEvents=p.events.filter(n=>(n.start+n.len)*p.sec>p.position);
+  p.start=audio.currentTime-p.position;p.cycle=0;p.next=0;p.loopUntil=options.loop?Infinity:0;p.paused=false;p.ended=false;p.loading=false;running=true;
+  beginScene(p.events,p.start,p.sec,p.last,p.loopUntil);controls();syncStageTransport();syncStageTimeline();startPlaybackTimer(p);
+ }catch(e){if(token===generation){p.loading=false;diagnostics.error('playback',e);audioFail();byId('status').textContent=e.message||'Звук недоступен.'}}
+}
+function setStagePosition(seconds){
+ const p=playback;if(!p?.visual||!Number.isFinite(seconds))return;
+ p.position=Math.max(0,Math.min(p.last*p.sec,seconds));p.ended=p.position>=p.last*p.sec;
+ current=p.position/p.sec;
+ if(scene){scene.frozenTime=p.position;scene.still=true;scene.next=0;scene.cycle=0;scene.visible=[];scene.loopUntil=p.ended?0:options.loop?Infinity:0}
+ resetSceneAt(p.position);syncStageTimeline();syncStageTransport();drawScene();
+}
+async function seekStage(seconds){
+ if(!playback?.visual)return;
+ const resume=running||playback.loading;pauseStage();setStagePosition(seconds);
+ // The right endpoint is the stopped final frame, including in loop mode.
+ if(resume&&!playback.ended)await resumeStage();
+}
+byId('stageTransport').onclick=()=>{if(running)pauseStage();else return resumeStage()};
+for(const [id,seconds] of [['stageBack10',-10],['stageBack1',-1],['stageForward1',1],['stageForward10',10]])byId(id).onclick=()=>seekStage(Math.max(0,stageTime())+seconds);
+function beginStageScrub(){
+ if(stageScrub||!playback?.visual)return;
+ stageScrub={resume:running||playback.loading};pauseStage();
+}
+function finishStageScrub(){
+ if(!stageScrub)return;
+ const resume=stageScrub.resume;stageScrub=null;syncStageTimeline();
+ if(resume&&playback?.visual&&!playback.ended)return resumeStage();
+}
+byId('stageSeek').onpointerdown=beginStageScrub;
+byId('stageSeek').oninput=e=>{beginStageScrub();setStagePosition(Number(e.target.value))};
+byId('stageSeek').onchange=byId('stageSeek').onpointerup=byId('stageSeek').onpointercancel=byId('stageSeek').onblur=finishStageScrub;
+function setSceneHud(show){
+ const hud=byId('stageHud');hud.dataset.hidden=String(!show);hud.inert=!show;hud.setAttribute('aria-hidden',String(!show));
+ document.documentElement.classList.toggle('scene-hud-hidden',!show);
+ byId('scene').tabIndex=show?-1:0;
+ if(!show)byId('scene').focus?.();
+ drawScene();
+}
+function stageKeyboardHit(e){
+ const canvas=byId('scene'),rect=canvas.getBoundingClientRect(),height=canvas.clientHeight;
+ if(!height||!rect.height)return false;
+ const rotated=window.matchMedia?.('(orientation:portrait)').matches;
+ const y=rotated?(rect.right-e.clientX)*height/rect.width:(e.clientY-rect.top)*height/rect.height;
+ const keyH=Math.min(height*.3,Math.max(36,height*options.keyboardHeight/100));
+ return y>=Math.max(20,height-keyH)&&y<=height;
+}
+let stageTap=null;
+byId('stage').onpointerdown=e=>{stageTap={x:e.clientX,y:e.clientY}};
+byId('stage').onpointercancel=()=>{stageTap=null};
+byId('stage').onclick=e=>{
+ const tap=stageTap;stageTap=null;
+ if(!tap||Math.hypot(e.clientX-tap.x,e.clientY-tap.y)>10)return;
+ if(e.target.closest?.('button,input,label,select,a,[role="slider"]')||stageKeyboardHit(e))return;
+ setSceneHud(byId('stageHud').dataset.hidden==='true');
+};
+byId('scene').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setSceneHud(byId('stageHud').dataset.hidden==='true')}};
 const trackHost=typeof NotkaPlayer!=='undefined'&&typeof NotkaPlayer.writeDraft==='function'?NotkaPlayer:null;
 const songHost=trackHost&&typeof trackHost.songList==='function'?trackHost:null;
 const panelHint='Для файлов и автосохранения обнови APK через настройки стартовой панели.';
@@ -1537,6 +2021,8 @@ function encodeTrack(draft=false){
  reconcileRack();return JSON.stringify({format:'notka.track',version:3,ppq:PPQ,bpm,division,noteDivision,viewDivision,activeLane,lanes,instruments:projectInstruments,scene:cleanSceneOptions(options),instrumentSources:instrumentReferences(lanes),...(draft&&songFile?{draftFile:songFile}:{})});
 }
 function readTrack(raw){
+ const started=diagnostics.enabled?diagnostics.now():0;
+ try{
  if(!raw)throw Error('Файл пуст, слишком велик или недоступен.');
  const t=JSON.parse(raw),integer=Number.isSafeInteger;
  if(t?.format!=='notka.track'||![1,2,3].includes(t.version)||t.ppq!==PPQ||!integer(t.bpm)||t.bpm<40||t.bpm>220||
@@ -1566,6 +2052,7 @@ function readTrack(raw){
   lane.instrumentId=item.id;
  }
  return {bpm:t.bpm,division:t.division,noteDivision:t.noteDivision??0,viewDivision:t.viewDivision??0,activeLane:active,lanes:cleanLanes,instruments:rack,scene:cleanSceneOptions(t.scene)};
+ }catch(e){diagnostics.error('trackParse',e);throw e}finally{if(diagnostics.enabled)diagnostics.operation('trackParse',diagnostics.now()-started)}
 }
 function readNotes(notes){
  const integer=Number.isSafeInteger;
@@ -1577,18 +2064,25 @@ function readNotes(notes){
  });
  return clean;
 }
-function flushDraft(){
- clearTimeout(draftTimer);draftTimer=0;
+const draftInterval=60000;
+function scheduleDraft(delay=draftInterval){
+ if(!draftTimer&&draftPending&&trackHost)draftTimer=setTimeout(()=>{draftTimer=0;flushDraft()},delay);
+}
+function flushDraft(force=false){
  if(!draftPending||!trackHost)return;
- if(gesture?.n){draftTimer=setTimeout(flushDraft,180);return}
- try{if(trackHost.writeDraft(encodeTrack(true))){draftPending=false;return}}catch{}
+ // Closing popovers and releasing sliders must not bypass the minute interval.
+ if(draftTimer&&!force)return;
+ clearTimeout(draftTimer);draftTimer=0;
+ if(gesture?.n){scheduleDraft(1000);return}
+ const started=diagnostics.enabled?diagnostics.now():0;
+ try{
+  if(trackHost.writeDraft(encodeTrack(true))){draftPending=false;if(diagnostics.enabled)diagnostics.operation('autosave',diagnostics.now()-started);return}
+  diagnostics.error('autosave','Не удалось записать автокопию.');
+ }catch(e){diagnostics.error('autosave',e)}
  byId('status').textContent='Не удалось записать автокопию. Проверь свободное место.';
+ scheduleDraft();
 }
-function trackChanged(defer=false){
- trackStarted=true;draftPending=true;
- if(defer){if(!draftTimer)draftTimer=setTimeout(flushDraft,180)}
- else flushDraft();
-}
+function trackChanged(){trackStarted=true;draftPending=true;scheduleDraft()}
 function applyTrack(t){
  stop();finishGesture(true);contacts.clear();pinch=null;clearSelection();templateNote=null;
  songFile=t.songFile||null;projectInstruments=t.instruments;lanes=t.lanes;activeLane=t.activeLane;score=lanes[activeLane].notes;renderLanes();
@@ -1752,13 +2246,13 @@ try{
  document.documentElement.setAttribute('data-note-depth',String(colors.depth===true));
  document.documentElement.style.colorScheme=colors.scheme==='light'?'light':'dark';
 }catch{}
-function suspendEditor(){cancelLaneHold();instrumentRequest++;previewSerial++;contacts.clear();pinch=null;finishGesture(true);flushDraft();stop()}
-document.addEventListener('visibilitychange',()=>{sourceVisibility();if(document.hidden)suspendEditor()});
+function suspendEditor(){stopLibraryAudition();cancelInstrumentHold();stopSceneDemo();stopSceneOverview();cancelLaneHold();instrumentRequest++;previewSerial++;contacts.clear();pinch=null;finishGesture(true);flushDraft(true);diagnostics.suspend();stageScrub=null;if(playback?.visual)pauseStage();else stop()}
+document.addEventListener('visibilitychange',()=>{sourceVisibility();if(document.hidden)suspendEditor();else if(!byId('preferences').hidden&&!byId('visualOptions').hidden){startSceneOverview();queueSceneDemo()}});
 window.addEventListener('resize',resize);
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(resize).observe(roll);
 const exportHost=trackHost&&['beginExport','appendExport','finishExport','cancelExport'].every(k=>typeof trackHost[k]==='function')?trackHost:null;
 let exportJob=null;
-const editorVersion='0.72';
+const editorVersion='0.82';
 const exportBase=name=>name.trim().replace(/\.notka$/i,'').replace(/(?:\(v\d+(?:\.\d+)+\))+$/i,'').trim();
 const exportRate=32000,exportLimit=256*1024*1024;
 const exportText=s=>new Uint8Array(Array.from(unescape(encodeURIComponent(s)),c=>c.charCodeAt(0)));
@@ -1896,7 +2390,7 @@ async function exportMusic(withAudio){
   exportCheck(job);const stamp=new Date().toISOString().replace(/[-:]/g,'').replace('T','-').slice(0,15),file=name+'-'+stamp+(withAudio?'.zip':'.mid');
   if(!exportHost.finishExport(file))throw Error('Не удалось сохранить экспорт. Проверь свободное место.');
   byId('exportStatus').textContent='Готово: '+file+'\n'+folderHint();
- }catch(e){if(!notka)exportHost.cancelExport();byId('exportStatus').textContent=e.message||'Не удалось экспортировать трек.'}
+ }catch(e){diagnostics.error('export',e);if(!notka)exportHost.cancelExport();byId('exportStatus').textContent=e.message||'Не удалось экспортировать трек.'}
  finally{exportJob=null;exportBusy(false)}
 }
 byId('exportNotka').onclick=()=>exportMusic('notka');byId('exportMidi').onclick=()=>exportMusic(false);byId('exportAudio').onclick=()=>exportMusic(true);
@@ -1908,7 +2402,7 @@ byId('stageExport').onclick=()=>{
  try{
   if(!mediaExport){const script=document.createElement('script');script.textContent=NotkaPlayer.mediaExportScript();document.body.append(script);script.remove();mediaExport=window.NotkaMediaExport({
    host:exportHost,snapshot:()=>({track:readTrack(encodeTrack()),name:exportBase(songFile||'Мой трек'),folder:folderHint()}),
-   stop:()=>{stop();flushDraft()},busy:v=>{fileBusy=v;trackActions()},
+   stop:()=>{stageScrub=null;if(playback?.visual)pauseStage();else stop();flushDraft()},busy:v=>{fileBusy=v;trackActions()},
    prepare:async id=>{if(!audio)await unlock();return prepareInstrument(id)},bank:id=>instrumentCache.get(id),
    settings:(lane,track)=>laneInstrument(lane,track.instruments).settings,voice:createInstrumentVoice,
    layout:keyLayout,render:renderScene,travel:sceneTravel,write:exportWrite,wave:renderWave
@@ -1922,6 +2416,7 @@ function sceneRGBA(hex,a){const v=parseInt(hex.slice(1),16);return 'rgba('+[(v>>
 function sceneRound(g,x,y,w,h,r){
  r=Math.max(0,Math.min(r,w/2,h/2));g.beginPath?.();g.moveTo(x+r,y);g.lineTo(x+w-r,y);g.quadraticCurveTo(x+w,y,x+w,y+r);g.lineTo(x+w,y+h-r);g.quadraticCurveTo(x+w,y+h,x+w-r,y+h);g.lineTo(x+r,y+h);g.quadraticCurveTo(x,y+h,x,y+h-r);g.lineTo(x,y+r);g.quadraticCurveTo(x,y,x+r,y);g.closePath();
 }
+const canvasCaches=new WeakMap();
 function renderScene(canvas,s,now,mini=false){
  const g=canvas.getContext?.('2d'),width=canvas.clientWidth,height=canvas.clientHeight;
  if(!g||!s||width<1||height<1)return;
@@ -1929,12 +2424,26 @@ function renderScene(canvas,s,now,mini=false){
  if(canvas.width!==cw||canvas.height!==ch){canvas.width=cw;canvas.height=ch}
  g.setTransform(dpr,0,0,dpr,0,0);
  const bottom=height,keyH=Math.min(height*.3,Math.max(mini?18:36,height*options.keyboardHeight/100)),line=Math.max(20,bottom-keyH);
- const pad=mini?8:Math.min(24,width*.018),unit=(width-2*pad)/s.whites,travel=sceneTravel(),active=new Map(),primary=palettes[options.palette][0];
+ const pad=mini?8:Math.min(24,width*.018),unit=(width-2*pad)/s.whites,travel=sceneTravel(),active=s.activeKeys||(s.activeKeys=new Map()),primary=palettes[options.palette][0];active.clear();
+ // Magnifier is a uniform camera transform around the impact area. Keyboard layout,
+ // note geometry and time remain unchanged; only the visible crop changes.
+ let zoom=1;
+ if(s.lensRange){
+  const first=s.keys.get(s.lensRange[0]),last=s.keys.get(s.lensRange[1]);
+  if(first&&last){
+   const left=pad+(first.center-first.width/2)*unit,right=pad+(last.center+last.width/2)*unit;
+   zoom=Math.max(1,width/(right-left));
+   const tx=-zoom*left,ty=Math.max(height*(1-zoom),Math.min(0,height*.68-zoom*line));
+   g.setTransform(dpr*zoom,0,0,dpr*zoom,dpr*tx,dpr*ty);
+  }
+ }
+ const cacheKey=[cw,ch,dpr,line,keyH,pad,unit,zoom].join('/');let cache=canvasCaches.get(canvas);
+ if(!cache||cache.key!==cacheKey||cache.context!==g){cache={key:cacheKey,context:g,gradients:new Map()};canvasCaches.set(canvas,cache)}
+ const gradient=(key,make)=>{if(cache.gradients.has(key))return cache.gradients.get(key);const value=make();if(cache.gradients.size>=512)cache.gradients.delete(cache.gradients.keys().next().value);cache.gradients.set(key,value);return value};
  const glow=options.glow?options.glowAmount/100:0;
  g.fillStyle=options.background;g.fillRect(0,0,width,height);
  if(options.backdrop==='aurora'){
-  const wash=g.createRadialGradient(width*.3,line,0,width*.3,line,width*.8);
-  wash.addColorStop(0,sceneRGBA(primary,.13));wash.addColorStop(.5,sceneRGBA(palettes[options.palette][1],.045));wash.addColorStop(1,sceneRGBA(primary,0));g.fillStyle=wash;g.fillRect(0,0,width,line);
+  const wash=gradient('aurora/'+options.palette,()=>{const v=g.createRadialGradient(width*.3,line,0,width*.3,line,width*.8);v.addColorStop(0,sceneRGBA(primary,.13));v.addColorStop(.5,sceneRGBA(palettes[options.palette][1],.045));v.addColorStop(1,sceneRGBA(primary,0));return v});g.fillStyle=wash;g.fillRect(0,0,width,line);
  }
  if(options.backdrop==='stars')for(let i=1;i<54;i++){
   const sx=((i*137.509)%97)/97*width,sy=((i*i*13.27)%89)/89*line;
@@ -1945,20 +2454,21 @@ function renderScene(canvas,s,now,mini=false){
  const visible=sceneVisible(s,now);let particles=0,litNotes=0;
  for(const n of visible){
   const key=s.keys.get(n.pitch);if(!key)continue;
-  const cx=pad+key.center*unit,ink=sceneColor(n),geo=sceneNoteGeometry(n,now,s.sec,line,travel),age=geo.age;
+  const ink=sceneColor(n);if(ink==='transparent')continue;
+  const cx=pad+key.center*unit,geo=sceneNoteGeometry(n,now,s.sec,line,travel),age=geo.age;
   if(geo.held&&n.volume>0&&(!active.has(n.pitch)||active.get(n.pitch).v<n.volume))active.set(n.pitch,{ink,v:n.volume});
   if(age<0&&geo.bottom<0)continue;
   if(geo.held&&options.rays>0&&n.volume>0){
-   const rh=line*.48,ray=g.createLinearGradient(0,line-rh,0,line);ray.addColorStop(0,sceneRGBA(ink,0));ray.addColorStop(1,sceneRGBA(ink,options.rays/360));g.fillStyle=ray;
+   const rh=line*.48,ray=gradient('ray/'+ink+'/'+options.rays,()=>{const v=g.createLinearGradient(0,line-rh,0,line);v.addColorStop(0,sceneRGBA(ink,0));v.addColorStop(1,sceneRGBA(ink,options.rays/360));return v});g.fillStyle=ray;
    g.beginPath();g.moveTo(cx-unit*1.2,line-rh);g.lineTo(cx+unit*1.2,line-rh);g.lineTo(cx+unit*.45,line);g.lineTo(cx-unit*.45,line);g.closePath();g.fill();
   }
   if(geo.bottom>0&&geo.top<line&&n.start+n.len>now/s.sec){
    const bw=Math.max(2,unit*options.noteWidth/100*(key.black?.64:1)),bx=cx-bw/2,top=Math.max(-bw,geo.top),bh=Math.max(1,geo.bottom-top),r=bw*options.roundness/100;
    if(options.trails>0){const length=Math.min(line*.2,20+options.trails*.6),trail=g.createLinearGradient(0,top-length,0,top+3);trail.addColorStop(0,sceneRGBA(ink,0));trail.addColorStop(1,sceneRGBA(ink,options.trails/500));g.fillStyle=trail;g.fillRect(bx,top-length,bw,length)}
-   const glowThis=glow>0&&litNotes++<100;if(glowThis){g.shadowColor=ink;g.shadowBlur=Math.min(18,bw*.8)*glow}
+   const glowThis=glow>0&&litNotes++<100;if(glowThis){g.shadowColor=ink;g.shadowBlur=Math.min(18,bw*.8)*glow*zoom}
    const alpha=.48+.0052*n.volume;
    if(options.noteStyle==='glass'){
-    const glass=g.createLinearGradient(bx,0,bx+bw,0);glass.addColorStop(0,sceneRGBA(ink,.7*alpha));glass.addColorStop(.35,sceneRGBA(ink,alpha));glass.addColorStop(1,sceneRGBA(ink,.62*alpha));g.fillStyle=glass;
+    const glass=gradient('glass/'+[bx,bw,ink,alpha].join('/'),()=>{const v=g.createLinearGradient(bx,0,bx+bw,0);v.addColorStop(0,sceneRGBA(ink,.7*alpha));v.addColorStop(.35,sceneRGBA(ink,alpha));v.addColorStop(1,sceneRGBA(ink,.62*alpha));return v});g.fillStyle=glass;
    }else g.fillStyle=sceneRGBA(ink,options.noteStyle==='neon'?.12:alpha*.88);
    sceneRound(g,bx,top,bw,bh,r);g.fill();g.shadowBlur=0;
    g.strokeStyle=sceneRGBA(ink,options.noteStyle==='neon'?.95:.65);g.lineWidth=options.noteStyle==='neon'?1.5:.7;g.stroke();
@@ -1981,25 +2491,24 @@ function renderScene(canvas,s,now,mini=false){
  // A slim dark keybed and individually rounded keys replace the heavy block keyboard.
  g.fillStyle='#03060c';sceneRound(g,pad-2,line-1,width-pad*2+4,keyH+5,4);g.fill();
  for(const black of [false,true]){
-  const kh=black?keyH*.62:keyH,ivory=g.createLinearGradient(0,line,0,line+kh);
-  ivory.addColorStop(0,black?'#283343':'#d7e0e8');ivory.addColorStop(.12,black?'#141d2c':'#f4f7f8');ivory.addColorStop(1,black?'#080c14':'#bdc9d5');
+  const kh=black?keyH*.62:keyH,ivory=gradient('ivory/'+black,()=>{const v=g.createLinearGradient(0,line,0,line+kh);v.addColorStop(0,black?'#283343':'#d7e0e8');v.addColorStop(.12,black?'#141d2c':'#f4f7f8');v.addColorStop(1,black?'#080c14':'#bdc9d5');return v});
   for(const [p,k] of s.keys){
    if(k.black!==black)continue;
    const kw=Math.max(1,unit*k.width-1),kx=pad+unit*k.center-unit*k.width/2,a=active.get(p),round=Math.min(3,unit*.1);
    if(typeof Path2D==='function'){if(rebuild||!k.path){k.path=new Path2D();sceneRound(k.path,kx,line,kw,kh,round)}}
    g.fillStyle=ivory;if(k.path)g.fill(k.path);else{sceneRound(g,kx,line,kw,kh,round);g.fill()}
-   if(a&&options.keyLights){const light=g.createLinearGradient(0,line,0,line+kh);light.addColorStop(0,sceneRGBA(a.ink,.95));light.addColorStop(.4,sceneRGBA(a.ink,black?.6:.65));light.addColorStop(1,sceneRGBA(a.ink,.1));g.fillStyle=light;if(k.path)g.fill(k.path);else{sceneRound(g,kx,line,kw,kh,round);g.fill()}}
+   if(a&&options.keyLights){const light=gradient('light/'+a.ink+'/'+black,()=>{const v=g.createLinearGradient(0,line,0,line+kh);v.addColorStop(0,sceneRGBA(a.ink,.95));v.addColorStop(.4,sceneRGBA(a.ink,black?.6:.65));v.addColorStop(1,sceneRGBA(a.ink,.1));return v});g.fillStyle=light;if(k.path)g.fill(k.path);else{sceneRound(g,kx,line,kw,kh,round);g.fill()}}
    if(black){g.fillStyle='#ffffff0d';g.fillRect(kx+2,line+3,Math.max(0,kw-4),2)}
-   if(!mini&&options.keyLabels!=='none'&&(options.keyLabels==='all'||p%12===0)&&unit>(black?28:18)){
+   if((!mini||s.audition)&&options.keyLabels!=='none'&&(options.keyLabels==='all'||p%12===0)&&unit>(black?28:18)){
     g.fillStyle=black?'#98a6b9':'#536175';g.font=Math.min(11,unit*.32)+'px system-ui,sans-serif';g.textAlign='center';g.fillText(pitchName(p),kx+kw/2,line+kh-7);
    }
   }
  }
- if(glow){g.shadowColor=primary;g.shadowBlur=8+12*glow}
+ if(glow){g.shadowColor=primary;g.shadowBlur=(8+12*glow)*zoom}
  g.fillStyle=sceneRGBA(primary,.35+glow*.5);g.fillRect(pad,line-1,width-2*pad,1.5);g.shadowBlur=0;
- for(const [p,a] of active){const k=s.keys.get(p);if(!k)continue;const cx=pad+k.center*unit;g.fillStyle=a.ink;if(glow){g.shadowColor=a.ink;g.shadowBlur=14*glow}g.fillRect(cx-unit*.35,line-1,unit*.7,2);g.shadowBlur=0}
- if(!mini&&!s.exporting&&!byId('stageHud').hidden){
-  const fade=g.createLinearGradient(0,0,0,72);fade.addColorStop(0,sceneRGBA(options.background,.9));fade.addColorStop(1,sceneRGBA(options.background,0));g.fillStyle=fade;g.fillRect(0,0,width,72);
+ for(const [p,a] of active){const k=s.keys.get(p);if(!k)continue;const cx=pad+k.center*unit;g.fillStyle=a.ink;if(glow){g.shadowColor=a.ink;g.shadowBlur=14*glow*zoom}g.fillRect(cx-unit*.35,line-1,unit*.7,2);g.shadowBlur=0}
+ if(!mini&&!s.exporting&&byId('stageHud').dataset.hidden!=='true'){
+  const fade=gradient('fade/'+options.background,()=>{const v=g.createLinearGradient(0,0,0,72);v.addColorStop(0,sceneRGBA(options.background,.9));v.addColorStop(1,sceneRGBA(options.background,0));return v});g.fillStyle=fade;g.fillRect(0,0,width,72);
  }
 }
 window.NotkaSceneRenderer=renderScene;
@@ -2009,4 +2518,6 @@ restoreSourceStep();restoreSoundCatalog();renderLanes();resize();controls();
 window.addEventListener('pagehide',suspendEditor);
 if(!trackHost)byId('status').textContent=panelHint;
 else if(trackHost.restoreRequested()){showPrefs(false,byId('prefs'));byId('loadTrack').onclick();recoverDraft()}
+
+diagnostics.start();
 </script></html>

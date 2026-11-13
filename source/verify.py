@@ -1,9 +1,10 @@
-import zipfile,hashlib,struct,zlib,io
+import zipfile,hashlib,struct,zlib,io,json
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization,hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from pathlib import Path
-b=Path('Notka-0.64.apk').read_bytes()
+release=json.loads(Path('release.json').read_text())
+b=Path('Notka-'+release['apk_version']+'.apk').read_bytes()
 get=lambda data,i:struct.unpack_from('<I',data,i)[0]
 e=b.rindex(b'PK\x05\x06');cd=get(b,e+16);assert b[cd-16:cd]==b'APK Sig Block 42'
 size=struct.unpack_from('<Q',b,cd-24)[0];start=cd-size-8
@@ -25,6 +26,15 @@ sections=[b[:start],b[cd:e],b[e:e+16]+struct.pack('<I',start)+b[e+20:]]
 chunks=[section[i:i+1048576] for section in sections for i in range(0,len(section),1048576)]
 assert stored==sha(b'\x5a'+struct.pack('<I',len(chunks))+b''.join(sha(b'\xa5'+struct.pack('<I',len(c))+c) for c in chunks))
 with zipfile.ZipFile(io.BytesIO(b)) as z:
+ assert z.read('assets/editor-signing.der')==Path('signing.der').read_bytes()
+ assert z.read('assets/editor-signing-legacy.der')==Path('signing-legacy.der').read_bytes()
+ assert z.read('assets/editor-signing.der')!=z.read('assets/editor-signing-legacy.der')
+ builtin=z.read('assets/editor-builtin.zip');builtin_info=json.loads(z.read('assets/editor-builtin.json'))
+ assert hashlib.sha256(builtin).hexdigest()==builtin_info['sha256'] and builtin_info['code']==release['editor_code']
+ with zipfile.ZipFile(io.BytesIO(builtin)) as editor:
+  envelope=json.loads(editor.read('manifest.json'))
+  import base64
+  key.verify(base64.b64decode(envelope['signature']),envelope['record'].encode(),padding.PKCS1v15(),hashes.SHA256())
  dex=z.read('classes.dex');assert dex[:8]==b'dex\n035\0' and get(dex,8)==zlib.adler32(dex[12:]) and dex[12:32]==hashlib.sha1(dex[32:]).digest() and get(dex,32)==len(dex)
  second=z.read('classes2.dex');assert second[:8]==b'dex\n035\0' and get(second,8)==zlib.adler32(second[12:]) and second[12:32]==hashlib.sha1(second[32:]).digest()
  xml=z.read('AndroidManifest.xml');assert get(xml,4)==len(xml)
@@ -43,7 +53,7 @@ with zipfile.ZipFile(io.BytesIO(b)) as z:
   if tag==0x103:assert stack.pop()==pool[get(xml,p+20)]
   p+=length
  assert ('uses-sdk',{'minSdkVersion':21,'targetSdkVersion':32}) in events
- assert ('manifest',{'package':'studio.notka.piano','versionCode':64,'versionName':'0.64'}) in events
+ assert ('manifest',{'package':'studio.notka.piano','versionCode':release['apk_code'],'versionName':release['apk_version']}) in events
  assert not stack
  app=next(v for kind,v in events if kind=='application');assert app['icon']==0x7f010000
  resource=z.getinfo('resources.arsc');assert resource.compress_type==zipfile.ZIP_STORED
@@ -62,4 +72,4 @@ with zipfile.ZipFile(io.BytesIO(b)) as z:
  for service in services.values():assert not service['exported'] and service['stopWithTask'] and service['foregroundServiceType']==8193
  permissions={v['name'] for kind,v in events if kind=='uses-permission'}
  assert {'android.permission.WAKE_LOCK','android.permission.FOREGROUND_SERVICE','android.permission.FOREGROUND_SERVICE_DATA_SYNC','android.permission.FOREGROUND_SERVICE_MEDIA_PROCESSING','android.permission.POST_NOTIFICATIONS'}<=permissions
- print('OK: Android launcher manifest, DEX checksums, signed APK digest and RSA signature')
+ print('OK: Android launcher manifest, DEX checksums, APK RSA signature, current/legacy trust assets and built-in editor signed by the new key')

@@ -50,3 +50,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
+
+
+GeneralUser GS 2.0.3 — S. Christian Collins
+https://www.schristiancollins.com/generaluser
+30 адаптированных инструментов: моно PCM 32 кГц / 16 бит, 7 опорных нот, один слой velocity=100; FluidSynth без хоруса/реверберации, нормализация, петли. Это адаптации, не исходный SoundFont.
+Полная лицензия и сведения: soundbank/GENERALUSER-LICENSE.txt
+Исходный код подготовки: source/build_generaluser.py

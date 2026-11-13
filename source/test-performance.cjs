@@ -13,10 +13,10 @@ t.run('score.push({pitch:98,start:0,len:9000,volume:70});rowIndexes.delete(score
 for(const n of t.run('[...blockViews.keys()]')){const view=t.run('blockViews').get(n);assert.equal(parseFloat(view.style.left)-t.run('x'),t.run('pixels('+n.start+')-x'));assert.equal(parseFloat(view.style.top)-t.run('y'),t.run('(highestPitch-'+n.pitch+')*row-y+2'))}
 // The player reuses actual path instances until keyboard geometry changes.
 let paths=0;class Path{constructor(){paths++}moveTo(){}lineTo(){}quadraticCurveTo(){}closePath(){}}
-const p=boot(false,{}, {Path2D:Path});const gradient={addColorStop(){}};let filled=0;
-const g=new Proxy({}, {get:(o,k)=>o[k]??((...args)=>{if(k==='fill'&&args[0] instanceof Path)filled++;return k.startsWith('create')?gradient:undefined}),set:(o,k,v)=>(o[k]=v,true)});
-p.run('byId("scene")');p.els.scene.getContext=()=>g;p.run('options=cleanSceneOptions({rangeMode:"manual",keyStart:60,keyCount:24});var ps={events:[{pitch:60,start:0,len:960,volume:80,lane:0}],next:0,visible:[],sec:.001,last:2000,...keyLayout([])};renderScene(byId("scene"),ps,.1)');
-assert.equal(paths,24);assert(filled>=24);p.run('renderScene(byId("scene"),ps,.2)');assert.equal(paths,24);
+const p=boot(false,{}, {Path2D:Path});const gradient={addColorStop(){}};let filled=0,gradients=0;
+const g=new Proxy({}, {get:(o,k)=>o[k]??((...args)=>{if(k==='fill'&&args[0] instanceof Path)filled++;if(k.startsWith('create'))gradients++;return k.startsWith('create')?gradient:undefined}),set:(o,k,v)=>(o[k]=v,true)});
+p.run('byId("scene")');p.els.scene.getContext=()=>g;p.run('options=cleanSceneOptions({rangeMode:"manual",keyStart:60,keyCount:24,trails:0});var ps={events:[{pitch:60,start:0,len:960,volume:80,lane:0}],next:0,visible:[],sec:.001,last:2000,...keyLayout([])};renderScene(byId("scene"),ps,.1)');
+assert.equal(paths,24);assert(filled>=24);const initialGradients=gradients;assert(initialGradients>0);p.run('renderScene(byId("scene"),ps,.2)');assert.equal(paths,24);assert.equal(gradients,initialGradients);
 p.els.scene.clientWidth+=50;p.run('renderScene(byId("scene"),ps,.3)');assert.equal(paths,48);
 p.run('Object.assign(ps,keyLayout([]));renderScene(byId("scene"),ps,.4)');assert.equal(paths,72);
 p.run('options.keyboardHeight=22;renderScene(byId("scene"),ps,.5)');assert.equal(paths,96);

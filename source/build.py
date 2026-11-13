@@ -1,9 +1,12 @@
-import io,struct,hashlib,zlib,zipfile,datetime,json,subprocess
+import io,struct,hashlib,zlib,zipfile,datetime,json,subprocess,sys
 from pathlib import Path
 from cryptography.hazmat.primitives.asymmetric import rsa,padding
 from cryptography.hazmat.primitives import hashes,serialization
 from cryptography.x509 import CertificateBuilder,Name,NameAttribute,random_serial_number
 from cryptography.x509.oid import NameOID
+from signing_identity import load_signing_key
+release=json.loads(Path('release.json').read_text())
+signing_key=load_signing_key()
 def pack(fmt,*args):return struct.pack('<'+fmt,*args)
 def u32(n):return pack('I',n)
 def u64(n):return pack('Q',n)
@@ -32,7 +35,7 @@ def manifest():
  def end(name):
   nonlocal body
   body+=node(0x103,pack('II',nil,idx(name)))
- start('manifest',[('package','studio.notka.piano'),('versionCode',(16,64)),('versionName','0.64')])
+ start('manifest',[('package','studio.notka.piano'),('versionCode',(16,release['apk_code'])),('versionName',release['apk_version'])])
  start('uses-sdk',[('minSdkVersion',(16,21)),('targetSdkVersion',(16,32))]);end('uses-sdk')
  for permission in ['android.permission.INTERNET','android.permission.REQUEST_INSTALL_PACKAGES','android.permission.FOREGROUND_SERVICE','android.permission.FOREGROUND_SERVICE_DATA_SYNC','android.permission.FOREGROUND_SERVICE_MEDIA_PROCESSING','android.permission.WAKE_LOCK','android.permission.POST_NOTIFICATIONS']:
   start('uses-permission',[('name',permission)]);end('uses-permission')
@@ -61,9 +64,9 @@ def manifest():
  return pack('HHI',3,8,8+len(sp+res+body))+sp+res+body
 subprocess.run(['node','build-media.cjs'],check=True)
 subprocess.run(['node','build-editor.cjs'],check=True)
-subprocess.run(['python','bundle_channel.py','../dist','72','0.72','Модульный редактор'],check=True)
-subprocess.run(['python','build-native.py'],check=True)
-subprocess.run(['python','build-icon.py'],check=True)
+subprocess.run([sys.executable,'bundle_channel.py','../dist',str(release['editor_code']),release['editor_version'],release['editor_name']],check=True)
+subprocess.run([sys.executable,'build-native.py'],check=True)
+subprocess.run([sys.executable,'build-icon.py'],check=True)
 icon_symbol=Path('.native-build/icon/R.txt').read_text().strip().split()
 assert icon_symbol[:3]==['int','mipmap','ic_launcher']
 icon_id=int(icon_symbol[3],16)
@@ -76,12 +79,7 @@ def sign(apk):
  chunks=[section[i:i+1048576] for section in [apk[:offset],apk[offset:tail],apk[tail:]] for i in range(0,len(section),1048576)]
  sha=lambda b:hashlib.sha256(b).digest()
  digest=sha(b'\x5a'+u32(len(chunks))+b''.join(sha(b'\xa5'+lp(c)) for c in chunks))
- keypath=Path('signing.pem')
- if not keypath.exists():
-  key=rsa.generate_private_key(public_exponent=65537,key_size=3072)
-  keypath.touch(mode=0o600)
-  keypath.write_bytes(key.private_bytes(serialization.Encoding.PEM,serialization.PrivateFormat.PKCS8,serialization.NoEncryption()))
- else:key=serialization.load_pem_private_key(keypath.read_bytes(),password=None)
+ key=signing_key
  certpath=Path('signing.der')
  if not certpath.exists():
   name=Name([NameAttribute(NameOID.COMMON_NAME,'Notka')])
@@ -107,7 +105,7 @@ def jar_sign(z):
  manifest_bytes=b'Manifest-Version: 1.0\r\n\r\n'+b''.join(data for _,data in sections)
  sf=(b'Signature-Version: 1.0\r\nX-Android-APK-Signed: 2\r\nSHA-256-Digest-Manifest: '
      +digest(manifest_bytes)+b'\r\n\r\n'+b''.join(section(name,data) for name,data in sections))
- key=serialization.load_pem_private_key(Path('signing.pem').read_bytes(),None)
+ key=signing_key
  cert=x509.load_der_x509_certificate(Path('signing.der').read_bytes())
  signature=pkcs7.PKCS7SignatureBuilder().set_data(sf).add_signer(cert,key,hashes.SHA256())
  rsa=signature.sign(serialization.Encoding.DER,[pkcs7.PKCS7Options.Binary,pkcs7.PKCS7Options.DetachedSignature,pkcs7.PKCS7Options.NoAttributes])
@@ -116,12 +114,12 @@ def jar_sign(z):
 
 iofile=io.BytesIO()
 with zipfile.ZipFile(iofile,'w',zipfile.ZIP_DEFLATED) as z:
- z.writestr('AndroidManifest.xml',manifest());z.writestr('classes.dex',mkdex('https://raw.githubusercontent.com/Vang1549/Notka/main/dist'));z.writestr('assets/index.html',Path('app/launcher.html').read_text().replace('/* PACKED_EDITIONS */',Path('bundled-editions.js').read_text()))
+ z.writestr('AndroidManifest.xml',manifest());z.writestr('classes.dex',mkdex(release['update_origin']));z.writestr('assets/index.html',Path('app/launcher.html').read_text().replace('/* PACKED_EDITIONS */',Path('bundled-editions.js').read_text()))
  with zipfile.ZipFile('.native-build/icon/resources.apk') as resources:
   for name in resources.namelist():
    if name=='resources.arsc' or name.startswith('res/'):
     z.writestr(name,resources.read(name),compress_type=zipfile.ZIP_STORED if name=='resources.arsc' else zipfile.ZIP_DEFLATED)
- for filename,asset in [('editor-signing.der','signing.der'),('editor-builtin.zip','.native-build/editor-builtin.zip'),('editor-builtin.json','.native-build/editor-builtin.json')]:z.writestr('assets/'+filename,Path(asset).read_bytes())
+ for filename,asset in [('editor-signing.der','signing.der'),('editor-signing-legacy.der','signing-legacy.der'),('editor-builtin.zip','.native-build/editor-builtin.zip'),('editor-builtin.json','.native-build/editor-builtin.json')]:z.writestr('assets/'+filename,Path(asset).read_bytes())
  z.writestr('classes2.dex',Path('.native-build/classes.dex').read_bytes())
  z.writestr('assets/MEDIABUNNY-LICENSE.txt',Path('node_modules/mediabunny/LICENSE').read_bytes())
  z.writestr('assets/media-export.js',Path('app/media-export.bundle.js').read_bytes())
@@ -140,4 +138,4 @@ with zipfile.ZipFile(iofile) as src, zipfile.ZipFile(ordered,'w',zipfile.ZIP_DEF
    count=(-(dst.fp.tell()+30+len(entry.filename.encode('utf-8'))+4))%4
    entry.extra=pack('HH',0xd935,count)+b'\0'*count
   dst.writestr(entry,src.read(entry))
-Path('Notka-0.64.apk').write_bytes(sign(ordered.getvalue()))
+Path('Notka-'+release['apk_version']+'.apk').write_bytes(sign(ordered.getvalue()))
