@@ -1,0 +1,13 @@
+{
+  "errors": 0,
+  "warnings": 83,
+  "ids": {
+    "ClickableViewAccessibility": 2,
+    "DataExtractionRules": 1,
+    "DrawAllocation": 35,
+    "RtlHardcoded": 15,
+    "SetTextI18n": 21,
+    "UnusedAttribute": 2,
+    "ViewConstructor": 7
+  }
+}

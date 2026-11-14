@@ -15,7 +15,7 @@ class FileSheet(private val activity: MainActivity) {
         val remove: () -> Unit,
     )
 
-    fun show() =
+    fun show(onClose: () -> Unit = {}) =
         with(activity) {
             val box = column()
             val total = label("")
@@ -122,6 +122,6 @@ class FileSheet(private val activity: MainActivity) {
             }
             query.onTextChanged { render() }
             render()
-            sheet("Скачанные файлы", box, width = 385, close = "✕")
+            sheet("Скачанные файлы", box, width = 385, close = "‹", panel = true, onClose = onClose)
         }
 }

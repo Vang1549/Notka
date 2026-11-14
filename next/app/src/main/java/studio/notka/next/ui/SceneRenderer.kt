@@ -86,7 +86,7 @@ class SceneRenderer(
         whites = count + (if (high % 12 in blacks) .3f else 0f) - left
     }
 
-    fun color(laneIndex: Int): Int {
+    fun color(laneIndex: Int, customColors: Boolean = true): Int {
         val lane = project.lanes[laneIndex]
         val mode = options.text("colorMode")
         val key =
@@ -95,7 +95,7 @@ class SceneRenderer(
                 "instrument" -> "instrument-${lane.instrumentId}"
                 else -> "lane-$laneIndex"
             }
-        val custom = (options["colors"] as? JsonObject)?.text(key)
+        val custom = if (customColors) (options["colors"] as? JsonObject)?.text(key) else null
         if (custom == "transparent") return Color.TRANSPARENT
         if (!custom.isNullOrEmpty()) return Color.parseColor(custom)
         val palette = options.text("palette")

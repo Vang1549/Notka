@@ -18,7 +18,7 @@ class ReferenceLauncher(
 ) : FrameLayout(context) {
     init {
         val p = ReferencePalette(context)
-        setBackgroundColor(p.bg)
+        theme { setBackgroundColor(it.bg) }
         val outer =
             ScrollView(context).apply {
                 isFillViewport = true
@@ -33,13 +33,15 @@ class ReferenceLauncher(
         val card =
             context.column().apply {
                 setPadding(context.dp(21), context.dp(21), context.dp(21), context.dp(21))
-                background = context.shape(p.bg, p.border, 18f)
+                theme { background = context.shape(it.bg, it.border, 18f) }
             }
         val top = context.row()
         val badge =
             context.label("♫").apply {
-                background = context.shape(p.accent, 0, 7f)
-                setTextColor(p.on)
+                theme {
+                    background = context.shape(it.accent, 0, 7f)
+                    setTextColor(it.on)
+                }
                 gravity = Gravity.CENTER
                 setPadding(0, 0, 0, 0)
                 setTypeface(typeface, Typeface.BOLD)
@@ -77,8 +79,10 @@ class ReferenceLauncher(
                     { onStart(false) },
                 )
                 .apply {
-                    background = context.shape(p.accent, p.border)
-                    setTextColor(p.on)
+                    theme {
+                        background = context.shape(it.accent, it.border)
+                        setTextColor(it.on)
+                    }
                     typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
                     val styled = android.text.SpannableString(text)
                     styled.setSpan(
@@ -101,7 +105,7 @@ class ReferenceLauncher(
         }
         card.addView(versions)
         card.addView(
-            View(context).apply { setBackgroundColor(p.border) },
+            View(context).apply { theme { setBackgroundColor(it.border) } },
             LinearLayout.LayoutParams(-1, context.dp(1)).apply {
                 topMargin = context.dp(14)
                 bottomMargin = context.dp(12)
@@ -115,7 +119,7 @@ class ReferenceLauncher(
             )) card.addView(
             context.label(line).apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13f)
-                setTextColor(p.muted)
+                theme { setTextColor(it.muted) }
                 setPadding(0, 0, 0, 0)
                 minimumHeight = context.dp(19)
                 if (line.startsWith("APK")) {

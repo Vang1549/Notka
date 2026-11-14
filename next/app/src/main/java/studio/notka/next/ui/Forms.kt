@@ -33,7 +33,7 @@ fun Context.label(text: String) =
     TextView(this).apply {
         this.text = text
         setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15f)
-        setTextColor(ReferencePalette(this@label).text)
+        theme { setTextColor(it.text) }
         includeFontPadding = false
         setPadding(0, dp(6), 0, dp(4))
     }
@@ -62,7 +62,11 @@ fun Context.field(value: String, numeric: Boolean = false) =
         setHintTextColor(palette.muted)
         setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15f)
         includeFontPadding = false
-        background = this@field.shape(palette.raised, palette.border, 8f)
+        theme {
+            setTextColor(it.text)
+            setHintTextColor(it.muted)
+            background = this@field.shape(it.raised, it.border, 8f)
+        }
         setPadding(dp(8), dp(6), dp(8), dp(6))
         minimumHeight = dp(42)
         if (numeric)
@@ -79,16 +83,20 @@ fun Context.sheet(
     content: View,
     width: Int = 380,
     close: String = "Готово",
+    panel: Boolean = false,
+    beforeClose: () -> Boolean = { true },
     onClose: () -> Unit = {},
 ): AlertDialog {
     val palette = ReferencePalette(this)
-    val card = column().apply { setPadding(dp(17), dp(17), dp(17), dp(17)) }
+    val inset = if (panel) 21 else 17
+    val margin = if (panel) 32 else 24
+    val card = column().apply { setPadding(dp(inset), dp(inset), dp(inset), dp(inset)) }
     val heading = row()
     if (title.isNotEmpty())
         heading.addView(
             label(title).apply {
                 tag = "sheetTitle"
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20f)
+                setTextSize(TypedValue.COMPLEX_UNIT_DIP, if (panel) 19f else 20f)
                 setTypeface(typeface, Typeface.BOLD)
                 setPadding(0, 0, 0, 0)
             },
@@ -97,18 +105,18 @@ fun Context.sheet(
     else heading.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
     lateinit var dialog: AlertDialog
     heading.addView(
-        button(close) {
-            onClose()
-            dialog.dismiss()
-        },
+        button(close) { if (beforeClose()) dialog.dismiss() },
         LinearLayout.LayoutParams(-2, dp(43)),
     )
-    card.addView(heading, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(14) })
+    card.addView(
+        heading,
+        LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(if (panel) 10 else 14) },
+    )
     card.addView(content)
     val scroll =
         object : ScrollView(this) {
                 override fun onMeasure(width: Int, height: Int) {
-                    val limit = resources.displayMetrics.heightPixels - context.dp(24)
+                    val limit = resources.displayMetrics.heightPixels - context.dp(margin)
                     val size = View.MeasureSpec.getSize(height)
                     val mode = View.MeasureSpec.getMode(height)
                     val bounded =
@@ -119,7 +127,7 @@ fun Context.sheet(
                 }
             }
             .apply {
-                background = shape(palette.bg, palette.border, 18f)
+                theme { background = shape(it.bg, it.border, 18f) }
                 clipToOutline = true
                 isFillViewport = false
                 addView(card)
@@ -131,23 +139,17 @@ fun Context.sheet(
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             decorView.setPadding(0, 0, 0, 0)
             addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            setDimAmount(2f / 3)
-            setLayout(minOf(dp(width), resources.displayMetrics.widthPixels - dp(24)), -2)
-            val maximum = resources.displayMetrics.heightPixels - dp(24)
-            scroll.measure(
-                View.MeasureSpec.makeMeasureSpec(
-                    minOf(dp(width), resources.displayMetrics.widthPixels - dp(24)),
-                    View.MeasureSpec.EXACTLY,
-                ),
-                View.MeasureSpec.makeMeasureSpec(maximum, View.MeasureSpec.AT_MOST),
-            )
-            if (scroll.measuredHeight >= maximum)
-                setLayout(minOf(dp(width), resources.displayMetrics.widthPixels - dp(24)), maximum)
+            setDimAmount(if (panel) .6f else 2f / 3)
+            setLayout(minOf(dp(width), resources.displayMetrics.widthPixels - dp(margin)), -2)
             decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
+    }
+    dialog.setOnDismissListener {
+        content.clearFocus()
+        onClose()
     }
     dialog.show()
     return dialog

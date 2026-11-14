@@ -434,6 +434,7 @@ class SceneSheet(private val activity: MainActivity) {
                 setLayout(-1, -1)
             }
             dialog.setOnDismissListener {
+                panel.clearFocus()
                 closed = true
                 handler.removeCallbacksAndMessages(null)
                 stopPreview()
@@ -489,6 +490,7 @@ class SceneSheet(private val activity: MainActivity) {
 
     private fun buildControls(): Unit =
         with(activity) {
+            panel.clearFocus()
             panel.removeAllViews()
             val heading = row()
             heading.addView(
@@ -723,7 +725,12 @@ class SceneSheet(private val activity: MainActivity) {
                 row.addView(label(name), LinearLayout.LayoutParams(0, -2, 1f))
                 val chip =
                     button("") {
-                            ColorPicker(this).show(name, renderer.color(i), true) { value ->
+                            ColorPicker(this).show(
+                                name,
+                                renderer.color(i),
+                                true,
+                                renderer.color(i, false),
+                            ) { value ->
                                 val colors =
                                     (options["colors"] as? JsonObject)?.toMutableMap()
                                         ?: mutableMapOf()

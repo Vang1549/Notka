@@ -94,6 +94,7 @@ class LibrarySheet(private val activity: MainActivity) {
                 } else false
             }
             dialog!!.setOnDismissListener {
+                content.clearFocus()
                 closed.set(true)
                 downloadCancel.set(true)
                 stopPreview()
@@ -123,6 +124,7 @@ class LibrarySheet(private val activity: MainActivity) {
 
     private fun library(): Unit =
         with(activity) {
+            content.clearFocus()
             editing = null
             content.removeAllViews()
             this@LibrarySheet.setTitle("Инструменты")
@@ -459,6 +461,7 @@ class LibrarySheet(private val activity: MainActivity) {
 
     private fun settings(id: String): Unit =
         with(activity) {
+            content.clearFocus()
             editing = id
             content.removeAllViews()
             this@LibrarySheet.setTitle("Настройка инструмента")

@@ -19,12 +19,34 @@ class ThemeSheet(private val activity: MainActivity) {
     private lateinit var box: LinearLayout
     private lateinit var dialog: AlertDialog
     private val hsv = FloatArray(3)
+    private var cancelDelete: (() -> Boolean)? = null
 
     init {
-        if (items.length() == 0) {
-            items.put(builtin("dark"))
-            items.put(builtin("light"))
+        val valid = JSONArray()
+        val seen = mutableSetOf<String>()
+        for (i in 0 until items.length()) {
+            val item = items.optJSONObject(i) ?: continue
+            val id = item.optString("id")
+            if (!id.matches(Regex("dark|light|custom-[1-9][0-9]*")) || !seen.add(id)) continue
+            if (id == "dark" || id == "light") {
+                valid.put(builtin(id).put("depth", item.optBoolean("depth")))
+            } else {
+                if (
+                    item.optString("theme") !in listOf("dark", "light") ||
+                        listOf("background", "accent").any {
+                            !item.optString(it).matches(Regex("#[0-9a-fA-F]{6}"))
+                        } ||
+                        item.optString("name").isBlank()
+                )
+                    continue
+                item.put("name", item.getString("name").trim().take(40))
+                item.put("brightness", item.optInt("brightness", 100).coerceIn(50, 150))
+                item.put("contrast", item.optInt("contrast", 100).coerceIn(50, 180))
+                valid.put(item)
+            }
         }
+        for (mode in listOf("dark", "light")) if (mode !in seen) valid.put(builtin(mode))
+        items = valid
         if ((0 until items.length()).none { items.getJSONObject(it).getString("id") == active })
             active = "dark"
     }
@@ -46,7 +68,6 @@ class ThemeSheet(private val activity: MainActivity) {
             .first { it.getString("id") == active }
 
     private fun save() {
-        val old = ReferencePalette(activity)
         val item = current()
         prefs
             .edit()
@@ -60,24 +81,41 @@ class ThemeSheet(private val activity: MainActivity) {
             .putBoolean("depth", item.optBoolean("depth"))
             .apply()
         val next = ReferencePalette(activity)
-        recolorTree(activity.window.decorView, old, next)
-        if (::dialog.isInitialized) dialog.window?.decorView?.let { recolorTree(it, old, next) }
+        activity.applyTheme()
+        if (::dialog.isInitialized) dialog.window?.decorView?.let { applyPalette(it, next) }
         activity.grid.palette = next
     }
 
-    fun show() =
+    fun show(onClose: () -> Unit = {}) =
         with(activity) {
-            box = column()
+            box = column().apply { isFocusableInTouchMode = true }
+            save()
             render()
-            dialog = sheet("Темы", box, width = 385, close = "✕")
-            dialog.setOnDismissListener {
-                save()
-                recreate()
+            dialog =
+                sheet(
+                    "Темы",
+                    box,
+                    width = 385,
+                    close = "‹",
+                    panel = true,
+                    beforeClose = { cancelDelete?.invoke() != true },
+                ) {
+                    box.clearFocus()
+                    save()
+                    onClose()
+                }
+            dialog.setOnKeyListener { _, key, event ->
+                if (key == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP)
+                    cancelDelete?.invoke() == true
+                else false
             }
         }
 
     private fun render(): Unit =
         with(activity) {
+            fun themeLabel(text: String) = label(text).apply { setPadding(0, 0, 0, 0) }
+            box.clearFocus()
+            cancelDelete = null
             box.removeAllViews()
             val item = current()
             val custom = active.startsWith("custom-")
@@ -85,13 +123,15 @@ class ThemeSheet(private val activity: MainActivity) {
             val index =
                 (0 until items.length()).first { items.getJSONObject(it).getString("id") == active }
             val choose = row()
+            choose.addView(themeLabel("Тема"), LinearLayout.LayoutParams(dp(43), -2))
             choose.addView(
                 select(names, index) {
+                    box.clearFocus()
                     active = items.getJSONObject(it).getString("id")
                     save()
                     render()
                 },
-                LinearLayout.LayoutParams(0, dp(40), 1f),
+                LinearLayout.LayoutParams(0, dp(34), 1f),
             )
             choose.addView(
                 button("＋") {
@@ -101,6 +141,7 @@ class ThemeSheet(private val activity: MainActivity) {
                             items.getJSONObject(it).getString("id") == "custom-$n"
                         }
                     ) n++
+                    box.clearFocus()
                     val next =
                         JSONObject(item.toString())
                             .put("id", "custom-$n")
@@ -109,23 +150,56 @@ class ThemeSheet(private val activity: MainActivity) {
                     active = "custom-$n"
                     save()
                     render()
+                    box.findViewWithTag<EditText>("themeName")?.apply {
+                        requestFocus()
+                        selectAll()
+                        post {
+                            (getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+                                    as android.view.inputmethod.InputMethodManager)
+                                .showSoftInput(this, 0)
+                        }
+                    }
                 },
-                LinearLayout.LayoutParams(dp(42), dp(40)).apply { leftMargin = dp(8) },
+                LinearLayout.LayoutParams(dp(42), dp(44)).apply { leftMargin = dp(8) },
             )
-            box.addView(choose)
+            box.addView(
+                choose,
+                LinearLayout.LayoutParams(-1, -2).apply {
+                    topMargin = dp(5)
+                    bottomMargin = dp(10)
+                },
+            )
             if (custom) {
                 val name =
                     field(item.getString("name")).apply {
+                        theme {
+                            setTextColor(it.text)
+                            background = shape(it.panel, it.border, 6f)
+                        }
+                        tag = "themeName"
                         filters = arrayOf(android.text.InputFilter.LengthFilter(40))
                     }
                 val nameRow = row()
-                nameRow.addView(label("Название"), LinearLayout.LayoutParams(0, -2, 1f))
-                nameRow.addView(name, LinearLayout.LayoutParams(dp(190), dp(36)))
+                nameRow.addView(themeLabel("Название"), LinearLayout.LayoutParams(0, -2, .4f))
+                nameRow.addView(name, LinearLayout.LayoutParams(0, dp(32), .6f))
                 box.addView(nameRow)
                 name.setOnFocusChangeListener { _, focus ->
-                    if (!focus && name.text.isNotBlank()) {
-                        item.put("name", name.text.toString().trim())
+                    if (!focus) {
+                        val value = name.text.toString().trim().ifEmpty { item.getString("name") }
+                        item.put("name", value)
+                        name.setText(value)
                         save()
+                        val spinner = choose.getChildAt(1) as Spinner
+                        @Suppress("UNCHECKED_CAST")
+                        val adapter = spinner.adapter as ArrayAdapter<String>
+                        adapter.setNotifyOnChange(false)
+                        adapter.clear()
+                        adapter.addAll(
+                            (0 until items.length()).map {
+                                items.getJSONObject(it).getString("name")
+                            }
+                        )
+                        adapter.notifyDataSetChanged()
                     }
                 }
             }
@@ -170,6 +244,12 @@ class ThemeSheet(private val activity: MainActivity) {
                                 )
                             paint.color = p.accent
                             c.drawRoundRect(r, 3 * d, 3 * d, paint)
+                            paint.style = Paint.Style.STROKE
+                            paint.strokeWidth = d
+                            paint.color = 0x44000000
+                            r.inset(d / 2, d / 2)
+                            c.drawRoundRect(r, 3 * d, 3 * d, paint)
+                            paint.style = Paint.Style.FILL
                             if (p.depth) {
                                 paint.shader =
                                     LinearGradient(
@@ -189,164 +269,196 @@ class ThemeSheet(private val activity: MainActivity) {
                         c.drawRect(width * .58f, 0f, width * .58f + 2 * d, height.toFloat(), paint)
                     }
                 }
+            preview.background = shape(0, ReferencePalette(this).border, 8f)
+            preview.clipToOutline = true
             box.addView(
                 preview,
                 LinearLayout.LayoutParams(-1, dp(56)).apply {
                     topMargin = dp(10)
-                    bottomMargin = dp(10)
+                    bottomMargin = dp(15)
                 },
             )
             if (custom) {
                 val pair = row()
                 for ((key, title) in
                     listOf("background" to "Основной", "accent" to "Второстепенный")) pair.addView(
-                    button("● $title") {
+                    button(title) {
+                            box.clearFocus()
                             editing = key
                             render()
                         }
                         .apply {
                             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13f)
                             setPadding(dp(6), 0, dp(6), 0)
-                            if (editing == key)
+                            contentDescription = title
+                            theme { palette ->
+                                setTextColor(palette.text)
                                 background =
-                                    shape(
-                                        ReferencePalette(this@with).panel,
-                                        ReferencePalette(this@with).text,
-                                    )
+                                    shape(palette.panel, 0).apply {
+                                        setStroke(
+                                            dp(if (editing == key) 2 else 1),
+                                            if (editing == key) palette.text else palette.border,
+                                        )
+                                    }
+                                val chip =
+                                    shape(Color.parseColor(item.getString(key)), palette.text, 8f)
+                                chip.setBounds(0, 0, dp(16), dp(16))
+                                text =
+                                    android.text.SpannableString("\uFFFC  $title").apply {
+                                        setSpan(
+                                            android.text.style.ImageSpan(
+                                                chip,
+                                                android.text.style.ImageSpan.ALIGN_BOTTOM,
+                                            ),
+                                            0,
+                                            1,
+                                            0,
+                                        )
+                                    }
+                            }
                         },
-                    LinearLayout.LayoutParams(0, dp(40), 1f).apply { rightMargin = dp(4) },
+                    LinearLayout.LayoutParams(0, dp(43), 1f).apply {
+                        if (key == "background") rightMargin = dp(8)
+                    },
                 )
                 box.addView(pair)
-                Color.colorToHSV(Color.parseColor(item.getString(editing)), hsv)
+                readHsv(Color.parseColor(item.getString(editing)), hsv)
                 val hex =
                     field(item.getString(editing)).apply {
                         filters = arrayOf(android.text.InputFilter.LengthFilter(7))
+                        theme {
+                            setTextColor(it.text)
+                            background = shape(it.panel, it.border, 6f)
+                        }
                         contentDescription = "Код выбранного цвета"
                     }
+                val colorKey = editing
                 fun colorChanged() {
                     val value = String.format("#%06x", Color.HSVToColor(hsv) and 0xffffff)
-                    item.put(editing, value)
+                    item.put(colorKey, value)
                     save()
                     hex.setText(value)
                     preview.invalidate()
                 }
-                val pad =
-                    object : View(this) {
-                        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
-                        override fun onDraw(c: Canvas) {
-                            paint.shader =
-                                LinearGradient(
-                                    0f,
-                                    0f,
-                                    width.toFloat(),
-                                    0f,
-                                    Color.WHITE,
-                                    Color.HSVToColor(floatArrayOf(hsv[0], 1f, 1f)),
-                                    Shader.TileMode.CLAMP,
-                                )
-                            c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-                            paint.shader =
-                                LinearGradient(
-                                    0f,
-                                    0f,
-                                    0f,
-                                    height.toFloat(),
-                                    Color.TRANSPARENT,
-                                    Color.BLACK,
-                                    Shader.TileMode.CLAMP,
-                                )
-                            c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-                            paint.shader = null
-                            paint.style = Paint.Style.STROKE
-                            paint.strokeWidth = dp(2).toFloat()
-                            paint.color = Color.WHITE
-                            c.drawCircle(
-                                hsv[1] * width,
-                                (1 - hsv[2]) * height,
-                                dp(6).toFloat(),
-                                paint,
-                            )
-                            paint.style = Paint.Style.FILL
-                        }
-
-                        override fun onTouchEvent(e: MotionEvent): Boolean {
-                            hsv[1] = (e.x / width).coerceIn(0f, 1f)
-                            hsv[2] = (1 - e.y / height).coerceIn(0f, 1f)
-                            colorChanged()
-                            invalidate()
-                            return true
-                        }
-                    }
+                val pad = ColorPlane(this, hsv) { colorChanged() }
                 box.addView(
                     pad,
-                    LinearLayout.LayoutParams(-1, dp(112)).apply { topMargin = dp(10) },
+                    LinearLayout.LayoutParams(-1, dp(112)).apply {
+                        topMargin = dp(10)
+                        bottomMargin = dp(10)
+                    },
                 )
-                box.addView(
-                    ReferenceRange(this, "Оттенок", "°", 0.0, 360.0, 1.0, hsv[0].toDouble()) { value
-                        ->
-                        if (value != null) {
-                            hsv[0] = value.toFloat()
-                            pad.invalidate()
-                            colorChanged()
-                        }
+                val hueValue = themeLabel("${hsv[0].toInt()}°")
+                val hueRow = row()
+                hueRow.addView(themeLabel("Оттенок"), LinearLayout.LayoutParams(0, -2, 1f))
+                hueRow.addView(hueValue)
+                box.addView(hueRow)
+                val hue =
+                    HueSlider(this).apply {
+                        progress = hsv[0].toInt()
+                        setOnSeekBarChangeListener(
+                            object : SeekBar.OnSeekBarChangeListener {
+                                override fun onStartTrackingTouch(s: SeekBar) {}
+
+                                override fun onStopTrackingTouch(s: SeekBar) {}
+
+                                override fun onProgressChanged(
+                                    s: SeekBar,
+                                    value: Int,
+                                    user: Boolean,
+                                ) {
+                                    if (user) {
+                                        hsv[0] = value.toFloat()
+                                        hueValue.text = "$value°"
+                                        pad.invalidate()
+                                        colorChanged()
+                                    }
+                                }
+                            }
+                        )
                     }
+                box.addView(
+                    hue,
+                    LinearLayout.LayoutParams(-1, dp(23)).apply {
+                        topMargin = dp(7)
+                        bottomMargin = dp(7)
+                    },
                 )
                 val hexRow = row()
-                hexRow.addView(label("HEX"), LinearLayout.LayoutParams(0, -2, 1f))
-                hexRow.addView(hex, LinearLayout.LayoutParams(dp(100), dp(36)))
+                hexRow.addView(themeLabel("HEX"), LinearLayout.LayoutParams(0, -2, 1f))
+                hexRow.addView(hex, LinearLayout.LayoutParams(dp(75), dp(32)))
                 box.addView(hexRow)
                 hex.setOnFocusChangeListener { _, focus ->
-                    if (!focus && hex.text.toString().matches(Regex("#[0-9a-fA-F]{6}"))) {
-                        item.put(editing, hex.text.toString())
-                        save()
-                        Color.colorToHSV(Color.parseColor(hex.text.toString()), hsv)
-                        preview.invalidate()
-                        pad.invalidate()
+                    if (!focus) {
+                        val normalized =
+                            "#" + hex.text.toString().trim().removePrefix("#").lowercase()
+                        if (normalized.matches(Regex("#[0-9a-f]{6}"))) {
+                            item.put(colorKey, normalized)
+                            readHsv(Color.parseColor(normalized), hsv)
+                            hue.progress = hsv[0].toInt()
+                            hueValue.text = "${hsv[0].toInt()}°"
+                            save()
+                            preview.invalidate()
+                            pad.invalidate()
+                        }
+                        hex.setText(item.getString(colorKey))
                     }
                 }
-                box.addView(
-                    ReferenceRange(
-                        this,
-                        "Яркость темы",
-                        "%",
-                        50.0,
-                        150.0,
-                        1.0,
-                        item.getInt("brightness").toDouble(),
-                    ) { value ->
-                        if (value != null) {
-                            item.put("brightness", value.toInt())
-                            save()
-                            preview.invalidate()
+                fun range(title: String, key: String, low: Int, high: Int) {
+                    val line = row()
+                    val value = themeLabel("${item.getInt(key)}%")
+                    line.addView(themeLabel(title), LinearLayout.LayoutParams(0, -2, 1f))
+                    line.addView(value)
+                    box.addView(
+                        line,
+                        LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(10) },
+                    )
+                    val slider =
+                        ReferenceSlider(this).apply {
+                            contentDescription = title
+                            max = high - low
+                            progress = item.getInt(key) - low
+                            setOnSeekBarChangeListener(
+                                object : SeekBar.OnSeekBarChangeListener {
+                                    override fun onStartTrackingTouch(s: SeekBar) {}
+
+                                    override fun onStopTrackingTouch(s: SeekBar) {}
+
+                                    override fun onProgressChanged(
+                                        s: SeekBar,
+                                        p: Int,
+                                        user: Boolean,
+                                    ) {
+                                        if (user) {
+                                            item.put(key, p + low)
+                                            value.text = "${p+low}%"
+                                            save()
+                                            preview.invalidate()
+                                        }
+                                    }
+                                }
+                            )
                         }
-                    }
-                )
-                box.addView(
-                    ReferenceRange(
-                        this,
-                        "Контраст сетки",
-                        "%",
-                        50.0,
-                        180.0,
-                        1.0,
-                        item.getInt("contrast").toDouble(),
-                    ) { value ->
-                        if (value != null) {
-                            item.put("contrast", value.toInt())
-                            save()
-                            preview.invalidate()
-                        }
-                    }
-                )
+                    box.addView(
+                        slider,
+                        LinearLayout.LayoutParams(-1, dp(25)).apply { topMargin = dp(10) },
+                    )
+                }
+                range("Яркость темы", "brightness", 50, 150)
+                range("Контраст сетки", "contrast", 50, 180)
             }
             box.checkRow("Объёмные ноты", item.optBoolean("depth")) {
                 item.put("depth", it)
                 save()
                 preview.invalidate()
             }
+            (box.getChildAt(box.childCount - 1).layoutParams as LinearLayout.LayoutParams).apply {
+                topMargin = dp(10)
+                bottomMargin = dp(10)
+            }
             if (custom) {
                 box.addButton("Сбросить тему") {
+                    box.clearFocus()
                     val defaults = builtin(item.getString("theme"))
                     for (key in
                         listOf("background", "accent", "brightness", "contrast", "depth")) item.put(
@@ -356,8 +468,28 @@ class ThemeSheet(private val activity: MainActivity) {
                     save()
                     render()
                 }
+                val confirmation = column().apply { visibility = View.GONE }
+                cancelDelete = {
+                    if (confirmation.visibility == View.VISIBLE) {
+                        confirmation.visibility = View.GONE
+                        true
+                    } else false
+                }
                 box.addButton("Удалить тему…") {
-                    confirm("Удалить тему", item.getString("name")) {
+                    box.clearFocus()
+                    confirmation.visibility = View.VISIBLE
+                    confirmation.post {
+                        confirmation.requestRectangleOnScreen(
+                            Rect(0, 0, confirmation.width, confirmation.height),
+                            false,
+                        )
+                    }
+                }
+                confirmation.addView(themeLabel("Удалить «${item.getString("name") }»?"))
+                val actions = row()
+                actions.addView(
+                    button("Удалить") {
+                        box.clearFocus()
                         val kept = JSONArray()
                         for (i in 0 until items.length()) {
                             val t = items.getJSONObject(i)
@@ -367,8 +499,15 @@ class ThemeSheet(private val activity: MainActivity) {
                         items = kept
                         save()
                         render()
-                    }
-                }
+                    },
+                    LinearLayout.LayoutParams(0, dp(43), 1f),
+                )
+                actions.addView(
+                    button("Отмена") { confirmation.visibility = View.GONE },
+                    LinearLayout.LayoutParams(0, dp(43), 1f).apply { leftMargin = dp(8) },
+                )
+                confirmation.addView(actions)
+                box.addView(confirmation)
             }
         }
 }

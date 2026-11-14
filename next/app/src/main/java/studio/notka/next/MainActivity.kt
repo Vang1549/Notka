@@ -139,11 +139,11 @@ class MainActivity : Activity() {
             }
         }
         val palette = ReferencePalette(this)
-        screen = FrameLayout(this).apply { setBackgroundColor(palette.bg) }
+        screen = FrameLayout(this).apply { theme { setBackgroundColor(it.bg) } }
         root =
             column().apply {
                 setPadding(0, dp(12), 0, dp(12))
-                setBackgroundColor(palette.bg)
+                theme { setBackgroundColor(it.bg) }
             }
         screen.addView(root, FrameLayout.LayoutParams(-1, -1))
         val top = row()
@@ -204,7 +204,7 @@ class MainActivity : Activity() {
         status =
             label("").apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
-                setTextColor(palette.muted)
+                theme { setTextColor(it.muted) }
                 setPadding(0, 0, 0, 0)
                 visibility = View.GONE
             }
@@ -246,12 +246,23 @@ class MainActivity : Activity() {
         visualButton.setCompoundDrawables(null, sceneIcon, null, null)
         visualButton.setPadding(dp(11), dp(9), dp(11), dp(9))
         fun segment(b: Button, radii: FloatArray) {
-            b.background =
-                android.graphics.drawable.GradientDrawable().apply {
-                    setColor(palette.accent)
-                    setStroke(dp(1), palette.border)
-                    cornerRadii = radii.map { it * resources.displayMetrics.density }.toFloatArray()
-                }
+            b.theme { p ->
+                setTextColor(p.on)
+                background =
+                    android.graphics.drawable.GradientDrawable().apply {
+                        setColor(p.accent)
+                        setStroke(dp(1), p.border)
+                        cornerRadii =
+                            radii.map { it * resources.displayMetrics.density }.toFloatArray()
+                    }
+                if (b === visualButton)
+                    setCompoundDrawables(
+                        null,
+                        ReferenceIcon("scene", p.on).apply { setBounds(0, 0, dp(23), dp(24)) },
+                        null,
+                        null,
+                    )
+            }
         }
         segment(startButton, floatArrayOf(10f, 10f, 0f, 0f, 0f, 0f, 10f, 10f))
         segment(play, FloatArray(8))
@@ -271,7 +282,10 @@ class MainActivity : Activity() {
         val bpmBox = column().apply { gravity = Gravity.CENTER }
         bpmInput =
             field(editor.project.bpm.toString(), true).apply {
-                background = null
+                theme {
+                    setTextColor(it.text)
+                    background = null
+                }
                 setPadding(0, 0, 0, 0)
                 minimumHeight = 0
                 minHeight = 0
@@ -290,7 +304,7 @@ class MainActivity : Activity() {
         bpmBox.addView(
             label("BPM").apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 9f)
-                setTextColor(palette.muted)
+                theme { setTextColor(it.muted) }
                 gravity = Gravity.CENTER
                 setPadding(0, 0, 0, 0)
             },
@@ -319,7 +333,7 @@ class MainActivity : Activity() {
         selectionBar =
             column().apply {
                 setPadding(dp(9), dp(6), dp(9), dp(6))
-                background = shape(palette.panel, palette.line, 11f)
+                theme { background = shape(it.panel, it.line, 11f) }
                 elevation = dp(4).toFloat()
                 visibility = View.GONE
             }
@@ -333,7 +347,7 @@ class MainActivity : Activity() {
         inspectorLength =
             label("").apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
-                setTextColor(palette.muted)
+                theme { setTextColor(it.muted) }
                 setPadding(0, 0, 0, 0)
             }
         ins.addView(inspectorTitle)
@@ -363,7 +377,10 @@ class MainActivity : Activity() {
                     setPadding(dp(6), 0, dp(6), 0)
                     minHeight = 0
                     minimumHeight = 0
-                    setTextColor(Color.rgb(251, 172, 156))
+                    theme {
+                        setTextColor(Color.rgb(251, 172, 156))
+                        background = shape(it.panel, it.border)
+                    }
                 },
             LinearLayout.LayoutParams(-2, dp(30)).apply { leftMargin = dp(6) },
         )
@@ -382,8 +399,10 @@ class MainActivity : Activity() {
         volumeSlider =
             SeekBar(this).apply {
                 max = 100
-                progressTintList = ColorStateList.valueOf(palette.accent)
-                thumbTintList = ColorStateList.valueOf(palette.accent)
+                theme {
+                    progressTintList = ColorStateList.valueOf(it.accent)
+                    thumbTintList = ColorStateList.valueOf(it.accent)
+                }
             }
         volumeRow.addView(volumeSlider, LinearLayout.LayoutParams(0, dp(24), 1f))
         volumeValue = label("").apply { setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f) }
@@ -955,7 +974,7 @@ class MainActivity : Activity() {
             header.addView(View(this), LinearLayout.LayoutParams(dp(48), 1))
             header.addView(
                 label("Дорожка").apply {
-                    setTextColor(palette.muted)
+                    theme { setTextColor(it.muted) }
                     setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11f)
                 },
                 LinearLayout.LayoutParams(0, dp(20), 1f),
@@ -963,7 +982,7 @@ class MainActivity : Activity() {
             for (text in listOf("Фон", "Звук")) header.addView(
                 label(text).apply {
                     gravity = Gravity.CENTER
-                    setTextColor(palette.muted)
+                    theme { setTextColor(it.muted) }
                     setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11f)
                 },
                 LinearLayout.LayoutParams(dp(48), dp(20)),
@@ -1516,13 +1535,32 @@ class MainActivity : Activity() {
             }
     }
 
+    fun applyTheme() {
+        val palette = ReferencePalette(this)
+        screen.setBackgroundColor(palette.bg)
+        applyPalette(root, palette)
+        applyPalette(selectionBar, palette)
+        launcher?.let { applyPalette(it, palette) }
+        grid.palette = palette
+        grid.invalidate()
+    }
+
     private fun settings() {
+        if (isFinishing || isDestroyed) return
         val box = column()
         lateinit var d: AlertDialog
-        box.addButton("Скачанные файлы") { FileSheet(this).show() }
-        box.addButton("Темы") { ThemeSheet(this).show() }
-        box.addButton("Диагностика") { diagnosticsSettings() }
-        box.addButton("Проверить обновления APK") { UpdateManager(this).check() }
+        box.addButton("Скачанные файлы") {
+            d.dismiss()
+            FileSheet(this).show { settings() }
+        }
+        box.addButton("Темы") {
+            d.dismiss()
+            ThemeSheet(this).show { settings() }
+        }
+        box.addButton("Диагностика") {
+            d.dismiss()
+            diagnosticsSettings()
+        }
         box.addButton("Страница выпусков ↗") {
             startActivity(
                 Intent(
@@ -1531,7 +1569,7 @@ class MainActivity : Activity() {
                 )
             )
         }
-        d = sheet("Настройки панели", box, width = 385, close = "✕")
+        d = sheet("Настройки панели", box, width = 385, close = "✕", panel = true)
     }
 
     private fun diagnosticsSettings() {
@@ -1566,7 +1604,7 @@ class MainActivity : Activity() {
             app.diagnostics.clear()
             summary.text = app.diagnostics.report()
         }
-        sheet("Диагностика", box, width = 385, close = "✕")
+        sheet("Диагностика", box, width = 385, close = "‹", panel = true) { settings() }
     }
 
     override fun onStop() {

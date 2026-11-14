@@ -14,8 +14,9 @@ import studio.notka.core.*
 /** Android interaction/accessibility with the range geometry used by the reference WebView. */
 class ReferenceSlider(
     context: Context,
-    private var accent: Int = ReferencePalette(context).accent,
+    fixedAccent: Int? = null,
 ) : SeekBar(context) {
+  private var accent = fixedAccent ?: ReferencePalette(context).accent
   private val d = resources.displayMetrics.density
   private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
   private val track = Path()
@@ -26,6 +27,11 @@ class ReferenceSlider(
   }
 
   init {
+    if (fixedAccent == null)
+        theme {
+          accent = it.accent
+          invalidate()
+        }
     progressTintList = null
     thumbTintList = null
     progressDrawable = null
@@ -98,7 +104,7 @@ fun Context.select(
           ): View =
               (convertView as? TextView ?: TextView(this@select)).apply {
                 text = getItem(position)
-                setTextColor(palette.text)
+                setTextColor(ReferencePalette(this@select).text)
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, size)
                 includeFontPadding = false
                 gravity = android.view.Gravity.CENTER_VERTICAL
@@ -113,9 +119,11 @@ fun Context.select(
           val p = Paint(Paint.ANTI_ALIAS_FLAG)
 
           override fun draw(c: Canvas) {
-            bg.bounds = bounds
-            bg.draw(c)
-            p.color = palette.text
+            val current = ReferencePalette(this@select)
+            val surface = shape(current.panel, current.border, 6f)
+            surface.bounds = bounds
+            surface.draw(c)
+            p.color = current.text
             p.style = Paint.Style.STROKE
             p.strokeWidth = dp(1).toFloat()
             val x = bounds.right - dp(10).toFloat()
@@ -133,10 +141,10 @@ fun Context.select(
 
           override fun getOpacity() = PixelFormat.TRANSLUCENT
         }
-        // The platform background reserves 48 dp for its own arrow. Our background
-        // draws the arrow itself, so retaining that inset clips the selected text.
-        setPadding(0, 0, 0, 0)
-        minimumHeight = dp(34)
+    // The platform background reserves 48 dp for its own arrow. Our background
+    // draws the arrow itself, so retaining that inset clips the selected text.
+    setPadding(0, 0, 0, 0)
+    minimumHeight = dp(34)
     setSelection(selected.coerceIn(labels.indices), false)
     var last = selected
     onItemSelectedListener =

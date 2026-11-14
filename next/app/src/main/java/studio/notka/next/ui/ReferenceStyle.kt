@@ -131,7 +131,10 @@ class ReferenceButton(context: Context) : Button(context) {
         minHeight = context.dp(43)
         minimumHeight = context.dp(43)
         setPadding(context.dp(12), 0, context.dp(12), 0)
-        background = context.shape(p.panel, p.border)
+        theme {
+            background = context.shape(it.panel, it.border)
+            setTextColor(it.text)
+        }
         backgroundTintList = null
         setTextColor(p.text)
         stateListAnimator = null
@@ -263,13 +266,7 @@ fun Context.iconButton(kind: String, description: String, action: () -> Unit): B
             dp(if (kind == "lanes" || kind == "back") 20 else 22),
         )
         tag = kind
-        background =
-            iconSurface(
-                kind,
-                ReferencePalette(this@iconButton).text,
-                ReferencePalette(this@iconButton).panel,
-                ReferencePalette(this@iconButton).border,
-            )
+        theme { background = iconSurface(kind, it.text, it.panel, it.border) }
         setOnClickListener { action() }
     }
 
@@ -363,54 +360,4 @@ class ReferenceCheck(
         info.isCheckable = true
         info.isChecked = checked
     }
-}
-
-/** Update an open theme editor without replacing focused fields or interrupting a slider drag. */
-fun recolorTree(view: View, old: ReferencePalette, next: ReferencePalette) {
-    if (view is ReferenceSlider) view.recolor(old, next)
-    val mapping =
-        mapOf(
-            old.bg to next.bg,
-            old.accent to next.accent,
-            old.text to next.text,
-            old.on to next.on,
-            old.muted to next.muted,
-            old.panel to next.panel,
-            old.border to next.border,
-            old.cell to next.cell,
-            old.raised to next.raised,
-            old.line to next.line,
-            old.cursor to next.cursor,
-        )
-    if (view is android.widget.TextView) {
-        mapping[view.currentTextColor]?.let { view.setTextColor(it) }
-        mapping[view.currentHintTextColor]?.let { view.setHintTextColor(it) }
-    }
-    val bg = view.background
-    if (bg is android.graphics.drawable.ColorDrawable) mapping[bg.color]?.let { bg.color = it }
-    if (bg is ReferenceShape) bg.recolor(mapping)
-    else if (bg is GradientDrawable && android.os.Build.VERSION.SDK_INT >= 24) {
-        bg.color?.defaultColor?.let { mapping[it] }?.let { bg.setColor(it) }
-    }
-    if (
-        view.tag is String &&
-            view is android.widget.Button &&
-            view.tag in
-                listOf(
-                    "lanes",
-                    "grid",
-                    "track",
-                    "back",
-                    "trash",
-                    "copy",
-                    "volume",
-                    "scene",
-                    "download",
-                )
-    )
-        view.background =
-            view.context.iconSurface(view.tag as String, next.text, next.panel, next.border)
-    if (view is android.view.ViewGroup)
-        for (i in 0 until view.childCount) recolorTree(view.getChildAt(i), old, next)
-    view.invalidate()
 }
