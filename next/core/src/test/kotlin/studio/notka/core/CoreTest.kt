@@ -7,6 +7,17 @@ import kotlinx.serialization.json.*
 
 class CoreTest {
     @Test
+    fun addedLaneStartsWithPianoInsteadOfCurrentSound() {
+        val editor = Editor()
+        val id = editor.addInstrument("lib-mda-grand-1", "Другой инструмент")
+        editor.assignInstrument(id)
+        editor.addLane()
+        assertEquals(DEFAULT_SOURCE, editor.project.lane.instrument)
+        assertEquals(DEFAULT_SOURCE, editor.project.instrument(editor.project.lane).source)
+        assertEquals(2, editor.project.lanes.size)
+    }
+
+    @Test
     fun legacyFilesAndRoundTrip() {
         val v1 =
             """{"format":"notka.track","version":1,"ppq":960,"bpm":100,"division":4,"notes":[{"start":1440,"len":240,"pitch":63,"volume":72}]}"""
@@ -33,16 +44,31 @@ class CoreTest {
         val raw = ProjectCodec.encode(original)
         for (bad in
             listOf(
-                raw.replace("\"len\":960", "\"len\":0"),
+                raw.replace("\"len\":${original.lane.notes.single().len}", "\"len\":0"),
                 raw.replace("\"pitch\":60", "\"pitch\":200"),
-                raw.replace("\"bpm\":120", "\"bpm\":\"120\""),
+                raw.replace("\"bpm\":${original.bpm}", "\"bpm\":\"${original.bpm}\""),
                 raw.replace("\"instrumentId\":\"inst-1\"", "\"instrumentId\":\"inst-missing\""),
             )) {
+            assertNotEquals(raw, bad, "Each malformed fixture must actually change the input")
             assertFails { editor.load(ProjectCodec.decode(bad)) }
             assertEquals(original, editor.project)
         }
         assertFails { Note(1, MAX_TICK, 1, 60).validate() }
         assertFails { SoundSettings(start = 60.0, end = 50.0).validate() }
+    }
+
+    @Test
+    fun editor80DivisionsAreFractionsOfABeat() {
+        assertEquals(100, Project().bpm)
+        for (division in DIVISIONS.filter { it > 0 }) {
+            val project = Project(division = division)
+            assertEquals(960L / division, project.snapTick)
+            assertEquals(960L / division, project.defaultNoteLength)
+            assertEquals(120L, project.copy(viewDivision = 8).defaultNoteLength)
+            assertEquals(320L, project.copy(viewDivision = 8, noteDivision = 3).defaultNoteLength)
+        }
+        assertEquals(1L, Project(division = 0).snapTick)
+        assertEquals(240L, Project(division = 0).defaultNoteLength)
     }
 
     @Test

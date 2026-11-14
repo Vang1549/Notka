@@ -38,6 +38,7 @@ class Transport(
         private set
 
     private var revision = -1L
+    private var visualMode = false
     private var focus: AudioFocusRequest? = null
     private val focusListener =
         AudioManager.OnAudioFocusChangeListener { change ->
@@ -103,9 +104,14 @@ class Transport(
         if (!playing) abandon()
     }
 
-    fun play(project: Project, currentRevision: Long) {
+    fun play(
+        project: Project,
+        currentRevision: Long,
+        visual: Boolean = false,
+        leadIn: Double = 0.0,
+    ) {
         if (preparing) return
-        if (engine != null && revision == currentRevision) {
+        if (engine != null && revision == currentRevision && visualMode == visual) {
             resume()
             return
         }
@@ -113,10 +119,11 @@ class Transport(
         val token = ++serial
         preparing = true
         onState()
-        val start = position
+        visualMode = visual
+        val start = if (leadIn > 0) -leadIn else position
         worker.execute {
             val result = runCatching {
-                NativeAudio.build(project, banks(), loop = project.scene.flag("loop"))
+                NativeAudio.build(project, banks(), loop = visual && project.scene.flag("loop"))
             }
             main.post {
                 if (token != serial) {
@@ -129,7 +136,8 @@ class Transport(
                         engine = it
                         duration = it.duration
                         revision = currentRevision
-                        it.seek(start.coerceIn(0.0, duration))
+                        it.seek(start.coerceIn(-60.0, duration))
+                        position = start
                         resume()
                     }
                     .onFailure {
@@ -185,6 +193,14 @@ class Transport(
             else seconds.coerceIn(0.0, maxOf(duration, 0.0))
         engine?.seek(position)
         if (wasPlaying) engine?.play()
+        onState()
+    }
+
+    fun setLoop(enabled: Boolean, period: Double, currentRevision: Long) {
+        val resume = playing
+        engine?.setLoop(enabled, period)
+        revision = currentRevision
+        if (resume) engine?.play()
         onState()
     }
 

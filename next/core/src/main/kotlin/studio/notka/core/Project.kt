@@ -93,7 +93,7 @@ data class Lane(
 )
 
 data class Project(
-    val bpm: Int = 120,
+    val bpm: Int = 100,
     val division: Int = 4,
     val noteDivision: Int = 0,
     val viewDivision: Int = 0,
@@ -112,10 +112,15 @@ data class Project(
         get() = (lanes.maxOfOrNull { lane -> lane.notes.maxOfOrNull { it.id } ?: 0 } ?: 0) + 1
 
     val snapTick
-        get() = if (division == 0) 1L else PPQ * 4 / division
+        get() = if (division == 0) 1L else PPQ / division
 
     val defaultNoteLength
-        get() = PPQ * 4 / (noteDivision.takeIf { it > 0 } ?: division.takeIf { it > 0 } ?: 4)
+        get() =
+            PPQ /
+                (noteDivision.takeIf { it > 0 }
+                    ?: viewDivision.takeIf { it > 0 }
+                    ?: division.takeIf { it > 0 }
+                    ?: 4)
 
     fun instrument(lane: Lane) = instruments.first { it.id == lane.instrumentId }
 

@@ -1,0 +1,7 @@
+
+studio.notka.next.NativeIntegrationTest:......
+studio.notka.next.ReferenceParityTest:.
+
+Time: 18.085
+
+OK (7 tests)

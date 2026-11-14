@@ -1,6 +1,6 @@
 # Нотка
 
-**Нотка 2 — новая нативная версия только для Android.** [Скачать APK 1.0.0](https://github.com/Vang1549/Notka/releases/download/native-1/Notka2-1.apk) · [Исходники и документация](next/README.md) · [Проверки и ограничения](next/PARITY.md).
+**Нотка 2 — новая нативная версия только для Android.** [Скачать APK 1.1.0](https://github.com/Vang1549/Notka/releases/download/native-2/Notka2-2.apk) · [Исходники и документация](next/README.md) · [Проверки и ограничения](next/PARITY.md).
 
 Нотка 2 устанавливается рядом со старой. Проекты переносятся экспортом/импортом `.notka`. Новая разработка ведётся в `next/`, обновления — через отдельную ветку `native-updates`.
 

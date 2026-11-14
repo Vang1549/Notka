@@ -209,7 +209,15 @@ class ExportService : Service() {
                 "mp4",
                 "webm" ->
                     CodecExport.video(project, app.banks, options, temp, ::checkJob, ::progress)
-                else -> CodecExport.audio(project, app.banks, options, temp, ::checkJob, ::progress)
+                else ->
+                    CodecExport.audio(
+                        project,
+                        app.banks,
+                        options,
+                        temp,
+                        ::checkJob,
+                        progress = ::progress,
+                    )
             }
             checkJob()
             require(temp.length() in 1..EXPORT_LIMIT)

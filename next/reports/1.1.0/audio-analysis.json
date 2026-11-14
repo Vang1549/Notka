@@ -1,0 +1,33 @@
+{
+  "sample_rate": 48000,
+  "channels": 2,
+  "seconds": 2.0,
+  "peak": 0.262939453125,
+  "rms": 0.0620622116614378,
+  "notes": [
+    {
+      "midi": 60,
+      "frequency": 261.8408203125,
+      "cents": 1.423804229202577
+    },
+    {
+      "midi": 64,
+      "frequency": 329.58984375,
+      "cents": -0.19808430925519932
+    },
+    {
+      "midi": 67,
+      "frequency": 392.2119140625,
+      "cents": 0.9558039306075575
+    }
+  ],
+  "decoded_files": [
+    "audio.m4a",
+    "scene.mp4",
+    "background.mp4",
+    "opus.ogg",
+    "webm-audio.webm",
+    "webm.webm",
+    "preview.mp3"
+  ]
+}

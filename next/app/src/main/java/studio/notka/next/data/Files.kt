@@ -53,11 +53,11 @@ class ProjectStore(context: Context) {
     private fun file(name: String): File {
         require(
             name.isNotBlank() &&
-                name.length <= 48 &&
+                name.length <= 80 &&
                 !name.startsWith('.') &&
                 !Regex("[\\\\/:*?\"<>|\\p{Cntrl}]").containsMatchIn(name)
         ) {
-            "Введи название до 48 символов без знаков пути"
+            "Введи название до 80 символов без знаков пути"
         }
         return File(root, "$name.notka")
     }

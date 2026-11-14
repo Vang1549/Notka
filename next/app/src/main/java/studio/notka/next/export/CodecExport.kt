@@ -7,6 +7,7 @@ import java.io.File
 import java.nio.ByteBuffer
 import kotlin.math.*
 import studio.notka.core.Project
+import studio.notka.core.number
 import studio.notka.next.audio.NativeAudio
 import studio.notka.next.data.BankStore
 import studio.notka.next.ui.SceneRenderer
@@ -28,6 +29,7 @@ object CodecExport {
         options: ExportOptions,
         file: File,
         check: () -> Unit,
+        leadIn: Double = 0.0,
         progress: (Double) -> Unit,
     ) {
         val opus = options.type in listOf("opus", "webm", "webm-audio")
@@ -55,7 +57,8 @@ object CodecExport {
             var track = -1
             val info = MediaCodec.BufferInfo()
             NativeAudio.build(project, banks, rate, options.includeMuted).use { audio ->
-                val total = ceil(audio.duration * rate).toLong()
+                audio.seek(-leadIn)
+                val total = ceil((audio.duration + .25 + leadIn) * rate).toLong()
                 var sent = 0L
                 var inputDone = false
                 var done = false
@@ -138,10 +141,11 @@ object CodecExport {
         val audioFile = File.createTempFile("audio-", ".media", file.parentFile)
         val videoFile = File.createTempFile("video-", ".media", file.parentFile)
         try {
-            audio(project, banks, options, audioFile, check) { progress(it * .35) }
+            val leadIn = 3.6 / project.scene.number("speed", 1.0)
+            audio(project, banks, options, audioFile, check, leadIn) { progress(it * .35) }
             val duration =
                 NativeAudio.build(project, banks, options.rate, options.includeMuted).use {
-                    it.duration
+                    it.duration + .25 + leadIn
                 }
             val format =
                 MediaFormat.createVideoFormat(
@@ -224,7 +228,7 @@ object CodecExport {
                         canvas,
                         options.width,
                         options.videoHeight,
-                        frame.toDouble() / options.fps,
+                        frame.toDouble() / options.fps - leadIn,
                     )
                     egl.draw(bitmap, frame * 1_000_000_000 / options.fps)
                     progress(.35 + frame.toDouble() / frames * .6)

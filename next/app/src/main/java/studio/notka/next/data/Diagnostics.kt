@@ -34,6 +34,11 @@ class Diagnostics(context: Context) {
         }
     }
 
+    @Synchronized
+    fun clear() {
+        file.delete()
+    }
+
     fun installCrashHandler() {
         val old = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, error ->

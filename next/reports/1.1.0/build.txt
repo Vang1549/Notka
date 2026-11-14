@@ -1,0 +1,199 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build
+> Task :core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :core:compileKotlin UP-TO-DATE
+> Task :core:compileJava NO-SOURCE
+> Task :core:processResources NO-SOURCE
+> Task :core:classes UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :core:jar UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:configureCMakeDebug[arm64-v8a]
+> Task :app:buildCMakeDebug[arm64-v8a]
+> Task :app:configureCMakeDebug[armeabi-v7a]
+> Task :app:compileDebugKotlin
+> Task :app:buildCMakeDebug[armeabi-v7a]
+> Task :app:configureCMakeDebug[x86_64]
+
+> Task :app:compileDebugKotlin
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:732:26 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:733:18 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:734:22 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:735:22 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1403:42 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1405:40 'static field SYSTEM_UI_FLAG_LIGHT_STATUS_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1406:50 'static field SYSTEM_UI_FLAG_LIGHT_STATUS_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1409:40 'static field SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1410:50 'static field SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1412:30 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1588:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1594:41 'fun onBackPressed(): Unit' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/audio/Transport.kt:85:23 'fun requestAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!, p1: Int, p2: Int): Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/audio/Transport.kt:95:20 'fun abandonAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!): Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/data/UpdateManager.kt:150:45 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/data/UpdateManager.kt:157:42 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/data/UpdateManager.kt:161:38 'field signatures: Array<(out) Signature!>?' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/export/ExportService.kt:88:31 'constructor(p0: Context!): Notification.Builder' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/export/ExportService.kt:112:21 'fun addAction(p0: Int, p1: CharSequence!, p2: PendingIntent!): Notification.Builder!' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/export/ExportService.kt:256:22 'fun stopForeground(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/Forms.kt:146:23 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/Forms.kt:147:22 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/Forms.kt:148:26 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/Forms.kt:149:26 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/ReferenceStyle.kt:251:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/SceneSheet.kt:430:27 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/SceneSheet.kt:431:26 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/SceneSheet.kt:432:30 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/SceneSheet.kt:433:30 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+
+> Task :app:buildCMakeDebug[x86_64]
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:buildKotlinToolingMetadata UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:generateReleaseBuildConfig UP-TO-DATE
+> Task :app:checkReleaseAarMetadata UP-TO-DATE
+> Task :app:generateReleaseResValues UP-TO-DATE
+> Task :app:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :app:generateReleaseResources UP-TO-DATE
+> Task :app:mergeReleaseResources UP-TO-DATE
+> Task :app:packageReleaseResources UP-TO-DATE
+> Task :app:parseReleaseLocalResources UP-TO-DATE
+> Task :app:createReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksRelease UP-TO-DATE
+> Task :app:processReleaseMainManifest UP-TO-DATE
+> Task :app:processReleaseManifest UP-TO-DATE
+> Task :app:processReleaseManifestForPackage UP-TO-DATE
+> Task :app:processReleaseResources UP-TO-DATE
+> Task :app:javaPreCompileRelease UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:mergeProjectDexDebug
+> Task :app:configureCMakeRelWithDebInfo[arm64-v8a]
+> Task :app:buildCMakeRelWithDebInfo[arm64-v8a]
+> Task :app:configureCMakeRelWithDebInfo[armeabi-v7a]
+> Task :app:buildCMakeRelWithDebInfo[armeabi-v7a]
+> Task :app:configureCMakeRelWithDebInfo[x86_64]
+> Task :app:compileReleaseKotlin
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:732:26 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:733:18 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:734:22 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:735:22 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1403:42 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1405:40 'static field SYSTEM_UI_FLAG_LIGHT_STATUS_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1406:50 'static field SYSTEM_UI_FLAG_LIGHT_STATUS_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1409:40 'static field SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1410:50 'static field SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1412:30 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1588:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/MainActivity.kt:1594:41 'fun onBackPressed(): Unit' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/audio/Transport.kt:85:23 'fun requestAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!, p1: Int, p2: Int): Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/audio/Transport.kt:95:20 'fun abandonAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!): Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/data/UpdateManager.kt:150:45 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/data/UpdateManager.kt:157:42 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/data/UpdateManager.kt:161:38 'field signatures: Array<(out) Signature!>?' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/export/ExportService.kt:88:31 'constructor(p0: Context!): Notification.Builder' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/export/ExportService.kt:112:21 'fun addAction(p0: Int, p1: CharSequence!, p2: PendingIntent!): Notification.Builder!' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/export/ExportService.kt:256:22 'fun stopForeground(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/Forms.kt:146:23 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/Forms.kt:147:22 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/Forms.kt:148:26 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/Forms.kt:149:26 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/ReferenceStyle.kt:251:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/SceneSheet.kt:430:27 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/SceneSheet.kt:431:26 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/SceneSheet.kt:432:30 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///mnt/c/Users/ivank/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/ChatGPT/%D0%9F%D0%B8%D0%B0%D0%BD%D0%B8%D0%BD%D0%BE%20%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD/next/app/src/main/java/studio/notka/next/ui/SceneSheet.kt:433:30 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+
+> Task :app:packageDebug
+> Task :app:buildCMakeRelWithDebInfo[x86_64]
+> Task :app:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :app:mergeReleaseNativeLibs UP-TO-DATE
+> Task :app:stripReleaseDebugSymbols UP-TO-DATE
+> Task :app:extractReleaseNativeSymbolTables UP-TO-DATE
+> Task :app:mergeReleaseNativeDebugMetadata UP-TO-DATE
+> Task :app:checkReleaseDuplicateClasses UP-TO-DATE
+> Task :app:dexBuilderRelease
+> Task :app:desugarReleaseFileDependencies UP-TO-DATE
+> Task :app:mergeReleaseStartupProfile UP-TO-DATE
+> Task :app:mergeExtDexRelease UP-TO-DATE
+> Task :app:mergeReleaseArtProfile UP-TO-DATE
+> Task :app:mergeReleaseGlobalSynthetics UP-TO-DATE
+> Task :app:mergeReleaseShaders UP-TO-DATE
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets UP-TO-DATE
+> Task :app:compressReleaseAssets UP-TO-DATE
+> Task :app:extractReleaseVersionControlInfo UP-TO-DATE
+> Task :app:processReleaseJavaRes UP-TO-DATE
+> Task :app:mergeReleaseJavaResource UP-TO-DATE
+> Task :app:optimizeReleaseResources UP-TO-DATE
+> Task :app:collectReleaseDependencies UP-TO-DATE
+> Task :app:sdkReleaseDependencyData UP-TO-DATE
+> Task :app:validateSigningRelease UP-TO-DATE
+> Task :app:writeReleaseAppMetadata UP-TO-DATE
+> Task :app:writeReleaseSigningConfigVersions UP-TO-DATE
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebug
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :app:generateDebugLintReportModel
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:mergeDexRelease
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:compileReleaseArtProfile
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect UP-TO-DATE
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease UP-TO-DATE
+> Task :app:lintVitalRelease
+> Task :app:assembleRelease
+> Task :app:lintAnalyzeDebug
+
+> Task :app:lintReportDebug
+Wrote HTML report to file:///mnt/d/Tools/Notka/next/build/app/reports/lint-results-debug.html
+
+> Task :app:lintDebug
+
+BUILD SUCCESSFUL in 3m 6s
+112 actionable tasks: 33 executed, 79 up-to-date

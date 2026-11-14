@@ -118,6 +118,14 @@ class NativeIntegrationTest {
             Thread.sleep(250)
             engine.pause()
             assertTrue(engine.seconds() > .85)
+            engine.setLoop(true, 1.5)
+            engine.seek(1.49)
+            engine.render(buffer, 2048)
+            assertTrue("Loop must remain active past its boundary", engine.status() == 0)
+            engine.setLoop(false, 1.5)
+            engine.seek(0.0)
+            engine.render(buffer, 2048)
+            for (i in buffer.indices) assertEquals(buffer[i], pcm.samples[i], .00004f)
         }
         val zip = File(outputs, "stems.zip")
         zip.outputStream().use {
@@ -133,9 +141,9 @@ class NativeIntegrationTest {
             }
         }
         assertTrue(
-            names.containsAll(listOf("original.notka", "track.mid", "mix.wav", "tracks.json"))
+            names.containsAll(listOf("Original.notka", "Track.mid", "Mix.wav", "Tracks.json"))
         )
-        assertTrue(names.any { it.startsWith("stems/") })
+        assertTrue(names.any { it.startsWith("Tracks/") })
     }
 
     @Test
@@ -283,6 +291,19 @@ class NativeIntegrationTest {
                 Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             ) as MainActivity
         instrumentation.runOnMainSync {
+            fun launch(view: android.view.View): Boolean {
+                if (view is android.widget.Button && view.text.startsWith("Запустить последнюю")) {
+                    view.performClick()
+                    return true
+                }
+                if (view is android.view.ViewGroup)
+                    for (i in 0 until view.childCount) if (launch(view.getChildAt(i))) return true
+                return false
+            }
+            assertTrue(
+                "Open editor through its actual launch card",
+                launch(activity.window.decorView),
+            )
             activity.mutate { app.editor.load(Project()) }
             activity.grid.resetView()
         }
@@ -293,23 +314,117 @@ class NativeIntegrationTest {
             event.recycle()
         }
         val density = context.resources.displayMetrics.density
-        val x = 140 * density
+        val x = 125 * density
         val y = 160 * density
         val time = SystemClock.uptimeMillis()
         touch(MotionEvent.ACTION_DOWN, x, y, time)
         touch(MotionEvent.ACTION_UP, x, y, time + 30)
         assertEquals(1, app.editor.project.lane.notes.size)
         val first = app.editor.project.lane.notes.first()
-        touch(MotionEvent.ACTION_DOWN, x + 5 * density, y, time + 100)
-        touch(MotionEvent.ACTION_MOVE, x + 95 * density, y - 26 * density, time + 150)
-        touch(MotionEvent.ACTION_UP, x + 95 * density, y - 26 * density, time + 180)
-        assertEquals(first.start + 960, app.editor.project.lane.notes.first().start)
+        assertEquals(240L, first.len)
+        assertTrue("A newly inserted note must not be selected", activity.grid.selected.isEmpty())
+        touch(MotionEvent.ACTION_DOWN, x, y, time + 100)
+        touch(MotionEvent.ACTION_MOVE, x + 76 * density, y - 26 * density, time + 150)
+        touch(MotionEvent.ACTION_UP, x + 76 * density, y - 26 * density, time + 180)
+        assertEquals(first.start + 480, app.editor.project.lane.notes.first().start)
         assertEquals(first.pitch + 1, app.editor.project.lane.notes.first().pitch)
         instrumentation.runOnMainSync {
             app.editor.undo()
             activity.refresh()
         }
         assertEquals(first, app.editor.project.lane.notes.first())
+        touch(MotionEvent.ACTION_DOWN, x, y, time + 700)
+        touch(MotionEvent.ACTION_UP, x, y, time + 730)
+        assertEquals(setOf(first.id), activity.grid.selected)
+        instrumentation.runOnMainSync { activity.grid.duplicateSelection() }
+        assertEquals(2, app.editor.project.lane.notes.size)
+        val duplicate = app.editor.project.lane.notes.last()
+        assertEquals(first.end, duplicate.start)
+        assertEquals(first.len, duplicate.len)
+        assertEquals(first.volume, duplicate.volume)
+        assertEquals(setOf(duplicate.id), activity.grid.selected)
+
+        touch(MotionEvent.ACTION_DOWN, 250 * density, 210 * density, time + 1000)
+        SystemClock.sleep(400)
+        touch(MotionEvent.ACTION_MOVE, 90 * density, 130 * density, time + 1450)
+        touch(MotionEvent.ACTION_UP, 90 * density, 130 * density, time + 1500)
+        assertEquals(
+            "Hold and drag must select both notes",
+            setOf(first.id, duplicate.id),
+            activity.grid.selected,
+        )
+        touch(MotionEvent.ACTION_DOWN, x, y, time + 1600)
+        touch(MotionEvent.ACTION_MOVE, x + 38 * density, y - 34 * density, time + 1660)
+        touch(MotionEvent.ACTION_UP, x + 38 * density, y - 34 * density, time + 1700)
+        assertTrue(app.editor.project.lane.notes.all { it.pitch == first.pitch + 1 })
+        assertEquals(first.start + 240, app.editor.project.lane.notes.first().start)
+        val before = android.graphics.RectF(activity.grid.selectedBounds()!!)
+        val notesBefore = app.editor.project.lane.notes
+        fun two(action: Int, x1: Float, y1: Float, x2: Float, y2: Float) {
+            val properties =
+                Array(2) { i ->
+                    MotionEvent.PointerProperties().apply {
+                        id = i
+                        toolType = MotionEvent.TOOL_TYPE_FINGER
+                    }
+                }
+            val points =
+                arrayOf(x1 to y1, x2 to y2)
+                    .map { (xx, yy) ->
+                        MotionEvent.PointerCoords().apply {
+                            this.x = xx * density
+                            this.y = yy * density
+                            pressure = 1f
+                            size = 1f
+                        }
+                    }
+                    .toTypedArray()
+            val event =
+                MotionEvent.obtain(
+                    time + 1800,
+                    SystemClock.uptimeMillis(),
+                    action,
+                    2,
+                    properties,
+                    points,
+                    0,
+                    0,
+                    1f,
+                    1f,
+                    0,
+                    0,
+                    android.view.InputDevice.SOURCE_TOUCHSCREEN,
+                    0,
+                )
+            instrumentation.runOnMainSync { activity.grid.dispatchTouchEvent(event) }
+            event.recycle()
+        }
+        touch(MotionEvent.ACTION_DOWN, 80 * density, 300 * density, time + 1800)
+        two(
+            MotionEvent.ACTION_POINTER_DOWN or (1 shl MotionEvent.ACTION_POINTER_INDEX_SHIFT),
+            80f,
+            300f,
+            180f,
+            400f,
+        )
+        two(MotionEvent.ACTION_MOVE, 60f, 280f, 210f, 430f)
+        two(
+            MotionEvent.ACTION_POINTER_UP or (1 shl MotionEvent.ACTION_POINTER_INDEX_SHIFT),
+            60f,
+            280f,
+            210f,
+            430f,
+        )
+        touch(MotionEvent.ACTION_UP, 60 * density, 280 * density, time + 1900)
+        assertEquals(notesBefore, app.editor.project.lane.notes)
+        assertTrue(
+            "Horizontal pinch must change note width",
+            activity.grid.selectedBounds()!!.width() > before.width() * 1.2,
+        )
+        assertTrue(
+            "Vertical pinch must change note height",
+            activity.grid.selectedBounds()!!.height() > before.height() * 1.2,
+        )
         app.projects.save("Проверка", app.editor.project, true)
         assertEquals(
             ProjectCodec.encode(app.editor.project),

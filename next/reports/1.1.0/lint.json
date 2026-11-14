@@ -1,0 +1,13 @@
+{
+  "errors": 0,
+  "warnings": 77,
+  "categories": {
+    "UnusedAttribute": 2,
+    "DataExtractionRules": 1,
+    "DrawAllocation": 32,
+    "ViewConstructor": 6,
+    "ClickableViewAccessibility": 4,
+    "SetTextI18n": 17,
+    "RtlHardcoded": 15
+  }
+}

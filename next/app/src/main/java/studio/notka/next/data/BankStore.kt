@@ -26,6 +26,7 @@ data class BankEntry(
     val previewHash: String = "",
     val builtin: Boolean = false,
     val origin: String = "legacy",
+    val short: String = "Ин",
 ) {
     fun sameAssets(other: BankEntry) =
         id == other.id &&
@@ -86,12 +87,21 @@ class BankStore(private val context: Context) {
     init {
         val builtin =
             listOf(
-                BankEntry(DEFAULT_SOURCE, "Пианино", "piano", 0, builtin = true),
+                BankEntry(
+                    DEFAULT_SOURCE,
+                    "Пианино",
+                    "piano",
+                    0,
+                    bytes = context.assets.open("banks/piano.json").use { it.available() },
+                    builtin = true,
+                ),
                 BankEntry(
                     "lib-mda-grand-1",
                     "Grand Piano · MDA",
                     "bank-mda-grand-1",
                     0,
+                    bytes =
+                        context.assets.open("banks/bank-mda-grand-1.json").use { it.available() },
                     builtin = true,
                 ),
                 BankEntry(FLOE, "Шкатулка · FrozenPlain", "musicbox-floe", 10),
@@ -158,6 +168,7 @@ class BankStore(private val context: Context) {
                     p?.getInt("bytes") ?: 0,
                     p?.getString("sha256") ?: "",
                     origin = d.optString("origin", "legacy"),
+                    short = d.optString("short", "Ин").take(4),
                 )
             }
         require(

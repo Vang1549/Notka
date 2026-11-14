@@ -227,7 +227,7 @@ void Sampler::trigger(const Prepared &e, double elapsed) {
 void Sampler::seek(double seconds) {
     if (!std::isfinite(seconds))
         throw std::invalid_argument("Invalid position");
-    frame_ = std::llround(std::clamp(seconds, 0.0, duration_) * rate_);
+    frame_ = std::llround(std::clamp(seconds, -60.0, duration_) * rate_);
     next_ = 0;
     limiter_ = 1;
     for (auto &v : voices_)

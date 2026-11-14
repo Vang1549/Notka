@@ -1,0 +1,38 @@
+[
+  {
+    "frame": "basic--1.0-reference",
+    "mean_channel_error": 0.9014705504115227,
+    "pixels_within_16": 0.9852276234567902,
+    "max_error": 151
+  },
+  {
+    "frame": "basic-0.4-reference",
+    "mean_channel_error": 0.8335333076131687,
+    "pixels_within_16": 0.9881018518518518,
+    "max_error": 151
+  },
+  {
+    "frame": "basic-1.0-reference",
+    "mean_channel_error": 0.8045730452674897,
+    "pixels_within_16": 0.9909297839506173,
+    "max_error": 151
+  },
+  {
+    "frame": "effects--1.0-reference",
+    "mean_channel_error": 1.213684413580247,
+    "pixels_within_16": 0.9842341820987655,
+    "max_error": 158
+  },
+  {
+    "frame": "effects-0.4-reference",
+    "mean_channel_error": 1.1350810185185185,
+    "pixels_within_16": 0.9853510802469135,
+    "max_error": 158
+  },
+  {
+    "frame": "effects-1.0-reference",
+    "mean_channel_error": 1.078360339506173,
+    "pixels_within_16": 0.9861998456790123,
+    "max_error": 158
+  }
+]

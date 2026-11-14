@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="studio.notka.core.CoreTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-14T02:50:05" hostname="Zentas" time="1.491">
+  <properties/>
+  <testcase name="fullSettingsAndUnknownBankSurvive" classname="studio.notka.core.CoreTest" time="1.035"/>
+  <testcase name="intervalIndexMatchesBruteForce" classname="studio.notka.core.CoreTest" time="0.207"/>
+  <testcase name="wavBoundsAndDecode" classname="studio.notka.core.CoreTest" time="0.058"/>
+  <testcase name="invalidImportNeverReplacesCurrentSong" classname="studio.notka.core.CoreTest" time="0.061"/>
+  <testcase name="undoGestureAndIndependentRack" classname="studio.notka.core.CoreTest" time="0.023"/>
+  <testcase name="midiIsReadableAndKeepsLeadingSilence" classname="studio.notka.core.CoreTest" time="0.095"/>
+  <testcase name="legacyFilesAndRoundTrip" classname="studio.notka.core.CoreTest" time="0.006"/>
+  <testcase name="editor80DivisionsAreFractionsOfABeat" classname="studio.notka.core.CoreTest" time="0.001"/>
+  <testcase name="addedLaneStartsWithPianoInsteadOfCurrentSound" classname="studio.notka.core.CoreTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

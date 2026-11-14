@@ -63,7 +63,7 @@ object AudioExport {
         progress: (Double) -> Unit,
     ) {
         NativeAudio.build(project, banks, options.rate, options.includeMuted).use { audio ->
-            val frames = ceil(maxOf(audio.duration, duration) * options.rate).toLong()
+            val frames = ceil(maxOf(audio.duration + .25, duration) * options.rate).toLong()
             require(frames * options.channels * (options.bits / 8) + 44 <= EXPORT_LIMIT) {
                 "WAV превышает 256 МБ"
             }
@@ -81,6 +81,9 @@ object AudioExport {
         }
     }
 
+    private fun trackFile(index: Int, name: String) =
+        "Tracks/${(index+1).toString().padStart(2,'0')} - ${name.replace(Regex("[\\\\/:*?\"<>|\\p{Cntrl}]"),"-")}.wav"
+
     fun archive(
         project: Project,
         banks: BankStore,
@@ -96,7 +99,8 @@ object AudioExport {
         require(lanes.isNotEmpty()) { "Нет звучащих нот" }
         val selected = project.copy(lanes = lanes, activeLane = 0)
         val midi = Midi.encode(selected, "Трек", banks.entries.associate { it.id to it.gm }, true)
-        val duration = NativeAudio.build(selected, banks, options.rate, true).use { it.duration }
+        val duration =
+            NativeAudio.build(selected, banks, options.rate, true).use { it.duration + .25 }
         ZipOutputStream(output).use { zip ->
             fun text(name: String, bytes: ByteArray) {
                 check()
@@ -104,22 +108,31 @@ object AudioExport {
                 zip.write(bytes)
                 zip.closeEntry()
             }
-            text("original.notka", ProjectCodec.encode(project).toByteArray())
-            text("track.mid", midi)
+            text("Original.notka", ProjectCodec.encode(project).toByteArray())
+            text("Track.mid", midi)
             text(
-                "tracks.json",
+                "Tracks.json",
                 buildJsonObject {
                         put("bpm", project.bpm)
                         put("sampleRate", options.rate)
                         put(
                             "tracks",
                             JsonArray(
-                                lanes.map { lane ->
+                                lanes.mapIndexed { index, lane ->
                                     buildJsonObject {
+                                        put("file", trackFile(index, lane.name))
                                         put("name", lane.name)
-                                        put("instrument", lane.instrument)
+                                        put("instrument", project.instrument(lane).name)
+                                        put("source", lane.instrument)
+                                        put(
+                                            "settings",
+                                            ProjectCodec.json.encodeToJsonElement(
+                                                SoundSettings.serializer(),
+                                                project.instrument(lane).settings,
+                                            ),
+                                        )
                                         put("instrumentId", lane.instrumentId)
-                                        put("muted", lane.muted)
+                                        put("originallyMuted", lane.muted)
                                     }
                                 }
                             ),
@@ -129,20 +142,17 @@ object AudioExport {
                     .toByteArray(),
             )
             text(
-                "README.txt",
-                "Нотка 2\noriginal.notka — исходный проект; track.mid — MIDI; mix.wav — общий звук; stems — отдельные дорожки с сохранёнными паузами.\nЛичные звуковые банки в архив не включены.\n"
+                "Readme.txt",
+                "Нотка 2\nOriginal.notka — исходный проект; Track.mid — MIDI; Mix.wav — общий звук; Tracks — отдельные дорожки с сохранёнными паузами.\nЛичные звуковые банки в архив не включены.\n"
                     .toByteArray(),
             )
-            zip.putNextEntry(ZipEntry("mix.wav"))
+            zip.putNextEntry(ZipEntry("Mix.wav"))
             wave(selected, banks, options.copy(includeMuted = true), zip, check) {
                 progress(it / (lanes.size + 1))
             }
             zip.closeEntry()
             lanes.forEachIndexed { index, lane ->
-                val name = lane.name.replace(Regex("[\\\\/:*?\"<>|\\p{Cntrl}]"), "_").take(48)
-                zip.putNextEntry(
-                    ZipEntry("stems/${(index+1).toString().padStart(3,'0')}-$name.wav")
-                )
+                zip.putNextEntry(ZipEntry(trackFile(index, lane.name)))
                 val track = selected.copy(lanes = listOf(lane), activeLane = 0)
                 wave(track, banks, options.copy(includeMuted = true), zip, check, duration) {
                     progress((index + 1 + it) / (lanes.size + 1))

@@ -52,6 +52,13 @@ int main() {
         for (size_t i = 0; i < 28800; i += 128)
             s.render(b.data() + i * 2, int(std::min<size_t>(128, 28800 - i)));
         check(a == b, "Rendering depends on callback block size");
+        s.seek(-.4);
+        std::vector<float> lead(38400);
+        s.render(lead.data(),19200);
+        check(energy(lead,0,lead.size())==0,"Scene lead-in is not silent");
+        std::vector<float> after(a.size());
+        s.render(after.data(),28800);
+        check(after==a,"Scene lead-in shifts musical audio samples");
         Event octave = e;
         octave.time = 0;
         octave.length = .2;

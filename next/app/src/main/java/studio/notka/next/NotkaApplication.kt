@@ -37,6 +37,14 @@ class NotkaApplication : Application() {
     var songName: String? = null
     private var savedRevision = -1L
     private var scheduled = false
+    private var freshSession = false
+
+    fun startNew() {
+        editor.load(Project())
+        songName = null
+        freshSession = true
+        observer()
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -69,6 +77,7 @@ class NotkaApplication : Application() {
     }
 
     fun changed() {
+        freshSession = false
         if (!scheduled) {
             scheduled = true
             main.postDelayed(
@@ -83,7 +92,7 @@ class NotkaApplication : Application() {
     }
 
     fun flush(force: Boolean = false) {
-        if (!ready || (!force && editor.revision == savedRevision)) return
+        if (freshSession || !ready || (!force && editor.revision == savedRevision)) return
         val project = editor.project
         val revision = editor.revision
         val name = songName

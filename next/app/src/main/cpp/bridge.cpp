@@ -233,3 +233,8 @@ extern "C" JNIEXPORT void JNICALL JNI_METHOD(render)(JNIEnv *env, jobject, jlong
         fail(env, e);
     }
 }
+
+extern "C" JNIEXPORT void JNICALL JNI_METHOD(setLoop)(JNIEnv *env, jobject, jlong h, jboolean enabled, jdouble period) {
+    try { auto &a=audio(h); a.closeStream(); a.sampler.setLoop(enabled,period); }
+    catch(const std::exception &e){ fail(env,e); }
+}

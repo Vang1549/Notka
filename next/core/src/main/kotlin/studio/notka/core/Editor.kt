@@ -106,10 +106,18 @@ class Editor(initial: Project = Project()) {
 
     fun addLane() = change { p ->
         val id = p.lanes.maxOf { it.id } + 1
+        val piano =
+            p.instruments.firstOrNull { it.source == DEFAULT_SOURCE }
+                ?: run {
+                    var n = 1
+                    while (p.instruments.any { it.id == "inst-$n" }) n++
+                    Instrument("inst-$n", DEFAULT_SOURCE, "Пианино")
+                }
         p.copy(
-            lanes =
-                p.lanes +
-                    Lane(id, "Дорожка ${p.lanes.size + 1}", p.lane.instrumentId, p.lane.instrument),
+            instruments =
+                if (p.instruments.any { it.id == piano.id }) p.instruments
+                else p.instruments + piano,
+            lanes = p.lanes + Lane(id, "Дорожка ${p.lanes.size + 1}", piano.id, piano.source),
             activeLane = p.lanes.size,
         )
     }

@@ -25,7 +25,7 @@ data class ExportOptions(
                 fps in listOf(24, 25, 30, 50, 60) &&
                 height in listOf(480, 720, 1080) &&
                 audioBitrate in 64000..320000 &&
-                videoBitrate in 1000000..20000000
+                videoBitrate in 100000..40000000
         )
         return this
     }
@@ -45,7 +45,7 @@ data class ExportOptions(
             .toString()
 
     val width
-        get() = if (portrait) height else height * 16 / 9 / 2 * 2
+        get() = if (portrait) height else if (height == 480) 854 else height * 16 / 9 / 2 * 2
 
     val videoHeight
         get() = if (portrait) height * 16 / 9 / 2 * 2 else height

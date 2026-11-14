@@ -138,6 +138,14 @@ class NativeAudio(val sampleRate: Int = 48000) : AutoCloseable {
         seek(handle, seconds)
     }
 
+    @Synchronized
+    fun setLoop(enabled: Boolean, period: Double) {
+        check(handle != 0L)
+        setLoop(handle, enabled, period)
+    }
+
+    private external fun setLoop(handle: Long, enabled: Boolean, period: Double)
+
     @Synchronized fun seconds(): Double = if (handle == 0L) 0.0 else position(handle)
 
     @Synchronized fun status(): Int = if (handle == 0L) 1 else state(handle)
