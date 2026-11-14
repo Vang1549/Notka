@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "795475d0bd7228a8b06ec6ee2f1a459bb1327635",
+  "workflowRun": "https://github.com/Vang1549/Notka/actions/runs/43632051306",
+  "workflowConclusion": "success",
+  "apkUrl": "https://github.com/Vang1549/Notka/releases/download/native-3/Notka2-3.apk",
+  "downloadSha256": "78d83fa765c874c7d82137d3260a74b0bbb3d02c589ba052d6eb0dff4e404f8a",
+  "downloadMatchesLocal": true,
+  "publishedChannelMatchesLocal": true,
+  "channelSha256": "268ed2d490af8c649525dc4a52e66c4f633ce1d8283f09bf844eb27a17092d48",
+  "nativeUpdates": "795475d0bd7228a8b06ec6ee2f1a459bb1327635",
+  "legacyUpdatesUnchanged": "dcc9d441abee7048888fbdcc3dd9983c72f2086a"
+}
